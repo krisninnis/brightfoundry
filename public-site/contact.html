@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact – BrightFoundry</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container">
+      <div class="nav-inner">
+   <div class="logo">
+  <a href="index.html">
+    <img src="img/brightfoundry-logo-light.png" alt="BrightFoundry logo" class="logo-only" />
+  </a>
+</div>
+
+
+        <div class="nav-links">
+          <a href="services.html">Services</a>
+          <a href="portfolio.html">Portfolio</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="faqs.html">FAQs</a>
+          <a href="contact.html" class="btn">Contact</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <span class="badge">Contact</span>
+        <div>
+          <h1>Tell me what you’re trying to build.</h1>
+          <p>
+            Whether you need a website, a small web app, an AI assistant or just a bit of help
+            figuring things out — send a quick message and we’ll take it from there.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT LAYOUT -->
+  <section class="section">
+    <div class="container">
+      <div class="grid" style="grid-template-columns: 2fr 1fr; gap:24px;">
+
+        <!-- CONTACT FORM -->
+        <div class="card">
+          <h2 style="margin-bottom:10px;">Start a conversation</h2>
+          <p style="margin-bottom:18px; font-size:0.95rem; color:#4b5563;">
+            Share a rough idea of what you need — don’t worry about using the “right” terminology.
+          </p>
+
+          <!-- NOTE: this is a static HTML form for now.
+               Later, you can hook it up to a backend, Formspree, Netlify Forms, or your own portal. -->
+          <form action="#" method="post">
+            <div style="margin-bottom:12px;">
+              <label for="name" style="display:block; font-size:0.9rem; margin-bottom:4px;">Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:0.95rem;"
+              />
+            </div>
+
+            <div style="margin-bottom:12px;">
+              <label for="email" style="display:block; font-size:0.9rem; margin-bottom:4px;">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:0.95rem;"
+              />
+            </div>
+
+            <div style="margin-bottom:12px;">
+              <label for="project-type" style="display:block; font-size:0.9rem; margin-bottom:4px;">What are you interested in?</label>
+              <select
+                id="project-type"
+                name="project-type"
+                style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:0.95rem;"
+              >
+                <option value="">Select an option</option>
+                <option>Website design</option>
+                <option>Web app / client portal</option>
+                <option>AI chatbot / automation</option>
+                <option>Branding / visual identity</option>
+                <option>Media / content</option>
+                <option>Care plan / ongoing support</option>
+                <option>Something else</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom:12px;">
+              <label for="budget" style="display:block; font-size:0.9rem; margin-bottom:4px;">Rough budget (optional)</label>
+              <select
+                id="budget"
+                name="budget"
+                style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:0.95rem;"
+              >
+                <option value="">Not sure yet</option>
+                <option>Under £300</option>
+                <option>£300 – £600</option>
+                <option>£600 – £1,500</option>
+                <option>£1,500 – £3,000</option>
+                <option>£3,000+</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom:16px;">
+              <label for="message" style="display:block; font-size:0.9rem; margin-bottom:4px;">Tell me a bit about your project</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="5"
+                required
+                style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:0.95rem; resize:vertical;"
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              class="btn"
+              style="border:none; cursor:pointer;"
+            >
+              Send message
+            </button>
+          </form>
+        </div>
+
+        <!-- CONTACT INFO / SIDE PANEL -->
+        <div class="card">
+          <h3 style="margin-bottom:10px;">Other ways to reach out</h3>
+          <p style="font-size:0.95rem; color:#4b5563; margin-bottom:10px;">
+            If you prefer, you can also get in touch directly:
+          </p>
+
+          <p style="font-size:0.9rem; color:#4b5563; margin-bottom:6px;">
+            <strong>Email:</strong>
+            <!-- TODO: replace this with your real email once set up -->
+            <a href="mailto:hello@brightfoundry.test">hello@brightfoundry.test</a>
+          </p>
+
+          <p style="font-size:0.9rem; color:#4b5563; margin-bottom:6px;">
+            <strong>Location:</strong> South Wales, UK (working with clients UK-wide)
+          </p>
+
+          <p style="font-size:0.9rem; color:#4b5563; margin-top:16px;">
+            Typical response time: within 1–2 working days. If it’s something quick, I’ll usually reply sooner.
+          </p>
+
+          <hr style="margin:18px 0; border:none; border-top:1px solid #e5e7eb;" />
+
+          <h3 style="margin-bottom:8px;">What to include (if you can)</h3>
+          <ul style="font-size:0.9rem; color:#4b5563; padding-left:18px;">
+            <li>Your current website (if you have one)</li>
+            <li>What you’d like to improve or build</li>
+            <li>Any deadlines or important dates</li>
+            <li>Anything you’ve seen online that you like</li>
+          </ul>
+
+          <p style="font-size:0.9rem; color:#6b7280; margin-top:12px;">
+            Don’t worry if you’re not sure about any of this — even a rough idea is enough to start.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p>© 2025 BrightFoundry. All rights reserved.</p>
+      <div style="margin-top:6px;">
+        <a href="privacy.html">Privacy Policy</a> •
+        <a href="terms.html">Terms</a> •
+        <a href="cookies.html">Cookies</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

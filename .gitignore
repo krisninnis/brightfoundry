@@ -1,0 +1,12 @@
+# Node modules
+server/node_modules/
+
+# Log files
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Local dev settings
+.env

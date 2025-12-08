@@ -1,0 +1,656 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+  background: #f5f5f5;
+  color: #111827;
+  line-height: 1.6;
+}
+
+/* CONTAINER */
+.container {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* HEADER */
+header {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+header .nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+}
+
+/* LOGO LINK */
+.logo a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #111827;
+}
+
+/* Logo image (generic) */
+.logo-mark {
+  height: 28px;
+  width: auto;
+  display: block;
+}
+
+/* Header logo only (used in main nav) */
+/* Header logo */
+.logo-only {
+  height: 100px;   /* try 60–72px for a chunky header logo */
+  width: auto;
+  display: block;
+}
+
+/* Optional: slightly smaller on mobile */
+@media (max-width: 768px) {
+  .logo-only {
+    height: 44px;
+  }
+}
+
+
+/* NAV LINKS */
+.nav-links a {
+  margin-left: 18px;
+  text-decoration: none;
+  color: #374151;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.nav-links a:hover {
+  color: #f59e0b;
+}
+
+/* Back link inside nav for demo templates */
+.nav-back {
+  font-size: 0.9rem;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  margin-right: 10px;
+  text-decoration: none;
+  color: #4b5563;
+}
+
+.nav-back:hover {
+  border-color: #d1d5db;
+  background: #f9fafb;
+}
+
+/* Muted nav link (e.g. Client login) */
+.nav-link-muted {
+  margin-left: 18px;
+  text-decoration: none;
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.nav-link-muted:hover {
+  color: #111827;
+}
+
+/* BUTTON */
+.btn {
+  display: inline-block;
+  background: #f59e0b;
+  color: #111827;
+  padding: 10px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.btn:hover {
+  background: #fbbf24;
+}
+
+/* HERO */
+.hero {
+  padding: 70px 0 60px;
+}
+
+.hero-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  font-size: 1.05rem;
+  max-width: 550px;
+  color: #4b5563;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* SIMPLE GRID */
+.grid {
+  display: grid;
+  gap: 20px;
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* CARD */
+.card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 18px 18px 20px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
+  border: 1px solid #e5e7eb;
+}
+
+.card h3 {
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.card p {
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+/* SECTION */
+.section {
+  padding: 40px 0;
+}
+
+.section-heading {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.section-heading h2 {
+  font-size: 1.5rem;
+  margin-bottom: 4px;
+}
+
+.section-heading p {
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+/* FOOTER */
+footer {
+  background: #ffffff;
+  padding: 30px 0;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 60px;
+  font-size: 0.85rem;
+}
+
+footer p {
+  color: #6b7280;
+}
+
+footer a {
+  color: #4b5563;
+  text-decoration: none;
+  margin: 0 4px;
+}
+
+footer a:hover {
+  color: #f59e0b;
+}
+
+/* RESPONSIVE - GLOBAL */
+@media (max-width: 768px) {
+  .hero-inner {
+    text-align: left;
+  }
+
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-links {
+    display: none; /* Simple for now; later we can add a mobile menu */
+  }
+}
+
+/* ================================
+   CLIENT PORTAL PREVIEW PAGE
+   ================================ */
+
+.page-portal-preview {
+  background: #f3f4f6;
+}
+
+/* Hero styling just for this page */
+.page-portal-preview .hero.hero-portal {
+  padding: 70px 0 60px;
+  background: radial-gradient(circle at top left, #e0f2fe 0, #f3f4f6 40%, #f3f4f6 100%);
+}
+
+.portal-hero-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  align-items: center;
+}
+
+.portal-hero-copy {
+  flex: 1 1 280px;
+}
+
+.portal-hero-copy h1 {
+  font-size: 2.3rem;
+  line-height: 1.15;
+  margin: 12px 0 10px;
+}
+
+.portal-hero-copy p {
+  max-width: 540px;
+  color: #4b5563;
+}
+
+.portal-meta {
+  margin-top: 14px;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* Fake dashboard preview card */
+.portal-preview-card {
+  flex: 0 0 320px;
+  max-width: 360px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px 18px 16px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+  border: 1px solid #e5e7eb;
+}
+
+.portal-preview-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.portal-preview-block {
+  border-radius: 12px;
+  background: #f9fafb;
+  padding: 12px 12px 10px;
+  margin-bottom: 8px;
+}
+
+.portal-preview-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  padding: 6px 4px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.portal-preview-row:last-child {
+  border-bottom: none;
+}
+
+.portal-preview-row span {
+  color: #6b7280;
+}
+
+.portal-preview-row strong {
+  color: #111827;
+  font-weight: 600;
+}
+
+.portal-preview-footer {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+/* “How it works” strip */
+.section-portal-how {
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.portal-how-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.portal-how-layout h2 {
+  margin-bottom: 6px;
+}
+
+.portal-how-layout p {
+  color: #6b7280;
+}
+
+.portal-how-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+
+.portal-how-list li + li {
+  margin-top: 4px;
+}
+
+/* Small helper link style */
+.text-link-muted {
+  font-size: 0.95rem;
+  color: #4b5563;
+  text-decoration: none;
+}
+
+.text-link-muted:hover {
+  color: #f59e0b;
+}
+
+/* Responsive tweaks for portal preview */
+@media (max-width: 768px) {
+  .portal-hero-copy h1 {
+    font-size: 1.9rem;
+  }
+
+  .portal-preview-card {
+    max-width: 100%;
+  }
+}
+
+/* HOME: client portal teaser */
+.section-home-portal {
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.section-home-portal .card p {
+  font-size: 0.9rem;
+}
+
+/* ================================
+   PORTAL DASHBOARD UX POLISH
+   ================================ */
+
+.portal-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.portal-page-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.portal-page-subtitle {
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+.portal-page-header-actions {
+  flex-shrink: 0;
+}
+
+.portal-cta-button {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.portal-cta-button:hover {
+  border-color: #9ca3af;
+}
+
+/* Sections */
+
+.dashboard-section {
+  margin-bottom: 28px;
+}
+
+.dashboard-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.dashboard-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* make the overview cards look nice when inserted by JS */
+.dashboard-summary-grid .portal-card,
+#dashboard-cards .portal-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px 16px 18px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
+}
+
+/* Split layout for projects + messages */
+.dashboard-section-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.4fr);
+  gap: 20px;
+}
+
+.dashboard-list-card {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  padding: 10px 10px 8px;
+}
+
+/* Rows inside list cards */
+
+.dashboard-item-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dashboard-item-row:last-child {
+  border-bottom: none;
+}
+
+.dashboard-item-main {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.dashboard-item-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.dashboard-item-sub {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.dashboard-item-tag {
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.dashboard-item-preview {
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+/* Empty state text */
+.empty-state-text {
+  font-size: 0.9rem;
+  color: #6b7280;
+  padding: 10px 8px;
+}
+
+/* Support strip */
+
+.dashboard-support-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  padding: 12px 14px;
+}
+
+.support-pill {
+  display: inline-flex;
+  flex-direction: column;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #f3f4f6;
+}
+
+.support-pill-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+}
+
+.support-pill-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.support-link {
+  margin-left: auto;
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: #2563eb;
+}
+
+.support-link:hover {
+  text-decoration: underline;
+}
+
+/* Responsive tweaks for dashboard */
+
+@media (max-width: 900px) {
+  .dashboard-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-section-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dashboard-support-strip {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .support-link {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-summary-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Dark theme adjustments */
+.theme-dark .dashboard-list-card,
+.theme-dark .dashboard-support-strip,
+.theme-dark .dashboard-summary-grid .portal-card,
+.theme-dark #dashboard-cards .portal-card {
+  background: #020617;
+  border-color: #1f2937;
+}
+
+.theme-dark .dashboard-item-title,
+.theme-dark .support-pill-value {
+  color: #e5e7eb;
+}
+
+.theme-dark .dashboard-item-sub,
+.theme-dark .dashboard-item-preview,
+.theme-dark .empty-state-text,
+.theme-dark .portal-page-subtitle {
+  color: #9ca3af;
+}
+
+.theme-dark .support-pill {
+  background: #111827;
+}
+
+.theme-dark .support-link {
+  color: #60a5fa;
+}

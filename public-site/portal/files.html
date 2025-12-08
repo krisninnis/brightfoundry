@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Portal – Files</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <div class="portal-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="portal-sidebar">
+      <div class="portal-brand">
+        <img
+          src="../img/brightfoundry-logo-light.png"
+          alt="BrightFoundry logo"
+          class="portal-brand-logo"
+        />
+        <div class="portal-brand-text">Client Portal</div>
+      </div>
+
+      <!-- MAIN NAV -->
+      <nav class="portal-nav portal-nav-group">
+        <a href="dashboard.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🏠</span>
+          <span class="portal-nav-label">Dashboard</span>
+        </a>
+        <a href="projects.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📁</span>
+          <span class="portal-nav-label">Projects</span>
+        </a>
+        <a href="files.html" class="portal-nav-link is-active">
+          <span class="portal-nav-icon">📄</span>
+          <span class="portal-nav-label">Files</span>
+        </a>
+        <a href="messages.html" class="portal-nav-link">
+          <span class="portal-nav-icon">💬</span>
+          <span class="portal-nav-label">Messages</span>
+        </a>
+        <a href="support.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🛟</span>
+          <span class="portal-nav-label">Support</span>
+        </a>
+        <a href="invoices.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🧾</span>
+          <span class="portal-nav-label">Invoices</span>
+        </a>
+        <a href="timeline.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📅</span>
+          <span class="portal-nav-label">Timeline</span>
+        </a>
+      </nav>
+
+      <!-- ACCOUNT CHIP + MENU -->
+      <div class="portal-sidebar-bottom">
+        <button class="portal-account-chip" type="button" id="portal-account-chip">
+          <div class="portal-account-avatar">
+            <img src="" alt="Profile avatar" class="portal-avatar-img" />
+          </div>
+          <div class="portal-account-meta">
+            <div class="portal-account-name">Your Client</div>
+            <div class="portal-account-sub">Client account</div>
+          </div>
+          <div class="portal-account-chevron">▾</div>
+        </button>
+
+        <div class="portal-account-menu" id="portal-account-menu">
+          <a href="settings.html" class="portal-account-menu-item">
+            ⚙️ <span>Account settings</span>
+          </a>
+          <button type="button" class="portal-account-menu-item portal-account-menu-item-muted">
+            ➕ <span>Add another account</span>
+          </button>
+          <a
+            href="login.html"
+            class="portal-account-menu-item portal-account-menu-danger"
+            data-logout
+          >
+            🚪 <span>Log out</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN COLUMN -->
+    <div class="portal-main">
+
+      <!-- TOPBAR -->
+      <header class="portal-topbar">
+        <div class="portal-topbar-inner">
+          <div class="portal-topbar-left">
+            <div class="topbar-title">Files</div>
+            <div class="topbar-subtitle">
+              All shared files and assets for your projects.
+            </div>
+          </div>
+
+          <div class="portal-topbar-right">
+            <button class="portal-theme-toggle" type="button">
+              Toggle theme
+            </button>
+            <div class="portal-avatar">
+              <img src="" alt="Profile avatar" class="portal-avatar-img" />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <main class="portal-main-inner">
+        <div class="portal-page-heading">
+          <h1>Your files &amp; assets</h1>
+          <p>Browse designs, documents and project assets in one place.</p>
+        </div>
+
+        <!-- Controls row: search + filters -->
+        <div class="files-controls-row">
+          <input
+            type="text"
+            id="files-search"
+            class="files-search-input"
+            placeholder="Search files..."
+          />
+
+          <div class="files-filter-group">
+            <button
+              type="button"
+              class="files-filter-btn is-active"
+              data-filter="all"
+            >
+              All
+            </button>
+            <button
+              type="button"
+              class="files-filter-btn"
+              data-filter="images"
+            >
+              Images
+            </button>
+            <button
+              type="button"
+              class="files-filter-btn"
+              data-filter="documents"
+            >
+              Documents
+            </button>
+          </div>
+        </div>
+
+        <!-- Files list card -->
+        <div class="files-list">
+          <div class="files-header">
+            <div>File</div>
+            <div>Project</div>
+            <div>Uploaded</div>
+          </div>
+          <div id="files-list">
+            <!-- Rows filled by JS in main.js -->
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="portal-bottom-nav">
+    <div class="portal-bottom-nav-inner">
+      <a href="dashboard.html" class="portal-bottom-link" id="nav-dashboard">
+        <div class="portal-bottom-icon">🏠</div>
+        <span>Home</span>
+      </a>
+      <a href="projects.html" class="portal-bottom-link" id="nav-projects">
+        <div class="portal-bottom-icon">📁</div>
+        <span>Projects</span>
+      </a>
+      <a href="files.html" class="portal-bottom-link is-active" id="nav-files">
+        <div class="portal-bottom-icon">📄</div>
+        <span>Files</span>
+      </a>
+      <a href="messages.html" class="portal-bottom-link" id="nav-messages">
+        <div class="portal-bottom-icon">💬</div>
+        <span>Messages</span>
+      </a>
+      <a href="support.html" class="portal-bottom-link" id="nav-support">
+        <div class="portal-bottom-icon">🛟</div>
+        <span>Support</span>
+      </a>
+    </div>
+  </nav>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

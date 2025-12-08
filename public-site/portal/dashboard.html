@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Portal – Dashboard</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <div class="portal-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="portal-sidebar">
+      <div class="portal-brand">
+        <img
+          src="../img/brightfoundry-logo-light.png"
+          alt="BrightFoundry logo"
+          class="portal-brand-logo"
+        />
+        <div class="portal-brand-text">Client Portal</div>
+      </div>
+
+      <!-- MAIN NAV (wrapped in nav-group so it sits in a container/box) -->
+      <nav class="portal-nav portal-nav-group">
+        <a href="dashboard.html" class="portal-nav-link is-active">
+          <span class="portal-nav-icon">🏠</span>
+          <span class="portal-nav-label">Dashboard</span>
+        </a>
+        <a href="projects.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📁</span>
+          <span class="portal-nav-label">Projects</span>
+        </a>
+        <a href="files.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📄</span>
+          <span class="portal-nav-label">Files</span>
+        </a>
+        <a href="messages.html" class="portal-nav-link">
+          <span class="portal-nav-icon">💬</span>
+          <span class="portal-nav-label">Messages</span>
+        </a>
+        <a href="support.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🛟</span>
+          <span class="portal-nav-label">Support</span>
+        </a>
+        <a href="invoices.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🧾</span>
+          <span class="portal-nav-label">Invoices</span>
+        </a>
+        <a href="timeline.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📅</span>
+          <span class="portal-nav-label">Timeline</span>
+        </a>
+      </nav>
+
+      <!-- BOTTOM GROUP (account chip + dropdown) -->
+      <div class="portal-sidebar-bottom">
+        <button class="portal-account-chip" type="button" id="portal-account-chip">
+          <div class="portal-account-avatar">
+            <img src="" alt="Profile avatar" class="portal-avatar-img" />
+          </div>
+          <div class="portal-account-meta">
+            <div class="portal-account-name">Your Client</div>
+            <div class="portal-account-sub">Client account</div>
+          </div>
+          <div class="portal-account-chevron">▾</div>
+        </button>
+
+        <div class="portal-account-menu" id="portal-account-menu">
+          <a href="settings.html" class="portal-account-menu-item">
+            ⚙️ <span>Account settings</span>
+          </a>
+          <button type="button" class="portal-account-menu-item portal-account-menu-item-muted">
+            ➕ <span>Add another account</span>
+          </button>
+          <a href="login.html"
+             class="portal-account-menu-item portal-account-menu-danger"
+             data-logout>
+            🚪 <span>Log out</span>
+          </a>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- MAIN COLUMN -->
+    <div class="portal-main">
+
+      <!-- TOPBAR -->
+      <header class="portal-topbar">
+        <div class="portal-topbar-inner">
+          <div class="portal-topbar-left">
+            <div class="topbar-title">Dashboard</div>
+            <div class="topbar-subtitle">
+              Welcome back, <span>Your Client</span>
+            </div>
+          </div>
+
+          <div class="portal-topbar-right">
+            <button class="portal-theme-toggle" type="button">
+              Toggle theme
+            </button>
+            <div class="portal-avatar">
+              <img src="" alt="Profile avatar" class="portal-avatar-img" />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- MAIN CONTENT -->
+      <main class="portal-main-inner">
+
+        <!-- Page header -->
+        <div class="portal-page-header">
+          <div>
+            <h1 class="portal-page-title">Dashboard</h1>
+            <p class="portal-page-subtitle">
+              A quick overview of your projects, messages and support.
+            </p>
+          </div>
+          <!-- Removed second Toggle theme button to avoid duplicates -->
+        </div>
+
+        <!-- Overview summary cards -->
+        <section class="dashboard-section">
+          <h2 class="dashboard-section-title">Overview</h2>
+          <div id="dashboard-cards" class="dashboard-summary-grid">
+            <!-- JS fills this with three cards -->
+          </div>
+        </section>
+
+        <!-- Recent activity -->
+        <section class="dashboard-section dashboard-section-split">
+          <div class="dashboard-column">
+            <h2 class="dashboard-section-title">Recent projects</h2>
+            <div id="dashboard-projects" class="dashboard-list-card">
+              <!-- Rendered in JS -->
+            </div>
+          </div>
+
+          <div class="dashboard-column">
+            <h2 class="dashboard-section-title">Latest messages</h2>
+            <div id="dashboard-messages" class="dashboard-list-card">
+              <!-- Rendered in JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Support snapshot -->
+        <section class="dashboard-section">
+          <h2 class="dashboard-section-title">Support</h2>
+          <div class="dashboard-support-strip">
+            <div class="support-pill">
+              <span class="support-pill-label">Open tickets</span>
+              <span class="support-pill-value" id="dashboard-open-tickets">0</span>
+            </div>
+            <div class="support-pill">
+              <span class="support-pill-label">Recently resolved</span>
+              <span class="support-pill-value" id="dashboard-resolved-tickets">0</span>
+            </div>
+            <a href="support.html" class="support-link">View all support tickets →</a>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="portal-bottom-nav">
+    <div class="portal-bottom-nav-inner">
+      <a href="dashboard.html" class="portal-bottom-link is-active" id="nav-dashboard">
+        <div class="portal-bottom-icon">🏠</div>
+        <span>Home</span>
+      </a>
+      <a href="projects.html" class="portal-bottom-link" id="nav-projects">
+        <div class="portal-bottom-icon">📁</div>
+        <span>Projects</span>
+      </a>
+      <a href="files.html" class="portal-bottom-link" id="nav-files">
+        <div class="portal-bottom-icon">📄</div>
+        <span>Files</span>
+      </a>
+      <a href="messages.html" class="portal-bottom-link" id="nav-messages">
+        <div class="portal-bottom-icon">💬</div>
+        <span>Messages</span>
+      </a>
+      <a href="support.html" class="portal-bottom-link" id="nav-support">
+        <div class="portal-bottom-icon">🛟</div>
+        <span>Support</span>
+      </a>
+    </div>
+  </nav>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

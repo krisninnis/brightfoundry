@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Portal – Projects</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <div class="portal-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="portal-sidebar">
+      <div class="portal-brand">
+        <img src="../img/brightfoundry-logo-light.png"
+             alt="BrightFoundry logo"
+             class="portal-brand-logo" />
+        <div class="portal-brand-text">Client Portal</div>
+      </div>
+
+      <!-- MAIN NAV -->
+      <nav class="portal-nav portal-nav-group">
+        <a href="dashboard.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🏠</span>
+          <span class="portal-nav-label">Dashboard</span>
+        </a>
+        <a href="projects.html" class="portal-nav-link is-active">
+          <span class="portal-nav-icon">📁</span>
+          <span class="portal-nav-label">Projects</span>
+        </a>
+        <a href="files.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📄</span>
+          <span class="portal-nav-label">Files</span>
+        </a>
+        <a href="messages.html" class="portal-nav-link">
+          <span class="portal-nav-icon">💬</span>
+          <span class="portal-nav-label">Messages</span>
+        </a>
+        <a href="support.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🛟</span>
+          <span class="portal-nav-label">Support</span>
+        </a>
+        <a href="invoices.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🧾</span>
+          <span class="portal-nav-label">Invoices</span>
+        </a>
+        <a href="timeline.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📅</span>
+          <span class="portal-nav-label">Timeline</span>
+        </a>
+      </nav>
+
+      <!-- ACCOUNT CHIP + MENU -->
+      <div class="portal-sidebar-bottom">
+        <button class="portal-account-chip" type="button" id="portal-account-chip">
+          <div class="portal-account-avatar">
+            <img src="" alt="Profile avatar" class="portal-avatar-img" />
+          </div>
+          <div class="portal-account-meta">
+            <div class="portal-account-name">Your Client</div>
+            <div class="portal-account-sub">Client account</div>
+          </div>
+          <div class="portal-account-chevron">▾</div>
+        </button>
+
+        <div class="portal-account-menu" id="portal-account-menu">
+          <a href="settings.html" class="portal-account-menu-item">
+            ⚙️ <span>Account settings</span>
+          </a>
+          <button type="button" class="portal-account-menu-item portal-account-menu-item-muted">
+            ➕ <span>Add another account</span>
+          </button>
+          <a href="login.html"
+             class="portal-account-menu-item portal-account-menu-danger"
+             data-logout>
+            🚪 <span>Log out</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN COLUMN -->
+    <div class="portal-main">
+
+      <!-- TOPBAR -->
+      <header class="portal-topbar">
+        <div class="portal-topbar-inner">
+          <div class="portal-topbar-left">
+            <div class="topbar-title">Projects</div>
+            <div class="topbar-subtitle">
+              All active and completed work in one place.
+            </div>
+          </div>
+
+          <div class="portal-topbar-right">
+            <button class="portal-theme-toggle" type="button">
+              Toggle theme
+            </button>
+            <div class="portal-avatar">
+              <img src="" alt="Profile avatar" class="portal-avatar-img" />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <main class="portal-main-inner">
+        <div class="portal-page-heading">
+          <h1>Your projects</h1>
+          <p>Live overview of the projects we’re working on together.</p>
+        </div>
+
+        <!-- PROJECTS CONTROLS (single row) -->
+        <div class="projects-controls">
+          <!-- Search -->
+          <input
+            type="text"
+            id="projects-search"
+            class="projects-search"
+            placeholder="Search projects..."
+          />
+
+          <!-- Filters -->
+          <div class="projects-filters">
+            <button class="projects-filter-btn is-active" data-filter="all">All</button>
+            <button class="projects-filter-btn" data-filter="active">Active</button>
+            <button class="projects-filter-btn" data-filter="completed">Completed</button>
+          </div>
+        </div>
+
+        <!-- PROJECTS TABLE CARD -->
+        <div class="projects-list">
+          <div class="projects-header">
+            <div>Project</div>
+            <div>Phase</div>
+            <div>Status</div>
+          </div>
+          <div id="projects-list">
+            <!-- Rows filled by JS in main.js -->
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="portal-bottom-nav">
+    <div class="portal-bottom-nav-inner">
+      <a href="dashboard.html" class="portal-bottom-link" id="nav-dashboard">
+        <div class="portal-bottom-icon">🏠</div>
+        <span>Home</span>
+      </a>
+      <a href="projects.html" class="portal-bottom-link is-active" id="nav-projects">
+        <div class="portal-bottom-icon">📁</div>
+        <span>Projects</span>
+      </a>
+      <a href="files.html" class="portal-bottom-link" id="nav-files">
+        <div class="portal-bottom-icon">📄</div>
+        <span>Files</span>
+      </a>
+      <a href="messages.html" class="portal-bottom-link" id="nav-messages">
+        <div class="portal-bottom-icon">💬</div>
+        <span>Messages</span>
+      </a>
+      <a href="support.html" class="portal-bottom-link" id="nav-support">
+        <div class="portal-bottom-icon">🛟</div>
+        <span>Support</span>
+      </a>
+    </div>
+  </nav>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+🌐 PHASE 9 — BrightFoundry Website Builder (Separate SaaS Product)
+STAGE 1 — Foundation
+
+Brand name: BrightFoundry Builder or BrightFoundry Studio
+
+Positioning
+
+Feature set
+
+Competitor analysis (Squarespace, Wix, Webflow, Dorik, Typedream)
+
+Architecture & technology choice
+
+Subscription model
+
+STAGE 2 — Builder Core
+
+The essential builder engine:
+
+Project system
+
+Page manager
+
+Section/block library
+
+Styles & themes
+
+Live Preview
+
+Publish system
+
+Hosting
+
+STAGE 3 — User Dashboard
+
+Separate from your client portal:
+
+My Websites
+
+Billing
+
+Domains
+
+Templates
+
+Assets
+
+Settings
+
+Collaborators
+
+STAGE 4 — Templates & Blocks Marketplace
+
+Create templates like:
+
+Restaurant website
+
+Builder homepage
+
+Personal brand site
+
+Portfolio
+
+Coaching funnel
+
+Section blocks like:
+
+Hero
+
+About
+
+Features
+
+Contact
+
+Pricing
+
+Testimonials
+
+Gallery
+
+STAGE 5 — AI Integration
+
+AI Assists with content
+
+AI generates page sections
+
+AI rewrites website copy
+
+AI design suggestions
+
+AI chat assistant inside editor
+
+STAGE 6 — Public Launch
+
+Marketing page
+
+Waitlist
+
+Beta testers
+
+Demo videos
+
+Tutorials
+
+Subscription rollout

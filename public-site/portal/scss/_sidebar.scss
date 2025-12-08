@@ -1,0 +1,124 @@
+.portal-sidebar {
+  background: $color-sidebar-bg;
+  border-right: 1px solid $color-sidebar-border;
+  color: #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 16px;
+}
+
+.portal-sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+
+  img {
+    height: 120px;           // ⬅ bigger logo
+    width: auto;
+    border-radius: 16px;
+  }
+
+  span {
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    color: #9ca3af;
+  }
+}
+
+
+.portal-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: auto;
+}
+
+.portal-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  color: #9ca3af;
+  cursor: pointer;
+  transition:
+    background 0.16s ease,
+    color 0.16s ease,
+    transform 0.08s ease,
+    box-shadow 0.16s ease;
+}
+
+.portal-nav-link:hover {
+  background: rgba(148, 163, 184, 0.18);
+  color: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.portal-nav-link.is-active {
+  background: #f59e0b;
+  color: #111827;
+  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.45);
+}
+
+.portal-nav-icon {
+  height: 20px;
+  width: 20px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(148, 163, 184, 0.6);
+  background: radial-gradient(circle at 30% 30%, #facc15, transparent 55%);
+}
+
+/* Bottom section (settings / logout) */
+.portal-sidebar-bottom {
+  margin-top: 26px;
+  border-top: 1px solid rgba(148, 163, 184, 0.22);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+@include respond($bp-md) {
+  .portal-sidebar-logo span {
+    display: none;
+  }
+
+  .portal-nav-link span {
+    display: none;
+  }
+
+  .portal-nav-link {
+    justify-content: center;
+    border-radius: 14px;
+  }
+}
+
+@include respond($bp-sm) {
+  .portal-sidebar {
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 12px;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+  }
+
+  .portal-sidebar-bottom {
+    display: none;
+  }
+
+  .portal-sidebar-logo {
+    margin-bottom: 0;
+    margin-right: 12px;
+  }
+
+  .portal-sidebar-nav {
+    flex-direction: row;
+    gap: 6px;
+  }
+}
