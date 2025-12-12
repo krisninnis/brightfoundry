@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Portal – BrightFoundry</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ==========================
+       HEADER
+  =========================== -->
+  <header>
+    <div class="container">
+      <div class="nav-inner">
+
+        <!-- LOGO -->
+        <div class="logo">
+          <a href="index.html">
+            <img
+              src="img/brightfoundry-logo-light.png"
+              alt="BrightFoundry logo"
+              class="logo-only"
+            />
+          </a>
+        </div>
+
+        <!-- NAVIGATION -->
+        <nav class="nav-links">
+          <a href="services.html">Services</a>
+          <a href="portfolio.html">Portfolio</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="about.html">About</a>
+          <a href="faqs.html">FAQs</a>
+          <a href="contact.html" class="btn">Contact</a>
+          <a href="portal/login.html" class="nav-link-muted">Client Login</a>
+        </nav>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================
+       HERO (SPLIT LAYOUT)
+  =========================== -->
+  <section class="hero hero-portal">
+    <div class="container">
+      <div class="hero-inner hero-portal-inner">
+        <div class="hero-portal-copy">
+          <span class="badge">Included with every project</span>
+
+          <h1>Your own private client portal for every project.</h1>
+          <p>
+            Track progress, access files, view invoices and get support — all in one clean,
+            secure dashboard instead of chasing long email threads.
+          </p>
+
+          <div class="hero-actions">
+            <a href="contact.html" class="btn">Start a project</a>
+            <a href="portal/login.html" class="hero-secondary-link">
+              Existing client? Log in →
+            </a>
+          </div>
+
+          <ul class="hero-portal-points">
+            <li>All projects, files and invoices in one place</li>
+            <li>Simple messaging & support instead of messy email chains</li>
+            <li>Works on desktop, tablet and phone</li>
+          </ul>
+        </div>
+
+        <div class="hero-portal-media">
+          <div class="portal-browser-frame">
+            <!-- Replace this image with your best dashboard screenshot -->
+            <img
+              src="img/portal/dashboard.png"
+              alt="BrightFoundry client portal dashboard preview"
+              loading="lazy"
+            />
+          </div>
+          <p class="hero-portal-caption">
+            A clean, modern dashboard view your clients can log into at any time.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================
+       PORTAL SLIDESHOW
+  =========================== -->
+  <section class="section section-tight">
+    <div class="container">
+      <div class="section-heading">
+        <h2>See the portal in action</h2>
+        <p>A quick look at the main screens you’ll use inside the portal.</p>
+      </div>
+
+      <div class="portal-slideshow" aria-label="Client portal screenshots">
+        <button class="portal-slide-btn prev" aria-label="Previous screenshot">
+          ‹
+        </button>
+
+        <div class="portal-slide">
+          <img
+            id="portal-slide-image"
+            src="img/portal/dashboard.png"
+            alt="Client portal dashboard"
+            loading="lazy"
+          />
+          <div class="portal-slide-meta">
+            <h3 id="portal-slide-title">Dashboard overview</h3>
+            <p id="portal-slide-caption">
+              See your current projects, recent activity and quick stats in one clean view.
+            </p>
+          </div>
+        </div>
+
+        <button class="portal-slide-btn next" aria-label="Next screenshot">
+          ›
+        </button>
+      </div>
+
+      <p class="portal-slideshow-hint">
+        Tip: You can also use your keyboard’s ← and → arrow keys.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==========================
+       CORE BENEFITS
+  =========================== -->
+  <section class="section">
+    <div class="container">
+      <div class="section-heading">
+        <h2>Everything in one place, instead of scattered everywhere.</h2>
+        <p>
+          The BrightFoundry client portal keeps your project organised from day one —
+          so you always know where things are and what’s happening next.
+        </p>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>Project overview</h3>
+          <p>
+            See your active projects at a glance, with clear statuses, due dates and notes
+            so you always know what stage we’re at.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Messaging</h3>
+          <p>
+            Send and receive messages right inside the portal, so important decisions
+            don’t get lost in your inbox or DMs.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Files & assets</h3>
+          <p>
+            Access designs, documents, exports and handover files from one tidy place
+            without digging through downloads.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Invoices & billing</h3>
+          <p>
+            View past and upcoming invoices, keep track of what’s been paid and
+            see everything related to billing in one view.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Support & tickets</h3>
+          <p>
+            Log support requests, ask questions and track responses without needing
+            to write long emails each time.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Timeline of updates</h3>
+          <p>
+            A simple activity feed shows when key things happen — like new files,
+            milestone completions or support replies.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================
+       HOW IT WORKS
+  =========================== -->
+  <section class="section section-tight">
+    <div class="container">
+      <div class="section-heading">
+        <h2>How your portal works</h2>
+        <p>Simple to use on desktop, tablet or phone — no logins to multiple tools.</p>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>1. We start a project</h3>
+          <p style="font-size:0.95rem; color:#4b5563;">
+            Once we’ve agreed the scope and proposal, your project is created in the portal
+            and you’ll receive your login details.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>2. You log in anytime</h3>
+          <p style="font-size:0.95rem; color:#4b5563;">
+            Use your email and password to log in securely, check updates and send messages
+            whenever it suits you.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>3. Everything stays organised</h3>
+          <p style="font-size:0.95rem; color:#4b5563;">
+            As we design, build and launch, all the important steps, files and invoices
+            are kept together so nothing goes missing.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================
+       PERFECT FOR
+  =========================== -->
+  <section class="section section-muted">
+    <div class="container">
+      <div class="section-heading">
+        <h2>Designed for real small businesses, not big IT teams.</h2>
+        <p>
+          The portal is deliberately simple — clear labels, friendly language and no
+          complicated settings to manage.
+        </p>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>Local services</h3>
+          <p>
+            Trades, salons, clinics and small practices who just want a clear place
+            to see what’s going on.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Solo founders</h3>
+          <p>
+            Coaches, creators and one-person businesses balancing client work, marketing and admin.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Growing teams</h3>
+          <p>
+            Small teams who want a shared view of their website, app or portal project
+            without extra tools.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================
+       CTA
+  =========================== -->
+  <section class="section">
+    <div class="container">
+      <div class="card">
+        <h2 style="margin-bottom:8px;">Want your next project to feel more organised?</h2>
+        <p style="margin-bottom:16px;">
+          Every website, app or portal build with BrightFoundry comes with access to your own client portal.
+          If you’d like to see how it works, we can walk through it on a short call.
+        </p>
+        <a href="contact.html" class="btn">Talk about a project</a>
+        <p style="margin-top:10px; font-size:0.9rem; color:#6b7280;">
+          Already working together?
+          <a href="portal/login.html" style="color:#2563eb;">Log in to your portal →</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================
+       FOOTER
+  =========================== -->
+  <footer>
+    <div class="container">
+      <p>© 2025 BrightFoundry. All rights reserved.</p>
+      <div style="margin-top:6px;">
+        <a href="privacy.html">Privacy Policy</a> •
+        <a href="terms.html">Terms</a> •
+        <a href="cookies.html">Cookies</a> •
+        <a href="portal/login.html">Client Login</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================
+       PORTAL SLIDESHOW SCRIPT
+  =========================== -->
+  <script>
+    // Simple portal screenshot slider
+    document.addEventListener("DOMContentLoaded", function () {
+      const slides = [
+        {
+          src: "img/portal/dashboard.png",
+          title: "Dashboard overview",
+          caption: "See your current projects, recent activity and quick stats in one clean view."
+        },
+        {
+          src: "img/portal/projects.png",
+          title: "Projects list",
+          caption: "View all your active projects, statuses and key details at a glance."
+        },
+        {
+          src: "img/portal/messages.png",
+          title: "Messages",
+          caption: "Keep conversations in one place instead of chasing long email threads."
+        },
+        {
+          src: "img/portal/files.png",
+          title: "Files & assets",
+          caption: "Download designs, documents and handover files from a single, organised space."
+        },
+        {
+          src: "img/portal/invoices.png",
+          title: "Invoices",
+          caption: "See past and upcoming invoices together so you always know what’s been paid."
+        },
+        {
+          src: "img/portal/support.png",
+          title: "Support tickets",
+          caption: "Log support requests, see their status and view replies whenever you need."
+        },
+        {
+          src: "img/portal/timeline.png",
+          title: "Timeline",
+          caption: "A simple activity feed that shows progress as we move through the project."
+        },
+        {
+          src: "img/portal/settings.png",
+          title: "Account settings",
+          caption: "Update your details, avatar and preferences in just a few clicks."
+        }
+      ];
+
+      let currentIndex = 0;
+
+      const imgEl = document.getElementById("portal-slide-image");
+      const titleEl = document.getElementById("portal-slide-title");
+      const captionEl = document.getElementById("portal-slide-caption");
+      const prevBtn = document.querySelector(".portal-slide-btn.prev");
+      const nextBtn = document.querySelector(".portal-slide-btn.next");
+
+      function renderSlide(index) {
+        const slide = slides[index];
+        imgEl.src = slide.src;
+        imgEl.alt = slide.title;
+        titleEl.textContent = slide.title;
+        captionEl.textContent = slide.caption;
+      }
+
+      function showNext() {
+        currentIndex = (currentIndex + 1) % slides.length;
+        renderSlide(currentIndex);
+      }
+
+      function showPrev() {
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+        renderSlide(currentIndex);
+      }
+
+      if (prevBtn && nextBtn) {
+        prevBtn.addEventListener("click", showPrev);
+        nextBtn.addEventListener("click", showNext);
+      }
+
+      // Keyboard navigation (left/right arrows)
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "ArrowLeft") showPrev();
+        if (event.key === "ArrowRight") showNext();
+      });
+
+      // Initial render
+      renderSlide(currentIndex);
+    });
+  </script>
+
+</body>
+</html>

@@ -2,11 +2,30 @@
   "name": "brightfoundry-server",
   "version": "1.0.0",
   "main": "server.js",
+  "description": "",
+  "author": "",
+  "license": "ISC",
   "scripts": {
-    "start": "node server.js"
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:studio": "npx prisma studio",
+    "prisma:seed": "node prisma/seed.js"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   },
   "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.1.0",
+    "@prisma/client": "^7.0.0",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
-    "express": "^4.21.0"
+    "dotenv": "^17.2.3",
+    "express": "^4.22.1",
+    "jsonwebtoken": "^9.0.3",
+    "prisma": "^7.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }

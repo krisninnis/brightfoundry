@@ -88,7 +88,8 @@
           <div class="portal-topbar-left">
             <div class="topbar-title">Settings</div>
             <div class="topbar-subtitle">
-              Manage your profile, notifications and security.
+              Manage your profile, notifications and security,
+              <span class="portal-account-name">Your Client</span>.
             </div>
           </div>
 
@@ -132,7 +133,7 @@
 
                   <div class="settings-profile-actions">
                     <input
-                      id="settings-avatar"
+                      id="portal-avatar-input"
                       type="file"
                       class="settings-input"
                       accept="image/*"
@@ -142,7 +143,7 @@
                       in the sidebar and top-right.
                     </p>
                     <button type="button"
-                            id="settings-avatar-remove"
+                            id="portal-avatar-remove"
                             class="portal-btn portal-btn-muted"
                             style="margin-top:8px;">
                       Remove profile photo
@@ -151,45 +152,49 @@
                 </div>
               </div>
 
-              <div class="settings-field">
-                <label class="settings-label" for="settings-name">Name</label>
-                <input
-                  id="settings-name"
-                  type="text"
-                  class="settings-input"
-                  placeholder="Your name"
-                  value="Your Client"
-                />
-              </div>
+              <!-- Account form wired to API -->
+              <form id="settings-form" class="settings-form">
+                <label class="settings-field" for="settings-name">
+                  <span class="settings-label">Name</span>
+                  <input
+                    id="settings-name"
+                    type="text"
+                    class="settings-input"
+                    placeholder="Your name"
+                    autocomplete="name"
+                  />
+                </label>
 
-              <div class="settings-field">
-                <label class="settings-label" for="settings-email">Email</label>
-                <input
-                  id="settings-email"
-                  type="email"
-                  class="settings-input"
-                  placeholder="you@example.com"
-                  value="client@example.com"
-                />
-              </div>
+                <label class="settings-field" for="settings-email">
+                  <span class="settings-label">Email</span>
+                  <input
+                    id="settings-email"
+                    type="email"
+                    class="settings-input"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                  />
+                </label>
 
-              <div class="settings-field">
-                <label class="settings-label" for="settings-company">Business / project name</label>
-                <input
-                  id="settings-company"
-                  type="text"
-                  class="settings-input"
-                  placeholder="e.g. Bright Bakery"
-                />
-              </div>
+                <label class="settings-field" for="settings-business">
+                  <span class="settings-label">Business / project name</span>
+                  <input
+                    id="settings-business"
+                    type="text"
+                    class="settings-input"
+                    placeholder="e.g. Bright Bakery"
+                    autocomplete="organization"
+                  />
+                </label>
 
-              <button type="button" class="portal-btn settings-btn">
-                Save account details
-              </button>
+                <button type="submit" class="portal-btn settings-btn">
+                  Save account details
+                </button>
 
-              <p class="settings-footnote">
-                This is a demo — details aren’t stored anywhere yet.
-              </p>
+                <p class="settings-footnote" id="settings-status">
+                  This is a demo — details aren’t stored anywhere yet.
+                </p>
+              </form>
             </div>
 
             <!-- Preferences -->
@@ -315,6 +320,9 @@
     </div>
   </nav>
 
+  <!-- Shared config + auth helpers, then main UI logic -->
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

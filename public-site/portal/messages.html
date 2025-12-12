@@ -20,7 +20,6 @@
         <div class="portal-brand-text">Client Portal</div>
       </div>
 
-      <!-- MAIN NAV -->
       <nav class="portal-nav portal-nav-group">
         <a href="dashboard.html" class="portal-nav-link">
           <span class="portal-nav-icon">🏠</span>
@@ -66,31 +65,49 @@
         </button>
 
         <div class="portal-account-menu" id="portal-account-menu">
-          <a href="settings.html" class="portal-account-menu-item">
-            ⚙️ <span>Account settings</span>
-          </a>
-          <button type="button" class="portal-account-menu-item portal-account-menu-item-muted">
-            ➕ <span>Add another account</span>
-          </button>
-          <a href="login.html"
-             class="portal-account-menu-item portal-account-menu-danger"
-             data-logout>
-            🚪 <span>Log out</span>
-          </a>
+          <div class="portal-account-menu-inner">
+            <div class="portal-account-menu-header">
+              <div class="portal-account-avatar portal-account-avatar-inline">
+                <img src="" alt="Profile avatar" class="portal-avatar-img" />
+              </div>
+              <div>
+                <div class="portal-account-name" id="portal-account-name-menu">
+                  Your Client
+                </div>
+                <div class="portal-account-sub" id="portal-account-email-menu">
+                  client@example.com
+                </div>
+              </div>
+            </div>
+
+            <div class="portal-account-menu-body">
+              <a href="settings.html" class="portal-account-menu-link">
+                Account &amp; settings
+              </a>
+            </div>
+
+            <div class="portal-account-menu-footer">
+              <button type="button" class="portal-account-menu-link" data-logout>
+                Log out
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </aside>
 
-    <!-- MAIN COLUMN -->
+    <!-- MAIN AREA -->
     <div class="portal-main">
-
-      <!-- TOPBAR -->
       <header class="portal-topbar">
         <div class="portal-topbar-inner">
           <div class="portal-topbar-left">
-            <div class="topbar-title">Messages</div>
-            <div class="topbar-subtitle">
-              Threaded conversations about your projects.
+            <button class="portal-mobile-menu-toggle" type="button" id="portal-mobile-menu-toggle">
+              ☰
+            </button>
+            <div class="portal-breadcrumb">
+              <a href="dashboard.html" class="portal-breadcrumb-link">Dashboard</a>
+              <span class="portal-breadcrumb-separator">/</span>
+              <span class="portal-breadcrumb-current">Messages</span>
             </div>
           </div>
 
@@ -108,27 +125,90 @@
       <!-- CONTENT -->
       <main class="portal-main-inner">
         <div class="portal-page-heading">
-          <h1>Messages &amp; updates</h1>
-          <p>Threaded conversations and updates about your projects.</p>
+          <h1>Messages</h1>
+          <p>Keep all your conversations with the studio in one place.</p>
         </div>
 
-        <!-- Toolbar: search + meta -->
-        <div class="messages-toolbar">
-          <input
-            id="messages-search"
-            type="search"
-            class="messages-search-input"
-            placeholder="Search messages..."
-            autocomplete="off"
-          />
-          <div class="messages-toolbar-meta">
-            <span id="messages-count">0</span> thread(s)
+        <div class="tickets-layout">
+          <!-- LEFT: messages list -->
+          <div>
+            <div class="tickets-toolbar">
+              <input
+                id="messages-search"
+                type="search"
+                class="tickets-search-input"
+                placeholder="Search messages..."
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="tickets-list">
+              <div class="tickets-header">
+                <div>Message</div>
+                <div>Project</div>
+                <div>Updated</div>
+              </div>
+              <div id="messages-list">
+                <!-- filled by JS -->
+              </div>
+            </div>
           </div>
-        </div>
 
-        <!-- Threads list (filled by JS) -->
-        <div class="messages-list" id="messages-list">
-          <!-- Threads filled by JS in main.js -->
+          <!-- RIGHT: new message + helper -->
+          <div class="settings-column">
+            <div class="portal-card">
+              <h3>Send a new message</h3>
+              <p class="settings-help">
+                Share feedback, ask questions or let us know about anything related to your project.
+              </p>
+              <form id="new-message-form" class="settings-form">
+                <label class="settings-field">
+                  <span class="settings-label">Subject</span>
+                  <input
+                    type="text"
+                    id="new-message-subject"
+                    class="settings-input"
+                    placeholder="e.g. Feedback on homepage layout"
+                    required
+                    autocomplete="off"
+                  />
+                </label>
+
+                <label class="settings-field">
+                  <span class="settings-label">Project</span>
+                  <select id="new-message-project" class="settings-input">
+                    <option value="" data-default>
+                      General (not linked to a specific project)
+                    </option>
+                  </select>
+                </label>
+
+                <label class="settings-field">
+                  <span class="settings-label">Message</span>
+                  <textarea
+                    id="new-message-body"
+                    class="settings-input"
+                    rows="4"
+                    placeholder="Write your message here..."
+                    required
+                  ></textarea>
+                </label>
+
+                <p class="settings-footnote" id="new-message-status"></p>
+                <button type="submit" class="portal-btn">
+                  Send message
+                </button>
+              </form>
+            </div>
+
+            <div class="portal-card">
+              <h3>How messaging works</h3>
+              <p class="settings-help">
+                We’ll follow up via the portal and email. Important decisions and approvals stay here so you
+                always have a record of what was agreed.
+              </p>
+            </div>
+          </div>
         </div>
       </main>
     </div>
@@ -160,6 +240,8 @@
     </div>
   </nav>
 
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

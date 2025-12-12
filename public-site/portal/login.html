@@ -89,8 +89,13 @@
         <!-- SUBMIT -->
         <button type="submit" class="portal-btn auth-btn">Sign in</button>
 
+        <!-- ERROR MESSAGE (filled by auth.js) -->
+        <p id="login-error" class="auth-error"></p>
+
         <p class="auth-note">
-          Demo only — any email/password or provider will log you in.
+          For the demo, you can use:
+          <br />
+          <strong>client@example.com</strong> / <strong>client123</strong>
         </p>
       </form>
 
@@ -104,6 +109,8 @@
 
   </div>
 
+  <!-- Shared config (API + auth helpers), then auth logic -->
+  <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
 </body>
 </html>

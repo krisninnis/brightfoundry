@@ -1,40 +1,99 @@
-// BrightFoundry Client Portal JS 
+// BrightFoundry Client Portal JS
 // - Theme toggle (light/dark)
-// - Simple fake auth gate (front-end only)
-// - Demo data rendering for dashboard, projects, files, messages, support, invoices & timeline
-// - Avatar upload (optional) with default gradient fallback
+// - Real auth gate using JWT from config.js
+// - Real API rendering for projects, messages, files, support tickets, invoices & timeline
+// - Avatar upload with localStorage
 // - Account chip dropdown + logout
-// - Search & filters for projects, files, messages, tickets, invoices, timeline
+// - Search & filters
+// - Profile update, support ticket + message creation, invoice status toggling
 
 (function () {
   const THEME_KEY = "bf-portal-theme";
-  const AUTH_KEY = "bf-portal-auth";
-  const AVATAR_KEY = "bf-portal-avatar"; // stores data URL for uploaded avatar
+  const AUTH_STORAGE_KEY = "bf-portal-auth"; // same key used in auth.js
+  const AVATAR_KEY = "bf-portal-avatar";
 
   // --------------------
-  // AUTH HANDLING (simple front-end gate)
+  // AUTH HANDLING
   // --------------------
-  function isLoggedIn() {
-    return localStorage.getItem(AUTH_KEY) === "true";
+  function getAuthState() {
+    try {
+      const raw = localStorage.getItem(AUTH_STORAGE_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (err) {
+      console.warn("Could not read auth state from localStorage", err);
+      return null;
+    }
   }
 
-  function requireAuth() {
-    const path = window.location.pathname;
-    const isAuthPage =
-      path.endsWith("login.html") || path.endsWith("register.html");
+  function setAuthUser(updatedUser) {
+    try {
+      const current = getAuthState();
+      if (!current) return;
+      const next = { ...current, user: updatedUser };
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(next));
+    } catch (err) {
+      console.warn("Could not update auth user in storage", err);
+    }
+  }
 
-    if (!isAuthPage && !isLoggedIn()) {
+  function clearAuthState() {
+    try {
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+    } catch (err) {
+      console.warn("Could not clear auth state", err);
+    }
+  }
+
+  async function ensureAuthAndUser() {
+    const auth = getAuthState();
+    if (!auth || !auth.token) {
+      redirectToLogin();
+      return null;
+    }
+
+    const hasHelpers =
+      typeof API_BASE_URL !== "undefined" &&
+      typeof getAuthHeaders === "function";
+
+    if (!hasHelpers) {
+      console.warn(
+        "API config helpers missing; using stored user only (no /auth/me check)."
+      );
+      return getAuthState()?.user || null;
+    }
+
+    let user = getAuthState()?.user;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/me`, {
+        headers: getAuthHeaders(),
+      });
+      if (!res.ok) throw new Error("Not authenticated");
+
+      const data = await res.json();
+      const freshUser = data.user || data;
+      user = freshUser;
+      setAuthUser(user);
+    } catch (err) {
+      console.warn("Auth check failed, redirecting to login:", err);
+      clearAuthState();
+      redirectToLogin();
+      return null;
+    }
+
+    return user;
+  }
+
+  function redirectToLogin() {
+    const current = window.location.pathname.split("/").pop();
+    if (current !== "login.html" && current !== "register.html") {
       window.location.href = "login.html";
     }
   }
 
-  function logoutAndRedirect() {
-    localStorage.removeItem(AUTH_KEY);
-    window.location.href = "login.html";
-  }
-
   // --------------------
-  // THEME HANDLING
+  // THEME
   // --------------------
   function applyTheme(theme) {
     const body = document.body;
@@ -70,380 +129,428 @@
   }
 
   // --------------------
-  // MESSAGES SEARCH
+  // AVATAR
   // --------------------
-  function initMessagesSearch() {
-    const searchInput = document.getElementById("messages-search");
-    const list = document.getElementById("messages-list");
-    if (!searchInput || !list) return;
-
-    function applyFilter() {
-      const q = searchInput.value.trim().toLowerCase();
-      const threads = Array.from(list.querySelectorAll(".message-thread"));
-      let visibleCount = 0;
-
-      threads.forEach((thread) => {
-        const text = thread.innerText.toLowerCase();
-        const matches = !q || text.includes(q);
-        thread.style.display = matches ? "" : "none";
-        if (matches) visibleCount++;
-      });
-
-      const countEl = document.getElementById("messages-count");
-      if (countEl) {
-        countEl.textContent = visibleCount;
-      }
+  function getStoredAvatar() {
+    try {
+      const raw = localStorage.getItem(AVATAR_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (err) {
+      console.warn("Could not read avatar from storage", err);
+      return null;
     }
-
-    applyFilter();
-    searchInput.addEventListener("input", applyFilter);
   }
 
-  // --------------------
-  // AVATAR HANDLING
-  // --------------------
-  function applyAvatar(dataUrl) {
-    const containers = document.querySelectorAll(
-      ".portal-avatar, .portal-account-avatar, #settings-profile-avatar"
-    );
+  function storeAvatar(dataUrl) {
+    try {
+      const payload = { dataUrl };
+      localStorage.setItem(AVATAR_KEY, JSON.stringify(payload));
+    } catch (err) {
+      console.warn("Could not store avatar", err);
+    }
+  }
 
-    containers.forEach((container) => {
-      if (!container) return;
+  function clearAvatar() {
+    try {
+      localStorage.removeItem(AVATAR_KEY);
+    } catch (err) {
+      console.warn("Could not clear avatar", err);
+    }
+  }
 
-      let img = container.querySelector(".portal-avatar-img");
-      if (!img) {
-        img = document.createElement("img");
-        img.className = "portal-avatar-img";
-        img.alt = "Profile avatar";
-        container.appendChild(img);
-      }
+  function applyAvatarToEls() {
+    const avatar = getStoredAvatar();
+    const src = avatar?.dataUrl || "";
 
-      if (dataUrl) {
-        img.src = dataUrl;
-        container.classList.add("has-photo");
-        img.style.display = "block";
+    const els = document.querySelectorAll(".portal-avatar-img");
+    els.forEach((img) => {
+      if (src) {
+        img.src = src;
+        img.classList.remove("portal-avatar-placeholder");
       } else {
-        img.removeAttribute("src");
-        container.classList.remove("has-photo");
-        img.style.display = "none";
+        img.src =
+          "data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%235652FF'/%3E%3Cstop offset='100%25' stop-color='%23FF6FD8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='80' height='80' rx='16' fill='url(%23g)'/%3E%3C/svg%3E";
+        img.classList.add("portal-avatar-placeholder");
       }
     });
   }
 
   function initAvatar() {
-    const stored = localStorage.getItem(AVATAR_KEY);
-    if (stored) {
-      applyAvatar(stored);
-    } else {
-      applyAvatar(null); // default gradient
-    }
+    applyAvatarToEls();
 
-    // Avatar upload (Settings page)
-    const avatarInput = document.getElementById("settings-avatar");
-    if (avatarInput) {
-      avatarInput.addEventListener("change", function (e) {
+    const input = document.getElementById("portal-avatar-input");
+    if (input) {
+      input.addEventListener("change", function (e) {
         const file = e.target.files && e.target.files[0];
         if (!file) return;
 
         const reader = new FileReader();
         reader.onload = function (evt) {
-          const dataUrl = evt.target.result;
-          try {
-            localStorage.setItem(AVATAR_KEY, dataUrl);
-          } catch (err) {
-            console.warn("Could not store avatar in localStorage", err);
-          }
-          applyAvatar(dataUrl);
+          const dataUrl = evt.target?.result;
+          if (!dataUrl || typeof dataUrl !== "string") return;
+          storeAvatar(dataUrl);
+          applyAvatarToEls();
         };
         reader.readAsDataURL(file);
       });
     }
 
-    // Remove avatar
-    const removeBtn = document.getElementById("settings-avatar-remove");
+    const removeBtn = document.getElementById("portal-avatar-remove");
     if (removeBtn) {
       removeBtn.addEventListener("click", function () {
-        localStorage.removeItem(AVATAR_KEY);
-        applyAvatar(null);
+        clearAvatar();
+        applyAvatarToEls();
       });
     }
   }
 
   // --------------------
-  // LOAD PROJECTS FROM API
+  // DEMO DATA (fallback) – will be overwritten by API
   // --------------------
-  async function loadProjectsFromApi() {
-    try {
-      const res = await fetch("http://localhost:4000/api/projects");
-      if (!res.ok) throw new Error("Failed to fetch projects");
-
-      const data = await res.json();
-
-      // Support either { projects: [...] } or plain array
-      if (Array.isArray(data.projects)) {
-        demoProjects = data.projects;
-      } else if (Array.isArray(data)) {
-        demoProjects = data;
-      }
-
-      // Re-render bits that depend on projects
-      renderDashboardOverview();
-      renderDashboardProjects();
-      renderProjectsList();
-      updateDashboardSupportCounts();
-    } catch (err) {
-      console.warn(
-        "Could not load projects from API, using local demo data instead.",
-        err
-      );
-    }
-  }
-
-  // --------------------
-  // LOAD MESSAGES FROM API
-  // --------------------
-  async function loadMessagesFromApi() {
-    try {
-      const res = await fetch("http://localhost:4000/api/messages");
-      if (!res.ok) throw new Error("Failed to fetch messages");
-
-      const data = await res.json();
-
-      // Support either { messages: [...] } or plain array
-      if (Array.isArray(data.messages)) {
-        messagesData = data.messages;
-      } else if (Array.isArray(data)) {
-        messagesData = data;
-      }
-
-      // Re-render parts that depend on messages
-      renderDashboardOverview();
-      renderDashboardMessages();
-      renderMessagesList();
-
-      // Re-apply search filter so the visible count updates
-      const searchInput = document.getElementById("messages-search");
-      if (searchInput) {
-        const evt = new Event("input");
-        searchInput.dispatchEvent(evt);
-      }
-    } catch (err) {
-      console.warn(
-        "Could not load messages from API, using local demo data instead.",
-        err
-      );
-    }
-  }
-
-  // --------------------
-  // DEMO DATA
-  // --------------------
-  let demoProjects = [
-    {
-      id: 1,
-      name: "Bright Bakery website",
-      status: "In progress",
-      phase: "Design & build",
-      updated: "2 days ago",
-    },
-    {
-      id: 2,
-      name: "Coaching landing page",
-      status: "Reviewing",
-      phase: "Content & copy",
-      updated: "5 days ago",
-    },
-    {
-      id: 3,
-      name: "Client portal prototype",
-      status: "In progress",
-      phase: "Development",
-      updated: "Today",
-    },
-    {
-      id: 4,
-      name: "Brand refresh",
-      status: "Completed",
-      phase: "Launched",
-      updated: "Last week",
-    },
-  ];
-
-  const demoTickets = [
-    {
-      id: "SUP-012",
-      status: "Open",
-      subject: "Homepage hero not loading",
-      updated: "Today",
-      project: "Bright Bakery website",
-    },
-    {
-      id: "SUP-011",
-      status: "Resolved",
-      subject: "Colour tweak on buttons",
-      updated: "2 days ago",
-      project: "Coaching landing page",
-    },
-    {
-      id: "SUP-010",
-      status: "In progress",
-      subject: "Client portal login issue",
-      updated: "Last week",
-      project: "Client portal prototype",
-    },
-  ];
-
-  const demoMessages = [
-    {
-      id: "MSG-101",
-      subject: "Homepage layout feedback",
-      preview:
-        "Updated the hero section as discussed – what do you think?",
-      updated: "Today",
-      project: "Bright Bakery website",
-    },
-    {
-      id: "MSG-102",
-      subject: "Colour palette options",
-      preview: "Version B feels closer to our brand colours.",
-      updated: "Yesterday",
-      project: "Brand refresh",
-    },
-    {
-      id: "MSG-103",
-      subject: "Launch date confirmation",
-      preview: "We’re on track for the launch window we discussed.",
-      updated: "3 days ago",
-      project: "Client portal prototype",
-    },
-  ];
-
-  const demoFiles = [
-    {
-      id: "FILE-001",
-      name: "homepage-layout-v3.png",
-      project: "Bright Bakery website",
-      uploaded: "Today",
-    },
-    {
-      id: "FILE-002",
-      name: "brand-colours-guide.pdf",
-      project: "Brand refresh",
-      uploaded: "2 days ago",
-    },
-    {
-      id: "FILE-003",
-      name: "portal-wireframes-notes.docx",
-      project: "Client portal prototype",
-      uploaded: "5 days ago",
-    },
-    {
-      id: "FILE-004",
-      name: "coaching-landing-copy-v2.docx",
-      project: "Coaching landing page",
-      uploaded: "1 week ago",
-    },
-  ];
-
-  const demoInvoices = [
-    {
-      id: "INV-001",
-      project: "Bright Bakery website",
-      status: "Paid",
-      amount: "£1,200",
-      when: "Paid 12 Nov",
-    },
-    {
-      id: "INV-002",
-      project: "Coaching landing page",
-      status: "Outstanding",
-      amount: "£650",
-      when: "Due in 5 days",
-    },
-    {
-      id: "INV-003",
-      project: "Client portal prototype",
-      status: "Overdue",
-      amount: "£2,100",
-      when: "Due 3 days ago",
-    },
-  ];
-
-  // Timeline events (demo – mix of project, billing, support)
-  const demoTimeline = [
-    {
-      id: "TL-001",
-      type: "project",
-      label: "Project kick-off call",
-      project: "Bright Bakery website",
-      date: "Today",
-      relatedId: "",
-    },
-    {
-      id: "TL-002",
-      type: "billing",
-      label: "Invoice INV-002 issued",
-      project: "Coaching landing page",
-      date: "Today",
-      relatedId: "INV-002",
-    },
-    {
-      id: "TL-003",
-      type: "support",
-      label: "Support ticket SUP-012 opened",
-      project: "Bright Bakery website",
-      date: "Yesterday",
-      relatedId: "SUP-012",
-    },
-    {
-      id: "TL-004",
-      type: "project",
-      label: "Client portal prototype development started",
-      project: "Client portal prototype",
-      date: "3 days ago",
-      relatedId: "",
-    },
-    {
-      id: "TL-005",
-      type: "billing",
-      label: "Invoice INV-001 paid",
-      project: "Bright Bakery website",
-      date: "Last week",
-      relatedId: "INV-001",
-    },
-    {
-      id: "TL-006",
-      type: "support",
-      label: "Ticket SUP-011 resolved",
-      project: "Coaching landing page",
-      date: "Last week",
-      relatedId: "SUP-011",
-    },
-  ];
-
-  // --------------------
-  // CLIENT-SIDE STATE (live data from API or fallback demo)
-  // --------------------
-  let messagesData = demoMessages.slice();
+  let demoProjects = [];
+  let demoTickets = [];
+  let demoMessages = [];
+  let demoFiles = [];
+  let demoInvoices = [];
+  let demoTimeline = [];
 
   // --------------------
   // FILTER STATE
   // --------------------
-  let projectsFilter = "all"; // 'all' | 'active' | 'completed'
+  let projectsFilter = "all";
   let projectsSearchTerm = "";
 
-  let filesFilter = "all"; // 'all' | 'images' | 'documents'
+  let filesFilter = "all";
   let filesSearchTerm = "";
 
-  let ticketsFilter = "all"; // 'all' | 'open' | 'in-progress' | 'resolved'
+  let ticketsFilter = "all";
   let ticketsSearchTerm = "";
 
-  let invoicesFilter = "all"; // 'all' | 'outstanding' | 'paid' | 'overdue'
+  let invoicesFilter = "all";
   let invoicesSearchTerm = "";
 
-  let timelineFilter = "all"; // 'all' | 'project' | 'billing' | 'support'
+  let timelineFilter = "all";
   let timelineSearchTerm = "";
 
+  // --------------------
+  // API LOADERS
+  // --------------------
+  async function loadProjectsFromApi() {
+    if (
+      typeof API_BASE_URL === "undefined" ||
+      typeof getAuthHeaders !== "function"
+    )
+      return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/projects`, {
+        headers: getAuthHeaders(),
+      });
+      if (!res.ok) throw new Error("Failed to fetch projects");
+
+      const data = await res.json();
+      if (Array.isArray(data.projects)) {
+        demoProjects = data.projects;
+      }
+
+      renderDashboardOverview();
+      renderDashboardProjects();
+      renderProjectsList();
+      populateTicketProjectOptions();
+      populateMessageProjectOptions();
+    } catch (err) {
+      console.warn("Could not load projects from API", err);
+    }
+  }
+
+  async function loadMessagesFromApi() {
+    if (
+      typeof API_BASE_URL === "undefined" ||
+      typeof getAuthHeaders !== "function"
+    )
+      return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/messages`, {
+        headers: getAuthHeaders(),
+      });
+      if (!res.ok) throw new Error("Failed to fetch messages");
+
+      const data = await res.json();
+      if (Array.isArray(data.messages)) {
+        demoMessages = data.messages;
+      }
+
+      renderDashboardMessages();
+      renderMessagesList();
+    } catch (err) {
+      console.warn("Could not load messages from API", err);
+    }
+  }
+
+  async function loadFilesFromApi() {
+    if (
+      typeof API_BASE_URL === "undefined" ||
+      typeof getAuthHeaders !== "function"
+    )
+      return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/files`, {
+        headers: getAuthHeaders(),
+      });
+      if (!res.ok) throw new Error("Failed to fetch files");
+
+      const data = await res.json();
+      if (Array.isArray(data.files)) {
+        demoFiles = data.files;
+      }
+
+      renderDashboardFiles();
+      renderFilesList();
+    } catch (err) {
+      console.warn("Could not load files from API", err);
+    }
+  }
+
+  async function loadSupportTicketsFromApi() {
+    if (
+      typeof API_BASE_URL === "undefined" ||
+      typeof getAuthHeaders !== "function"
+    )
+      return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/support-tickets`, {
+        headers: getAuthHeaders(),
+      });
+      if (!res.ok) throw new Error("Failed to fetch tickets");
+
+      const data = await res.json();
+      if (Array.isArray(data.tickets)) {
+        demoTickets = data.tickets;
+      }
+
+      renderSupportTickets();
+      updateDashboardSupportCounts();
+    } catch (err) {
+      console.warn("Could not load support tickets from API", err);
+    }
+  }
+
+  async function loadInvoicesFromApi() {
+    if (
+      typeof API_BASE_URL === "undefined" ||
+      typeof getAuthHeaders !== "function"
+    )
+      return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/invoices`, {
+        headers: getAuthHeaders(),
+      });
+      if (!res.ok) throw new Error("Failed to fetch invoices");
+
+      const data = await res.json();
+      if (Array.isArray(data.invoices)) {
+        demoInvoices = data.invoices;
+      }
+
+      renderInvoicesList();
+      updateDashboardFinancials();
+      updateInvoiceSidebarMetrics();
+    } catch (err) {
+      console.warn("Could not load invoices from API", err);
+    }
+  }
+
+  async function loadTimelineFromApi() {
+    if (
+      typeof API_BASE_URL === "undefined" ||
+      typeof getAuthHeaders !== "function"
+    )
+      return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/timeline`, {
+        headers: getAuthHeaders(),
+      });
+      if (!res.ok) throw new Error("Failed to fetch timeline");
+
+      const data = await res.json();
+      if (Array.isArray(data.events)) {
+        demoTimeline = data.events;
+      }
+
+      renderTimeline();
+    } catch (err) {
+      console.warn("Could not load timeline from API", err);
+    }
+  }
+
+  // --------------------
+  // WRITE HELPERS
+  // --------------------
+  async function createSupportTicket(subject, projectId) {
+    if (
+      typeof API_BASE_URL === "undefined" ||
+      typeof getAuthHeaders !== "function"
+    ) {
+      throw new Error("API is not configured");
+    }
+
+    const trimmed = (subject || "").trim();
+    if (!trimmed) {
+      throw new Error("Please enter a short description of your request.");
+    }
+
+    const payload = { subject: trimmed };
+    if (projectId) {
+      const numeric = Number(projectId);
+      if (!Number.isNaN(numeric)) {
+        payload.projectId = numeric;
+      }
+    }
+
+    const res = await fetch(`${API_BASE_URL}/support-tickets`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      let message = "Failed to create support ticket";
+      try {
+        const data = await res.json();
+        if (data && data.message) message = data.message;
+      } catch {}
+      throw new Error(message);
+    }
+
+    const data = await res.json();
+    return data.ticket;
+  }
+
+  async function createMessage(subject, body, projectId) {
+    if (
+      typeof API_BASE_URL === "undefined" ||
+      typeof getAuthHeaders !== "function"
+    ) {
+      throw new Error("API is not configured");
+    }
+
+    const trimmedSubject = (subject || "").trim();
+    const trimmedBody = (body || "").trim();
+
+    if (!trimmedSubject) {
+      throw new Error("Please add a subject for your message.");
+    }
+    if (!trimmedBody) {
+      throw new Error("Please write a short message.");
+    }
+
+    const payload = { subject: trimmedSubject, body: trimmedBody };
+    if (projectId) {
+      const numeric = Number(projectId);
+      if (!Number.isNaN(numeric)) {
+        payload.projectId = numeric;
+      }
+    }
+
+    const res = await fetch(`${API_BASE_URL}/messages`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      let message = "Failed to send message";
+      try {
+        const data = await res.json();
+        if (data && data.message) message = data.message;
+      } catch {}
+      throw new Error(message);
+    }
+
+    const data = await res.json();
+    return data.message;
+  }
+
+  async function updateProfile(name, email) {
+    if (
+      typeof API_BASE_URL === "undefined" ||
+      typeof getAuthHeaders !== "function"
+    ) {
+      throw new Error("API is not configured");
+    }
+
+    const payload = {};
+    if (typeof name === "string" && name.trim()) payload.name = name.trim();
+    if (typeof email === "string" && email.trim()) payload.email = email.trim();
+
+    const res = await fetch(`${API_BASE_URL}/me`, {
+      method: "PATCH",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      let message = "Failed to update profile";
+      try {
+        const data = await res.json();
+        if (data && data.message) message = data.message;
+      } catch {}
+      throw new Error(message);
+    }
+
+    const data = await res.json();
+    const user = data.user || data;
+    setAuthUser(user);
+    return user;
+  }
+
+  async function updateInvoiceStatus(invoiceIdLabel, dbStatus) {
+    if (
+      typeof API_BASE_URL === "undefined" ||
+      typeof getAuthHeaders !== "function"
+    ) {
+      throw new Error("API is not configured");
+    }
+
+    const numeric = parseInt(
+      String(invoiceIdLabel).replace(/^INV-/, ""),
+      10
+    );
+    if (Number.isNaN(numeric)) {
+      throw new Error("Invalid invoice id");
+    }
+
+    const res = await fetch(
+      `${API_BASE_URL}/invoices/${numeric}/status`,
+      {
+        method: "PATCH",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ status: dbStatus }),
+      }
+    );
+
+    if (!res.ok) {
+      let message = "Failed to update invoice";
+      try {
+        const data = await res.json();
+        if (data && data.message) message = data.message;
+      } catch {}
+      throw new Error(message);
+    }
+
+    const data = await res.json();
+    return data.invoice;
+  }
+
+  // --------------------
+  // FILTER HELPERS
+  // --------------------
   function getVisibleProjects() {
     let projects = demoProjects.slice();
 
@@ -455,17 +562,27 @@
 
     if (projectsSearchTerm) {
       const term = projectsSearchTerm.toLowerCase();
-      projects = projects.filter((p) =>
-        p.name.toLowerCase().includes(term)
-      );
+      projects = projects.filter((p) => {
+        return (
+          p.name.toLowerCase().includes(term) ||
+          p.phase.toLowerCase().includes(term) ||
+          p.status.toLowerCase().includes(term)
+        );
+      });
     }
 
     return projects;
   }
 
   function isImageFile(file) {
-    const lower = file.name.toLowerCase();
-    return /\.(png|jpe?g|gif|webp|svg)$/.test(lower);
+    if (!file.type) return false;
+    const lower = file.type.toLowerCase();
+    return (
+      lower.includes("png") ||
+      lower.includes("jpg") ||
+      lower.includes("jpeg") ||
+      lower.includes("gif")
+    );
   }
 
   function getVisibleFiles() {
@@ -527,10 +644,10 @@
       const term = invoicesSearchTerm.toLowerCase();
       invoices = invoices.filter((i) => {
         return (
-          i.id.toLowerCase().includes(term) ||
+          String(i.id).toLowerCase().includes(term) ||
           i.project.toLowerCase().includes(term) ||
-          i.amount.toLowerCase().includes(term) ||
-          i.when.toLowerCase().includes(term)
+          String(i.amount).toLowerCase().includes(term) ||
+          (i.when || "").toLowerCase().includes(term)
         );
       });
     }
@@ -554,9 +671,7 @@
       events = events.filter((e) => {
         return (
           e.label.toLowerCase().includes(term) ||
-          e.project.toLowerCase().includes(term) ||
-          e.date.toLowerCase().includes(term) ||
-          (e.relatedId && e.relatedId.toLowerCase().includes(term))
+          e.project.toLowerCase().includes(term)
         );
       });
     }
@@ -565,34 +680,20 @@
   }
 
   // --------------------
-  // RENDER FUNCTIONS
+  // RENDER HELPERS
   // --------------------
   function renderDashboardOverview() {
-    const container = document.getElementById("dashboard-cards");
-    if (!container) return;
+    const projects = demoProjects;
+    const openProjects = projects.filter((p) => p.status !== "Completed");
+    const completedProjects = projects.filter((p) => p.status === "Completed");
 
-    const activeProjects = demoProjects.filter(
-      (p) => p.status === "In progress" || p.status === "Reviewing"
-    ).length;
+    const openEl = document.getElementById("dashboard-open-projects");
+    const completedEl = document.getElementById(
+      "dashboard-completed-projects"
+    );
 
-    const openTickets = demoTickets.filter((t) => t.status === "Open").length;
-
-    const recentMessages = messagesData.length;
-
-    container.innerHTML = `
-      <div class="portal-card">
-        <h3>Active projects</h3>
-        <p>You currently have <strong>${activeProjects}</strong> projects in progress or review.</p>
-      </div>
-      <div class="portal-card">
-        <h3>Support tickets</h3>
-        <p><strong>${openTickets}</strong> open ticket(s). View details on the Support page.</p>
-      </div>
-      <div class="portal-card">
-        <h3>Recent messages</h3>
-        <p><strong>${recentMessages}</strong> recent message thread(s) in your inbox.</p>
-      </div>
-    `;
+    if (openEl) openEl.textContent = String(openProjects.length);
+    if (completedEl) completedEl.textContent = String(completedProjects.length);
   }
 
   function renderDashboardProjects() {
@@ -600,30 +701,26 @@
     if (!container) return;
 
     if (!demoProjects.length) {
-      container.innerHTML = `
-        <p class="empty-state-text">
-          No projects yet. Once your first project starts, you’ll see a quick overview here.
-        </p>
-      `;
+      container.innerHTML =
+        "<p class=\"empty-state-text\">No projects yet – once you have an active project, you’ll see it here.</p>";
       return;
     }
 
-    const topProjects = demoProjects.slice(0, 3);
-
-    const items = topProjects
-      .map((p) => {
-        return `
-          <div class="dashboard-item-row">
-            <div class="dashboard-item-main">
-              <div class="dashboard-item-title">${p.name}</div>
-              <div class="dashboard-item-sub">
-                ${p.phase} • Updated ${p.updated}
-              </div>
-            </div>
-            <div class="dashboard-item-tag">${p.status}</div>
-          </div>
-        `;
-      })
+    const recent = demoProjects.slice(0, 3);
+    const items = recent
+      .map(
+        (p) => `
+      <div class="dashboard-project-row">
+        <div class="dashboard-project-main">
+          <div class="dashboard-project-name">${p.name}</div>
+          <div class="dashboard-project-phase">${p.phase}</div>
+        </div>
+        <div class="dashboard-project-meta">
+          <span class="dashboard-project-status">${p.status}</span>
+          <span class="dashboard-project-updated">${p.updated}</span>
+        </div>
+      </div>`
+      )
       .join("");
 
     container.innerHTML = items;
@@ -633,66 +730,104 @@
     const container = document.getElementById("dashboard-messages");
     if (!container) return;
 
-    if (!messagesData.length) {
-      container.innerHTML = `
-        <p class="empty-state-text">
-          No messages yet. New replies and updates will appear here.
-        </p>
-      `;
+    if (!demoMessages.length) {
+      container.innerHTML =
+        "<p class=\"empty-state-text\">No recent messages. When your designer sends updates, they’ll show here.</p>";
       return;
     }
 
-    const topMessages = messagesData.slice(0, 3);
+    const recent = demoMessages.slice(0, 3);
+    const items = recent
+      .map(
+        (m) => `
+      <div class="dashboard-message-row">
+        <div class="dashboard-message-main">
+          <div class="dashboard-message-subject">${m.subject}</div>
+          <div class="dashboard-message-preview">${m.preview}</div>
+        </div>
+        <div class="dashboard-message-meta">
+          <div class="dashboard-message-project">${m.project}</div>
+          <div class="dashboard-message-updated">${m.updated}</div>
+        </div>
+      </div>`
+      )
+      .join("");
 
-    const items = topMessages
-      .map((m) => {
-        return `
-          <div class="dashboard-item-row">
-            <div class="dashboard-item-main">
-              <div class="dashboard-item-title">${m.subject}</div>
-              <div class="dashboard-item-sub">
-                ${m.project} • ${m.updated}
-              </div>
-            </div>
-            <div class="dashboard-item-preview">
-              ${m.preview}
-            </div>
-          </div>
-        `;
-      })
+    container.innerHTML = items;
+  }
+
+  function renderDashboardFiles() {
+    const container = document.getElementById("dashboard-files");
+    if (!container) return;
+
+    if (!demoFiles.length) {
+      container.innerHTML =
+        "<p class=\"empty-state-text\">No files yet. Design drafts, exports and assets will appear here.</p>";
+      return;
+    }
+
+    const recent = demoFiles.slice(0, 3);
+    const items = recent
+      .map(
+        (f) => `
+      <div class="dashboard-file-row">
+        <div class="dashboard-file-main">
+          <div class="dashboard-file-name">${f.name}</div>
+          <div class="dashboard-file-project">${f.project}</div>
+        </div>
+        <div class="dashboard-file-meta">
+          <div class="dashboard-file-updated">${f.uploaded}</div>
+        </div>
+      </div>`
+      )
       .join("");
 
     container.innerHTML = items;
   }
 
   function updateDashboardSupportCounts() {
-    const openEl = document.getElementById("dashboard-open-tickets");
-    const resolvedEl = document.getElementById("dashboard-resolved-tickets");
-    if (!openEl || !resolvedEl) return;
-
-    const openCount = demoTickets.filter((t) => t.status === "Open").length;
-    const resolvedCount = demoTickets.filter(
+    const tickets = demoTickets;
+    const openCount = tickets.filter((t) => t.status === "Open").length;
+    const resolvedCount = tickets.filter(
       (t) => t.status === "Resolved"
     ).length;
 
-    openEl.textContent = openCount;
-    resolvedEl.textContent = resolvedCount;
+    const openEl = document.getElementById("dashboard-open-tickets");
+    const resolvedEl = document.getElementById("dashboard-resolved-tickets");
+
+    if (openEl) openEl.textContent = String(openCount);
+    if (resolvedEl) resolvedEl.textContent = String(resolvedCount);
   }
 
-  function updateInvoicesSummary() {
-    const totalEl = document.getElementById("invoices-total-count");
-    const outstandingEl = document.getElementById(
-      "invoices-outstanding-count"
-    );
-    if (!totalEl || !outstandingEl) return;
+  function updateDashboardFinancials() {
+    const invoices = demoInvoices;
+    const outstanding = invoices.filter((i) => i.status === "Outstanding");
+    const overdue = invoices.filter((i) => i.status === "Overdue");
 
-    const total = demoInvoices.length;
-    const outstanding = demoInvoices.filter(
-      (i) => i.status === "Outstanding" || i.status === "Overdue"
+    const outstandingEl = document.getElementById("dashboard-outstanding");
+    const overdueEl = document.getElementById("dashboard-overdue");
+
+    if (outstandingEl) outstandingEl.textContent = String(outstanding.length);
+    if (overdueEl) overdueEl.textContent = String(overdue.length);
+  }
+
+  function updateInvoiceSidebarMetrics() {
+    const totalEl = document.getElementById("invoice-metric-total");
+    const outEl = document.getElementById("invoice-metric-outstanding");
+    const overEl = document.getElementById("invoice-metric-overdue");
+
+    if (!totalEl && !outEl && !overEl) return;
+
+    const invoices = demoInvoices;
+    const total = invoices.length;
+    const outstanding = invoices.filter(
+      (i) => i.status === "Outstanding"
     ).length;
+    const overdue = invoices.filter((i) => i.status === "Overdue").length;
 
-    totalEl.textContent = total;
-    outstandingEl.textContent = outstanding;
+    if (totalEl) totalEl.textContent = String(total);
+    if (outEl) outEl.textContent = String(outstanding);
+    if (overEl) overEl.textContent = String(overdue);
   }
 
   function renderProjectsList() {
@@ -700,29 +835,28 @@
     if (!container) return;
 
     const projects = getVisibleProjects();
-
     if (!projects.length) {
-      container.innerHTML = `
-        <p class="empty-state-text">
-          No projects found. Try a different search or filter.
-        </p>
-      `;
+      container.innerHTML =
+        "<p class=\"empty-state-text\">No projects found. Try adjusting your filters or search.</p>";
       return;
     }
 
     const rows = projects
-      .map((p) => {
-        return `
-          <div class="projects-row">
-            <div class="projects-cell projects-name">
-              <div class="projects-name-main">${p.name}</div>
-              <div class="projects-name-sub">Last updated ${p.updated}</div>
-            </div>
-            <div class="projects-cell projects-phase">${p.phase}</div>
-            <div class="projects-cell projects-status">${p.status}</div>
-          </div>
-        `;
-      })
+      .map(
+        (p) => `
+      <div class="projects-row">
+        <div class="projects-cell projects-name">
+          <div class="projects-name-main">${p.name}</div>
+          <div class="projects-name-sub">${p.phase}</div>
+        </div>
+        <div class="projects-cell projects-status">
+          ${p.status}
+        </div>
+        <div class="projects-cell projects-updated">
+          ${p.updated}
+        </div>
+      </div>`
+      )
       .join("");
 
     container.innerHTML = rows;
@@ -733,33 +867,28 @@
     if (!container) return;
 
     const files = getVisibleFiles();
-
     if (!files.length) {
-      container.innerHTML = `
-        <p class="empty-state-text">
-          No files found. Try a different search or filter.
-        </p>
-      `;
+      container.innerHTML =
+        "<p class=\"empty-state-text\">No files found. Once your designer shares assets, you’ll see them here.</p>";
       return;
     }
 
     const rows = files
-      .map((f) => {
-        return `
-          <div class="files-row">
-            <div class="files-cell files-name">
-              <div class="files-name-main">${f.name}</div>
-              <div class="files-name-sub">${f.project}</div>
-            </div>
-            <div class="files-cell files-project">
-              ${f.project}
-            </div>
-            <div class="files-cell files-date">
-              ${f.uploaded}
-            </div>
-          </div>
-        `;
-      })
+      .map(
+        (f) => `
+      <div class="files-row">
+        <div class="files-cell files-name">
+          <div class="files-name-main">${f.name}</div>
+          <div class="files-name-sub">${f.project}</div>
+        </div>
+        <div class="files-cell files-type">
+          ${f.type || ""}
+        </div>
+        <div class="files-cell files-updated">
+          ${f.uploaded}
+        </div>
+      </div>`
+      )
       .join("");
 
     container.innerHTML = rows;
@@ -769,30 +898,27 @@
     const container = document.getElementById("messages-list");
     if (!container) return;
 
-    if (!messagesData.length) {
-      container.innerHTML = `
-        <p class="empty-state-text">
-          No messages yet. New replies and updates will appear here.
-        </p>
-      `;
+    const messages = demoMessages.slice();
+    if (!messages.length) {
+      container.innerHTML =
+        "<p class=\"empty-state-text\">No messages yet. Updates from your designer will appear here.</p>";
       return;
     }
 
-    const rows = messagesData
-      .map((m) => {
-        return `
-          <div class="message-thread">
-            <div class="message-main">
-              <div class="message-subject">${m.subject}</div>
-              <div class="message-preview">${m.preview}</div>
-            </div>
-            <div class="message-meta">
-              <div class="message-project">${m.project}</div>
-              <div class="message-updated">${m.updated}</div>
-            </div>
-          </div>
-        `;
-      })
+    const rows = messages
+      .map(
+        (m) => `
+      <div class="messages-row">
+        <div class="messages-cell messages-main">
+          <div class="messages-subject">${m.subject}</div>
+          <div class="messages-preview">${m.preview}</div>
+        </div>
+        <div class="messages-cell messages-meta">
+          <div class="message-project">${m.project}</div>
+          <div class="message-updated">${m.updated}</div>
+        </div>
+      </div>`
+      )
       .join("");
 
     container.innerHTML = rows;
@@ -803,13 +929,9 @@
     if (!container) return;
 
     const tickets = getVisibleTickets();
-
     if (!tickets.length) {
-      container.innerHTML = `
-        <p class="empty-state-text">
-          No tickets found. Try a different search or filter.
-        </p>
-      `;
+      container.innerHTML =
+        "<p class=\"empty-state-text\">No support tickets yet. When you raise a request, it’ll appear here.</p>";
       return;
     }
 
@@ -817,19 +939,18 @@
       .map((t) => {
         const statusClass = t.status.toLowerCase().replace(" ", "-");
         return `
-          <div class="tickets-row">
-            <div class="tickets-cell tickets-subject">
-              <div class="tickets-subject-main">${t.subject}</div>
-              <div class="tickets-subject-sub">${t.id} • ${t.project}</div>
-            </div>
-            <div class="tickets-cell tickets-status tickets-status-${statusClass}">
-              ${t.status}
-            </div>
-            <div class="tickets-cell tickets-updated">
-              ${t.updated}
-            </div>
+        <div class="tickets-row">
+          <div class="tickets-cell tickets-subject">
+            <div class="tickets-subject-main">${t.subject}</div>
+            <div class="tickets-subject-sub">${t.id} • ${t.project}</div>
           </div>
-        `;
+          <div class="tickets-cell tickets-status tickets-status-${statusClass}">
+            ${t.status}
+          </div>
+          <div class="tickets-cell tickets-updated">
+            ${t.updated}
+          </div>
+        </div>`;
       })
       .join("");
 
@@ -841,126 +962,182 @@
     if (!container) return;
 
     const invoices = getVisibleInvoices();
-
-    const countEl = document.getElementById("invoices-count");
-    if (countEl) {
-      countEl.textContent = invoices.length;
-    }
-
     if (!invoices.length) {
-      container.innerHTML = `
-        <p class="empty-state-text">
-          No invoices found. Try a different search or filter.
-        </p>
-      `;
+      container.innerHTML =
+        "<p class=\"empty-state-text\">No invoices found. Try a different search or filter.</p>";
       return;
     }
 
     const rows = invoices
       .map((inv) => {
-        const statusClass = inv.status.toLowerCase(); // paid / outstanding / overdue
+        const statusClass = inv.status.toLowerCase();
         return `
-          <div class="invoices-row">
-            <div class="invoices-cell invoices-main">
-              <div class="invoices-id">${inv.id}</div>
-              <div class="invoices-project">${inv.project}</div>
-            </div>
-            <div class="invoices-cell invoices-amount">
-              ${inv.amount}
-            </div>
-            <div class="invoices-cell invoices-when">
-              ${inv.when}
-            </div>
-            <div class="invoices-cell invoices-status">
-              <span class="invoice-status invoice-status-${statusClass}">
-                ${inv.status}
-              </span>
-            </div>
+        <div class="invoices-row"
+             data-invoice-id="${inv.id}"
+             data-invoice-status="${inv.status}">
+          <div class="invoices-cell invoices-project">
+            <div class="invoices-project-main">${inv.project}</div>
+            <div class="invoices-project-sub">${inv.id}</div>
           </div>
-        `;
+          <div class="invoices-cell invoices-amount">
+            ${inv.amount}
+          </div>
+          <div class="invoices-cell invoices-when">
+            ${inv.when || ""}
+          </div>
+          <div class="invoices-cell invoices-status invoices-status-${statusClass}">
+            ${inv.status}
+          </div>
+        </div>`;
       })
       .join("");
 
     container.innerHTML = rows;
   }
 
-  function renderTimelineList() {
+  function renderTimeline() {
     const container = document.getElementById("timeline-list");
     if (!container) return;
 
     const events = getVisibleTimeline();
-
-    const countEl = document.getElementById("timeline-count");
-    if (countEl) {
-      countEl.textContent = events.length;
-    }
-
     if (!events.length) {
-      container.innerHTML = `
-        <p class="empty-state-text">
-          No events found. Try a different search or filter.
-        </p>
-      `;
+      container.innerHTML =
+        "<p class=\"empty-state-text\">Nothing on the timeline yet. As your project moves forward, key milestones will appear here.</p>";
       return;
     }
 
     const rows = events
-      .map((e) => {
-        const pillClass =
-          e.type === "project"
-            ? "timeline-pill-project"
-            : e.type === "billing"
-            ? "timeline-pill-billing"
-            : "timeline-pill-support";
-
-        const typeLabel =
-          e.type === "project"
-            ? "Project"
-            : e.type === "billing"
-            ? "Billing"
-            : "Support";
-
-        const relatedMarkup = e.relatedId
-          ? `<span class="timeline-id">${e.relatedId}</span>`
-          : "";
-
-        return `
-          <div class="timeline-row">
-            <div class="timeline-line"></div>
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <div class="timeline-top">
-                <div class="timeline-title">${e.label}</div>
-                <div class="timeline-meta-date">${e.date} • ${e.project}</div>
-              </div>
-              <div class="timeline-bottom">
-                <span class="timeline-pill ${pillClass}">${typeLabel}</span>
-                ${relatedMarkup}
-              </div>
-            </div>
+      .map(
+        (e) => `
+      <div class="timeline-row">
+        <div class="timeline-icon timeline-icon-${e.type}"></div>
+        <div class="timeline-main">
+          <div class="timeline-label">${e.label}</div>
+          <div class="timeline-sub">
+            ${e.project} • ${e.date}
           </div>
-        `;
-      })
+        </div>
+      </div>`
+      )
       .join("");
 
     container.innerHTML = rows;
   }
 
   // --------------------
-  // ACCOUNT CHIP MENU
+  // PROJECT SELECTS FOR SUPPORT & MESSAGES
+  // --------------------
+  function populateTicketProjectOptions() {
+    const select = document.getElementById("new-ticket-project");
+    if (!select) return;
+
+    const currentValue = select.value;
+    select.innerHTML = "";
+
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent =
+      "General (not linked to a specific project)";
+    defaultOption.setAttribute("data-default", "true");
+    select.appendChild(defaultOption);
+
+    demoProjects.forEach((p) => {
+      const opt = document.createElement("option");
+      opt.value = p.id;
+      opt.textContent = p.name;
+      select.appendChild(opt);
+    });
+
+    if (currentValue) select.value = currentValue;
+  }
+
+  function populateMessageProjectOptions() {
+    const select = document.getElementById("new-message-project");
+    if (!select) return;
+
+    const currentValue = select.value;
+    select.innerHTML = "";
+
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent =
+      "General (not linked to a specific project)";
+    defaultOption.setAttribute("data-default", "true");
+    select.appendChild(defaultOption);
+
+    demoProjects.forEach((p) => {
+      const opt = document.createElement("option");
+      opt.value = p.id;
+      opt.textContent = p.name;
+      select.appendChild(opt);
+    });
+
+    if (currentValue) select.value = currentValue;
+  }
+
+  // --------------------
+  // MESSAGES SEARCH
+  // --------------------
+  function initMessagesSearch() {
+    const searchInput = document.getElementById("messages-search");
+    const listEl = document.getElementById("messages-list");
+    if (!searchInput || !listEl) return;
+
+    searchInput.addEventListener("input", function (e) {
+      const term = e.target.value.trim().toLowerCase();
+
+      if (!term) {
+        renderMessagesList();
+        return;
+      }
+
+      const filtered = demoMessages.filter((m) => {
+        return (
+          m.subject.toLowerCase().includes(term) ||
+          m.preview.toLowerCase().includes(term) ||
+          m.project.toLowerCase().includes(term)
+        );
+      });
+
+      if (!filtered.length) {
+        listEl.innerHTML =
+          "<p class=\"empty-state-text\">No messages match that search.</p>";
+        return;
+      }
+
+      const rows = filtered
+        .map(
+          (m) => `
+        <div class="messages-row">
+          <div class="messages-cell messages-main">
+            <div class="messages-subject">${m.subject}</div>
+            <div class="messages-preview">${m.preview}</div>
+          </div>
+          <div class="messages-cell messages-meta">
+            <div class="message-project">${m.project}</div>
+            <div class="message-updated">${m.updated}</div>
+          </div>
+        </div>`
+        )
+        .join("");
+
+      listEl.innerHTML = rows;
+    });
+  }
+
+  // --------------------
+  // ACCOUNT MENU
   // --------------------
   function initAccountMenu() {
     const chip = document.getElementById("portal-account-chip");
     const menu = document.getElementById("portal-account-menu");
     if (!chip || !menu) return;
 
-    chip.addEventListener("click", function (e) {
-      e.stopPropagation();
+    chip.addEventListener("click", function () {
       menu.classList.toggle("is-open");
     });
 
     document.addEventListener("click", function (e) {
-      if (!menu.classList.contains("is-open")) return;
       const clickedInsideMenu = menu.contains(e.target);
       const clickedChip = chip.contains(e.target);
       if (!clickedInsideMenu && !clickedChip) {
@@ -970,31 +1147,42 @@
   }
 
   // --------------------
-  // INIT
+  // DOM READY
   // --------------------
-  document.addEventListener("DOMContentLoaded", function () {
-    // Auth gate
-    requireAuth();
+  document.addEventListener("DOMContentLoaded", async function () {
+    let user = null;
+    try {
+      user = await ensureAuthAndUser();
+    } catch (err) {
+      console.warn("Auth failed", err);
+    }
+    if (!user) return;
 
-    // Theme
     initTheme();
-    const toggleButtons = document.querySelectorAll(".portal-theme-toggle");
-    toggleButtons.forEach((btn) => {
-      btn.addEventListener("click", toggleTheme);
-    });
+    const themeToggleBtn = document.querySelector(".portal-theme-toggle");
+    if (themeToggleBtn) themeToggleBtn.addEventListener("click", toggleTheme);
 
-    // Avatars
+    const nameEls = document.querySelectorAll("#portal-account-name-menu");
+    const emailEls = document.querySelectorAll("#portal-account-email-menu");
+    const displayNameEls = document.querySelectorAll(".portal-account-name");
+
+    function applyUserToHeader(u) {
+      nameEls.forEach((el) => (el.textContent = u.name || "Your Client"));
+      emailEls.forEach((el) => (el.textContent = u.email || ""));
+      displayNameEls.forEach(
+        (el) => (el.textContent = u.name || "Your Client")
+      );
+    }
+
+    applyUserToHeader(user);
+
     initAvatar();
-
-    // Account chip dropdown
     initAccountMenu();
 
-    // Theme select in Settings
     const themeSelect = document.getElementById("portal-theme-select");
     if (themeSelect) {
       const saved = getStoredTheme() || "light";
       themeSelect.value = saved;
-
       themeSelect.addEventListener("change", function (e) {
         const chosen = e.target.value === "dark" ? "dark" : "light";
         applyTheme(chosen);
@@ -1002,7 +1190,6 @@
       });
     }
 
-    // Mobile bottom nav active state
     const currentPage = window.location.pathname.split("/").pop();
     document.querySelectorAll(".portal-bottom-link").forEach((link) => {
       const href = link.getAttribute("href");
@@ -1012,87 +1199,147 @@
       }
     });
 
-    // Logout links
     const logoutLinks = document.querySelectorAll("[data-logout]");
-    logoutLinks.forEach((link) => {
-      link.addEventListener("click", function (e) {
-        e.preventDefault();
-        logoutAndRedirect();
-      });
-    });
+    logoutLinks.forEach((btn) =>
+      btn.addEventListener("click", function () {
+        clearAuthState();
+        redirectToLogin();
+      })
+    );
 
-    // --------------------
-    // PROJECTS CONTROLS
-    // --------------------
+    // Base dashboard renders
+    renderDashboardOverview();
+    renderDashboardProjects();
+    renderDashboardMessages();
+    renderDashboardFiles();
+    updateDashboardSupportCounts();
+    updateDashboardFinancials();
+    updateInvoiceSidebarMetrics();
+    renderTimeline();
+
+    // PROJECTS filters/search
     const projectsSearchInput = document.getElementById("projects-search");
     const projectFilterButtons = document.querySelectorAll(
       ".projects-filter-btn"
     );
-
     if (projectsSearchInput) {
       projectsSearchInput.addEventListener("input", function (e) {
         projectsSearchTerm = e.target.value.trim();
         renderProjectsList();
       });
     }
-
     if (projectFilterButtons.length) {
-      projectFilterButtons.forEach((btn) => {
+      projectFilterButtons.forEach((btn) =>
         btn.addEventListener("click", function () {
           const value = btn.getAttribute("data-filter") || "all";
           projectsFilter = value;
-
-          projectFilterButtons.forEach((b) =>
-            b.classList.remove("is-active")
-          );
+          projectFilterButtons.forEach((b) => b.classList.remove("is-active"));
           btn.classList.add("is-active");
-
           renderProjectsList();
-        });
-      });
+        })
+      );
     }
 
-    // --------------------
-    // FILES CONTROLS
-    // --------------------
+    // FILES filters/search
     const filesSearchInput = document.getElementById("files-search");
-    const filesFilterButtons = document.querySelectorAll(".files-filter-btn");
-
+    const filesFilterButtons =
+      document.querySelectorAll(".files-filter-btn");
     if (filesSearchInput) {
       filesSearchInput.addEventListener("input", function (e) {
         filesSearchTerm = e.target.value.trim();
         renderFilesList();
       });
     }
-
     if (filesFilterButtons.length) {
-      filesFilterButtons.forEach((btn) => {
+      filesFilterButtons.forEach((btn) =>
         btn.addEventListener("click", function () {
           const value = btn.getAttribute("data-filter") || "all";
           filesFilter = value;
-
-          filesFilterButtons.forEach((b) =>
-            b.classList.remove("is-active")
-          );
+          filesFilterButtons.forEach((b) => b.classList.remove("is-active"));
           btn.classList.add("is-active");
-
           renderFilesList();
-        });
+        })
+      );
+    }
+
+    // MESSAGES
+    initMessagesSearch();
+    populateMessageProjectOptions();
+
+    const newMessageForm = document.getElementById("new-message-form");
+    const newMessageSubject =
+      document.getElementById("new-message-subject");
+    const newMessageBody = document.getElementById("new-message-body");
+    const newMessageProject =
+      document.getElementById("new-message-project");
+    const newMessageStatus =
+      document.getElementById("new-message-status");
+
+    if (newMessageForm && newMessageSubject && newMessageBody) {
+      newMessageForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const subject = newMessageSubject.value.trim();
+        const body = newMessageBody.value.trim();
+        const projectValue =
+          newMessageProject && newMessageProject.value
+            ? newMessageProject.value
+            : "";
+
+        if (!subject || !body) {
+          if (newMessageStatus) {
+            newMessageStatus.textContent =
+              "Please add a subject and a short message.";
+          }
+          return;
+        }
+
+        const submitButton = newMessageForm.querySelector(
+          "button[type='submit']"
+        );
+        if (submitButton) submitButton.disabled = true;
+        if (newMessageStatus) newMessageStatus.textContent = "Sending...";
+
+        try {
+          const message = await createMessage(
+            subject,
+            body,
+            projectValue
+          );
+          demoMessages = [message, ...demoMessages];
+          newMessageSubject.value = "";
+          newMessageBody.value = "";
+          if (newMessageProject) newMessageProject.value = "";
+          renderMessagesList();
+          renderDashboardMessages();
+          if (newMessageStatus) newMessageStatus.textContent = "Message sent.";
+        } catch (err) {
+          console.error("Failed to send message:", err);
+          if (newMessageStatus) {
+            newMessageStatus.textContent =
+              err && err.message
+                ? err.message
+                : "Could not send message. Please try again.";
+          }
+        } finally {
+          if (submitButton) submitButton.disabled = false;
+        }
       });
     }
 
-    // --------------------
-    // MESSAGES CONTROLS
-    // --------------------
-    initMessagesSearch();
+    // SUPPORT
+    populateTicketProjectOptions();
 
-    // --------------------
-    // SUPPORT CONTROLS
-    // --------------------
     const ticketsSearchInput = document.getElementById("tickets-search");
-    const ticketFilterButtons = document.querySelectorAll(
-      ".tickets-filter-btn"
-    );
+    const ticketFilterButtons =
+      document.querySelectorAll(".tickets-filter-btn");
+    const newTicketForm = document.getElementById("new-ticket-form");
+    const newTicketSubject =
+      document.getElementById("new-ticket-subject");
+    const newTicketStatus =
+      document.getElementById("new-ticket-status");
+    const newTicketProject =
+      document.getElementById("new-ticket-project");
 
     if (ticketsSearchInput) {
       ticketsSearchInput.addEventListener("input", function (e) {
@@ -1100,101 +1347,221 @@
         renderSupportTickets();
       });
     }
-
     if (ticketFilterButtons.length) {
-      ticketFilterButtons.forEach((btn) => {
+      ticketFilterButtons.forEach((btn) =>
         btn.addEventListener("click", function () {
           const value = btn.getAttribute("data-filter") || "all";
           ticketsFilter = value;
-
           ticketFilterButtons.forEach((b) =>
             b.classList.remove("is-active")
           );
           btn.classList.add("is-active");
-
           renderSupportTickets();
-        });
+        })
+      );
+    }
+
+    if (newTicketForm && newTicketSubject) {
+      newTicketForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const subject = newTicketSubject.value.trim();
+        const projectValue =
+          newTicketProject && newTicketProject.value
+            ? newTicketProject.value
+            : "";
+
+        if (!subject) {
+          if (newTicketStatus) {
+            newTicketStatus.textContent =
+              "Please add a short description of your request.";
+          }
+          return;
+        }
+
+        const submitButton = newTicketForm.querySelector(
+          "button[type='submit']"
+        );
+        if (submitButton) submitButton.disabled = true;
+        if (newTicketStatus)
+          newTicketStatus.textContent = "Sending your request...";
+
+        try {
+          const ticket = await createSupportTicket(subject, projectValue);
+          demoTickets = [ticket, ...demoTickets];
+          newTicketSubject.value = "";
+          if (newTicketProject) newTicketProject.value = "";
+          renderSupportTickets();
+          updateDashboardSupportCounts();
+          if (newTicketStatus)
+            newTicketStatus.textContent = "Support request created.";
+        } catch (err) {
+          console.error("Failed to create support ticket:", err);
+          if (newTicketStatus) {
+            newTicketStatus.textContent =
+              err && err.message
+                ? err.message
+                : "Could not create support ticket. Please try again.";
+          }
+        } finally {
+          if (submitButton) submitButton.disabled = false;
+        }
       });
     }
 
-    // --------------------
-    // INVOICES CONTROLS
-    // --------------------
+    // INVOICES search + filters + click-to-toggle
     const invoicesSearchInput = document.getElementById("invoices-search");
-    const invoiceFilterButtons = document.querySelectorAll(
-      ".invoices-filter-btn"
-    );
-
+    const invoiceFilterButtons =
+      document.querySelectorAll(".invoices-filter-btn");
     if (invoicesSearchInput) {
       invoicesSearchInput.addEventListener("input", function (e) {
         invoicesSearchTerm = e.target.value.trim();
         renderInvoicesList();
       });
     }
-
     if (invoiceFilterButtons.length) {
-      invoiceFilterButtons.forEach((btn) => {
+      invoiceFilterButtons.forEach((btn) =>
         btn.addEventListener("click", function () {
           const value = btn.getAttribute("data-filter") || "all";
           invoicesFilter = value;
-
           invoiceFilterButtons.forEach((b) =>
             b.classList.remove("is-active")
           );
           btn.classList.add("is-active");
-
           renderInvoicesList();
-        });
+        })
+      );
+    }
+
+    const invoicesListEl = document.getElementById("invoices-list");
+    if (invoicesListEl) {
+      invoicesListEl.addEventListener("click", async function (e) {
+        const row = e.target.closest(".invoices-row");
+        if (!row) return;
+
+        const idLabel = row.getAttribute("data-invoice-id");
+        const currentStatus = row.getAttribute("data-invoice-status");
+        if (!idLabel || !currentStatus) return;
+
+        let newLabelStatus = currentStatus;
+        let dbStatus = null;
+
+        if (currentStatus === "Outstanding" || currentStatus === "Overdue") {
+          newLabelStatus = "Paid";
+          dbStatus = "paid";
+        } else if (currentStatus === "Paid") {
+          newLabelStatus = "Outstanding";
+          dbStatus = "unpaid";
+        }
+
+        if (!dbStatus) return;
+
+        const ok = window.confirm(
+          `Demo: mark invoice ${idLabel} as ${newLabelStatus}?`
+        );
+        if (!ok) return;
+
+        try {
+          const updated = await updateInvoiceStatus(idLabel, dbStatus);
+          demoInvoices = demoInvoices.map((inv) =>
+            inv.id === updated.id ? updated : inv
+          );
+          renderInvoicesList();
+          updateDashboardFinancials();
+          updateInvoiceSidebarMetrics();
+          loadTimelineFromApi();
+        } catch (err) {
+          console.error("Failed to update invoice:", err);
+          window.alert(
+            err && err.message
+              ? err.message
+              : "Could not update invoice status."
+          );
+        }
       });
     }
 
-    // --------------------
-    // TIMELINE CONTROLS
-    // --------------------
-    const timelineSearchInput = document.getElementById("timeline-search");
-    const timelineFilterButtons = document.querySelectorAll(
-      ".timeline-filter-btn"
-    );
-
+    // TIMELINE filters/search
+    const timelineSearchInput =
+      document.getElementById("timeline-search");
+    const timelineFilterButtons =
+      document.querySelectorAll(".timeline-filter-btn");
     if (timelineSearchInput) {
       timelineSearchInput.addEventListener("input", function (e) {
         timelineSearchTerm = e.target.value.trim();
-        renderTimelineList();
+        renderTimeline();
       });
     }
-
     if (timelineFilterButtons.length) {
-      timelineFilterButtons.forEach((btn) => {
+      timelineFilterButtons.forEach((btn) =>
         btn.addEventListener("click", function () {
           const value = btn.getAttribute("data-filter") || "all";
           timelineFilter = value;
-
           timelineFilterButtons.forEach((b) =>
             b.classList.remove("is-active")
           );
           btn.classList.add("is-active");
+          renderTimeline();
+        })
+      );
+    }
 
-          renderTimelineList();
-        });
+    // SETTINGS / profile form
+    const settingsForm = document.getElementById("settings-form");
+    if (settingsForm) {
+      const nameInput = document.getElementById("settings-name");
+      const emailInput = document.getElementById("settings-email");
+      const statusEl = document.getElementById("settings-status");
+
+      if (nameInput) nameInput.value = user.name || "";
+      if (emailInput) emailInput.value = user.email || "";
+
+      settingsForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const nameValue = nameInput ? nameInput.value : "";
+        const emailValue = emailInput ? emailInput.value : "";
+
+        const submitButton = settingsForm.querySelector(
+          "button[type='submit']"
+        );
+        if (submitButton) submitButton.disabled = true;
+        if (statusEl) statusEl.textContent = "Saving your details...";
+
+        try {
+          const updatedUser = await updateProfile(nameValue, emailValue);
+          if (nameInput) nameInput.value = updatedUser.name || "";
+          if (emailInput) emailInput.value = updatedUser.email || "";
+          applyUserToHeader(updatedUser);
+          if (statusEl) statusEl.textContent = "Profile updated.";
+        } catch (err) {
+          console.error("Failed to update profile:", err);
+          if (statusEl) {
+            statusEl.textContent =
+              err && err.message
+                ? err.message
+                : "Could not update your profile. Please try again.";
+          }
+        } finally {
+          if (submitButton) submitButton.disabled = false;
+        }
       });
     }
 
-    // Initial renders (no-op on pages that don't have the containers)
-    renderDashboardOverview();
+    // Initial renders
     renderProjectsList();
     renderFilesList();
     renderMessagesList();
     renderSupportTickets();
     renderInvoicesList();
-    renderTimelineList();
-    updateInvoicesSummary();
+    renderTimeline();
 
-    renderDashboardProjects();
-    renderDashboardMessages();
-    updateDashboardSupportCounts();
-
-    // Try to refresh projects and messages from the API
+    // Fetch live data
     loadProjectsFromApi();
     loadMessagesFromApi();
+    loadSupportTicketsFromApi();
+    loadInvoicesFromApi();
+    loadFilesFromApi();
+    loadTimelineFromApi();
   });
 })();

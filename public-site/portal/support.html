@@ -66,31 +66,49 @@
         </button>
 
         <div class="portal-account-menu" id="portal-account-menu">
-          <a href="settings.html" class="portal-account-menu-item">
-            ⚙️ <span>Account settings</span>
-          </a>
-          <button type="button" class="portal-account-menu-item portal-account-menu-item-muted">
-            ➕ <span>Add another account</span>
-          </button>
-          <a href="login.html"
-             class="portal-account-menu-item portal-account-menu-danger"
-             data-logout>
-            🚪 <span>Log out</span>
-          </a>
+          <div class="portal-account-menu-inner">
+            <div class="portal-account-menu-header">
+              <div class="portal-account-avatar portal-account-avatar-inline">
+                <img src="" alt="Profile avatar" class="portal-avatar-img" />
+              </div>
+              <div>
+                <div class="portal-account-name" id="portal-account-name-menu">
+                  Your Client
+                </div>
+                <div class="portal-account-sub" id="portal-account-email-menu">
+                  client@example.com
+                </div>
+              </div>
+            </div>
+
+            <div class="portal-account-menu-body">
+              <a href="settings.html" class="portal-account-menu-link">
+                Account &amp; settings
+              </a>
+            </div>
+
+            <div class="portal-account-menu-footer">
+              <button type="button" class="portal-account-menu-link" data-logout>
+                Log out
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </aside>
 
-    <!-- MAIN COLUMN -->
+    <!-- MAIN AREA -->
     <div class="portal-main">
-
-      <!-- TOPBAR -->
       <header class="portal-topbar">
         <div class="portal-topbar-inner">
           <div class="portal-topbar-left">
-            <div class="topbar-title">Support</div>
-            <div class="topbar-subtitle">
-              Raise tickets and keep track of anything you need help with.
+            <button class="portal-mobile-menu-toggle" type="button" id="portal-mobile-menu-toggle">
+              ☰
+            </button>
+            <div class="portal-breadcrumb">
+              <a href="dashboard.html" class="portal-breadcrumb-link">Dashboard</a>
+              <span class="portal-breadcrumb-separator">/</span>
+              <span class="portal-breadcrumb-current">Support</span>
             </div>
           </div>
 
@@ -171,15 +189,38 @@
             <div class="portal-card">
               <h3>Need help with something?</h3>
               <p class="settings-help">
-                In a live portal, this is where you’d create a new support ticket
-                for bugs, content changes or new requests.
+                Create a support request for bugs, content changes or new ideas. We’ll
+                follow up via the portal and email.
               </p>
-              <button type="button" class="portal-btn portal-btn-ghost" disabled>
-                + New support request (demo only)
-              </button>
-              <p class="settings-footnote">
-                This version is just a clickable prototype – great for client demos.
-              </p>
+              <form id="new-ticket-form" class="settings-form">
+                <label class="settings-field">
+                  <span class="settings-label">What do you need help with?</span>
+                  <input
+                    type="text"
+                    id="new-ticket-subject"
+                    class="settings-input"
+                    placeholder="e.g. Update homepage hero text"
+                    required
+                    autocomplete="off"
+                  />
+                </label>
+
+                <label class="settings-field">
+                  <span class="settings-label">Which project is this about?</span>
+                  <select
+                    id="new-ticket-project"
+                    class="settings-input">
+                    <option value="" data-default>
+                      General (not linked to a specific project)
+                    </option>
+                  </select>
+                </label>
+
+                <p class="settings-footnote" id="new-ticket-status"></p>
+                <button type="submit" class="portal-btn">
+                  + Create support request
+                </button>
+              </form>
             </div>
 
             <div class="portal-card">
@@ -227,6 +268,9 @@
     </div>
   </nav>
 
+  <!-- Shared config + auth helpers, then main UI logic -->
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

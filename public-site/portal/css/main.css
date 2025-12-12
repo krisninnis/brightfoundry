@@ -270,12 +270,18 @@ img {
   gap: 6px;
 }
 
-/* Links with emoji icons */
+/* Sidebar nav container */
+.portal-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
+/* Links with emoji icons */
 .portal-nav-link {
   display: flex;
   align-items: center;
-  justify-content: center; /* center icon + text */
+  justify-content: flex-start; /* left-align icon + text */
   gap: 10px;
   padding: 9px 15px;
   border-radius: 999px;
@@ -303,6 +309,7 @@ img {
 
 /* Emoji bubble */
 .portal-nav-icon {
+  flex: 0 0 24px;
   width: 24px;
   text-align: center;
   font-size: 1.2rem;
@@ -310,7 +317,9 @@ img {
 
 /* Text label next to emoji */
 .portal-nav-label {
+  flex: 1 1 auto;
   white-space: nowrap;
+  line-height: 1.3;
 }
 
 /* Sidebar responsive tweaks (keep icons only on narrow tablet) */
@@ -340,6 +349,7 @@ img {
   flex-direction: column;
   gap: 6px;
   margin-bottom: 28px;
+  align-items: stretch;
 }
 
 /* Bottom group container (account chip + menu) */
@@ -570,6 +580,7 @@ img {
   transform: translateY(0);
   pointer-events: auto;
 }
+
 /* ==============================
    AVATAR SYSTEM
    ============================== */
@@ -667,6 +678,23 @@ img {
   color: #6b7280;
 }
 
+/* Generic lists inside cards – keep bullets inside the card */
+.portal-card ul {
+  margin: 6px 0 0;
+  padding-left: 1.1rem;  /* bring bullets inside the card edge */
+  list-style-position: outside;
+}
+
+.portal-card ul li {
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+/* Dark mode text colour for card lists */
+body.theme-dark .portal-card ul li {
+  color: #e5e7eb;
+}
+
 @media (max-width: 900px) {
   .portal-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -681,6 +709,7 @@ img {
 /* ==============================
    PROJECTS LIST
    ============================== */
+
 /* Controls row above the projects table */
 .projects-controls {
   display: flex;
@@ -968,6 +997,7 @@ body.theme-dark .projects-filter-btn.is-active {
     align-items: flex-start;
   }
 }
+
 /* ==============================
    MESSAGES TOOLBAR (search)
    ============================== */
@@ -1007,6 +1037,7 @@ body.theme-dark .messages-search-input {
   border-color: #1f2937;
   color: #e5e7eb;
 }
+
 /* ==============================
    SUPPORT TOOLBAR (search + filters)
    ============================== */
@@ -1825,7 +1856,6 @@ body.theme-dark .message-thread {
   box-shadow: 0 18px 45px rgba(15, 23, 42, 0.9);
 }
 
-
 /* Headers in lists */
 body.theme-dark .projects-header,
 body.theme-dark .files-header,
@@ -1930,8 +1960,9 @@ body.theme-dark .portal-sidebar-bottom {
   box-shadow: inset 0 0 0 rgba(0, 0, 0, 0); /* keep it flat in dark mode */
   border: 1px solid #1f2937;
 }
+
 /* ==============================
-   ACCOUNT CHIP + PROFILE PHOTO
+   ACCOUNT CHIP + PROFILE PHOTO (alt block)
    ============================== */
 
 /* Sidebar account chip (bottom box) */
@@ -2096,6 +2127,7 @@ body.theme-dark .settings-profile-avatar {
 .settings-link-button:hover {
   text-decoration: underline;
 }
+
 /* ==============================
    FILES CONTROLS (search + filters)
    ============================== */
@@ -2187,6 +2219,7 @@ body.theme-dark .files-filter-btn.is-active {
   color: #111827;
   box-shadow: 0 6px 18px rgba(251, 191, 36, 0.4);
 }
+
 /* ==============================
    INVOICES TOOLBAR (search + filters)
    ============================== */
@@ -2304,24 +2337,17 @@ body.theme-dark .invoices-filter-btn.is-active {
    INVOICES LIST
    ============================== */
 
-.invoices-list {
-  background: #ffffff;
-  border-radius: 18px;
-  padding: 12px 14px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+/* Outer card uses .portal-card + .invoices-card in HTML */
+.invoices-card {
+  margin-top: 8px;
 }
 
-.invoices-header,
-.invoices-row {
+/* Header row above the dynamic list */
+.invoices-header-row {
   display: grid;
   grid-template-columns: 2.1fr 1.1fr 1.2fr 0.9fr;
   gap: 12px;
   padding: 8px 4px;
-  align-items: center;
-}
-
-.invoices-header {
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -2330,7 +2356,23 @@ body.theme-dark .invoices-filter-btn.is-active {
   margin-bottom: 4px;
 }
 
+.invoices-header-col {
+  white-space: nowrap;
+}
+
+/* Container that JS populates with .invoices-row elements */
+.invoices-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Individual invoice row */
 .invoices-row {
+  display: grid;
+  grid-template-columns: 2.1fr 1.1fr 1.2fr 0.9fr;
+  gap: 12px;
+  padding: 8px 4px;
+  align-items: center;
   font-size: 0.9rem;
   border-bottom: 1px dashed #e5e7eb;
 }
@@ -2363,6 +2405,7 @@ body.theme-dark .invoices-filter-btn.is-active {
   color: #6b7280;
 }
 
+/* Status pill */
 .invoice-status {
   display: inline-flex;
   align-items: center;
@@ -2390,7 +2433,7 @@ body.theme-dark .invoices-filter-btn.is-active {
 
 /* Responsive */
 @media (max-width: 640px) {
-  .invoices-header {
+  .invoices-header-row {
     display: none;
   }
 
@@ -2399,10 +2442,41 @@ body.theme-dark .invoices-filter-btn.is-active {
     align-items: flex-start;
   }
 
-  .invoices-status {
+  .invoice-status {
     margin-top: 4px;
   }
 }
+
+/* ==============================
+   INVOICE METRICS LIST (sidebar)
+   ============================== */
+
+.portal-metric-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.portal-metric-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 0;
+  font-size: 0.9rem;
+}
+
+.portal-metric-list li span:first-child {
+  color: #6b7280;
+}
+
+.portal-metric-list li span:last-child {
+  font-weight: 600;
+}
+
+body.theme-dark .portal-metric-list li span:first-child {
+  color: #9ca3af;
+}
+
 /* ==============================
    TIMELINE LAYOUT
    ============================== */

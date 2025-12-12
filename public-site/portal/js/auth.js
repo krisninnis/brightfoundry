@@ -1,149 +1,133 @@
-// -----------------------------------------------------
-// BrightFoundry Client Portal – Front-End Demo Auth
-// -----------------------------------------------------
+// auth.js – handles login and registration using the real API
 
-const AUTH_KEY = "bf-portal-auth";
-
-/* -----------------------------
-   AUTH STORAGE HELPERS
---------------------------------*/
-function setLoggedIn() {
-  localStorage.setItem(AUTH_KEY, "true");
-}
-
-function clearLoggedIn() {
-  localStorage.removeItem(AUTH_KEY);
-}
-
-function isLoggedIn() {
-  return localStorage.getItem(AUTH_KEY) === "true";
-}
-
-/* -----------------------------
-   MINI TOAST (no external CSS needed)
---------------------------------*/
-function showToast(message) {
-  const toast = document.createElement("div");
-  toast.textContent = message;
-  toast.style.position = "fixed";
-  toast.style.bottom = "24px";
-  toast.style.left = "50%";
-  toast.style.transform = "translateX(-50%)";
-  toast.style.background = "#111827";
-  toast.style.color = "#f9fafb";
-  toast.style.padding = "10px 18px";
-  toast.style.borderRadius = "10px";
-  toast.style.fontSize = "0.85rem";
-  toast.style.opacity = "0";
-  toast.style.transition = "opacity 0.3s ease";
-
-  document.body.appendChild(toast);
-
-  // Fade in
-  requestAnimationFrame(() => {
-    toast.style.opacity = "1";
-  });
-
-  // Fade out + remove
-  setTimeout(() => {
-    toast.style.opacity = "0";
-    setTimeout(() => toast.remove(), 300);
-  }, 1500);
-}
-
-/* -----------------------------
-   FAKE REDIRECT LOADING
---------------------------------*/
-function fakeRedirect(url) {
-  showToast("Signing you in...");
-  setTimeout(() => {
-    window.location.href = url;
-  }, 900); // feels instant but polished
-}
-
-/* -----------------------------
-   FORM BUTTON LOADING
---------------------------------*/
-function setButtonLoading(button, loading = true) {
-  if (!button) return;
-
-  if (loading) {
-    button.dataset.originalText = button.textContent;
-    button.textContent = "Please wait…";
-    button.disabled = true;
-    button.style.opacity = "0.7";
-  } else {
-    button.textContent = button.dataset.originalText;
-    button.disabled = false;
-    button.style.opacity = "1";
-  }
-}
-
-/* -----------------------------
-   MAIN SCRIPT
---------------------------------*/
 document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById("login-form");
-  const registerForm = document.getElementById("register-form");
-  const providerButtons = document.querySelectorAll("[data-provider]");
+  const loginForm = document.querySelector("#login-form");
+  const registerForm = document.querySelector("#register-form");
+  const logoutButtons = document.querySelectorAll("[data-logout]");
 
-  const path = window.location.pathname;
-  const isAuthPage =
-    path.endsWith("login.html") || path.endsWith("register.html");
-
-  // Already logged in? Skip auth screens.
-  if (isLoggedIn() && isAuthPage) {
-    window.location.href = "dashboard.html";
-    return;
-  }
-
-  /* -----------------------------
-     EMAIL/PASSWORD LOGIN
-  --------------------------------*/
   if (loginForm) {
-    loginForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const btn = loginForm.querySelector("button[type='submit']");
-      setButtonLoading(btn, true);
-
-      // Fake processing delay
-      setTimeout(() => {
-        setLoggedIn();
-        fakeRedirect("dashboard.html");
-      }, 700);
-    });
+    loginForm.addEventListener("submit", handleLogin);
   }
 
-  /* -----------------------------
-     REGISTER FORM
-  --------------------------------*/
   if (registerForm) {
-    registerForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const btn = registerForm.querySelector("button[type='submit']");
-      setButtonLoading(btn, true);
-
-      setTimeout(() => {
-        setLoggedIn();
-        fakeRedirect("dashboard.html");
-      }, 900);
-    });
+    registerForm.addEventListener("submit", handleRegister);
   }
 
-  /* -----------------------------
-     SOCIAL / EXTERNAL PROVIDERS
-  --------------------------------*/
-  providerButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const provider = btn.getAttribute("data-provider");
-      showToast(`Connecting with ${provider}…`);
-
-      setButtonLoading(btn, true);
-
-      setTimeout(() => {
-        setLoggedIn();
-        fakeRedirect("dashboard.html");
-      }, 900);
-    });
+  logoutButtons.forEach((btn) => {
+    btn.addEventListener("click", handleLogout);
   });
 });
+
+async function handleLogin(event) {
+  event.preventDefault();
+
+  const email = document.querySelector("#login-email").value.trim();
+  const password = document.querySelector("#login-password").value.trim();
+  const errorEl = document.querySelector("#login-error");
+
+  if (errorEl) errorEl.textContent = "";
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      const msg = err.message || "Invalid email or password.";
+      if (errorEl) {
+        errorEl.textContent = msg;
+      } else {
+        alert(msg);
+      }
+      return;
+    }
+
+    const data = await res.json();
+    // Store token + user via config.js helpers
+    saveAuth(data.token, data.user);
+
+    // Redirect to dashboard after login
+    window.location.href = "dashboard.html";
+  } catch (err) {
+    console.error("Login failed:", err);
+    const msg = "Something went wrong. Please try again.";
+    if (errorEl) {
+      errorEl.textContent = msg;
+    } else {
+      alert(msg);
+    }
+  }
+}
+
+async function handleRegister(event) {
+  event.preventDefault();
+
+  // register.html uses reg-* IDs; support both just in case
+  const nameInput =
+    document.querySelector("#register-name") ||
+    document.querySelector("#reg-name");
+  const emailInput =
+    document.querySelector("#register-email") ||
+    document.querySelector("#reg-email");
+  const passwordInput =
+    document.querySelector("#register-password") ||
+    document.querySelector("#reg-password");
+
+  const name = nameInput ? nameInput.value.trim() : "";
+  const email = emailInput ? emailInput.value.trim() : "";
+  const password = passwordInput ? passwordInput.value.trim() : "";
+
+  const errorEl = document.querySelector("#register-error");
+
+  if (errorEl) errorEl.textContent = "";
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      const msg = err.message || "Registration failed.";
+      if (errorEl) {
+        errorEl.textContent = msg;
+      } else {
+        alert(msg);
+      }
+      return;
+    }
+
+    const data = await res.json();
+    // Store token + user via config.js helpers
+    saveAuth(data.token, data.user);
+
+    // Redirect to dashboard after signup
+    window.location.href = "dashboard.html";
+  } catch (err) {
+    console.error("Register failed:", err);
+    const msg = "Something went wrong. Please try again.";
+    if (errorEl) {
+      errorEl.textContent = msg;
+    } else {
+      alert(msg);
+    }
+  }
+}
+
+function handleLogout(event) {
+  event.preventDefault();
+  // Clear real auth
+  if (typeof clearAuth === "function") {
+    clearAuth();
+  }
+  window.location.href = "login.html";
+}

@@ -65,9 +65,9 @@
 
         <!-- FIELDS -->
         <div class="auth-field">
-          <label for="reg-name">Name</label>
+          <label for="register-name">Name</label>
           <input
-            id="reg-name"
+            id="register-name"
             type="text"
             placeholder="Your name"
             required
@@ -84,9 +84,9 @@
         </div>
 
         <div class="auth-field">
-          <label for="reg-email">Email</label>
+          <label for="register-email">Email</label>
           <input
-            id="reg-email"
+            id="register-email"
             type="email"
             placeholder="you@example.com"
             required
@@ -94,9 +94,9 @@
         </div>
 
         <div class="auth-field">
-          <label for="reg-password">Create password</label>
+          <label for="register-password">Create password</label>
           <input
-            id="reg-password"
+            id="register-password"
             type="password"
             placeholder="••••••••"
             required
@@ -108,8 +108,11 @@
           Create account
         </button>
 
+        <!-- ERROR MESSAGE (filled by auth.js) -->
+        <p id="register-error" class="auth-error"></p>
+
         <p class="auth-note">
-          Demo only — this doesn’t create a real account. You’ll be logged straight in.
+          For the demo, this creates an account instantly and signs you in.
         </p>
       </form>
 
@@ -123,6 +126,8 @@
 
   </div>
 
+  <!-- Shared config (API + auth helpers), then auth logic -->
+  <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
 </body>
 </html>
