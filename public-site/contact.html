@@ -52,10 +52,17 @@
             Whether you need a website, a small web app, an AI assistant or just a bit of help
             figuring things out — send a quick message and we’ll take it from there.
           </p>
+
+          <!-- NEW: privacy / no push message -->
+          <p style="margin-top:12px; font-size:0.9rem; color:#6b7280;">
+            <strong>We respect your privacy.</strong> You’re welcome to browse, take your time, and reach out only if it feels right.
+            We won’t add you to mailing lists or chase you — and you can choose <strong>email-only</strong> (no calls) below if you prefer.
+          </p>
+
           <p style="margin-top:10px; font-size:0.9rem; color:#6b7280;">
             Already a client?
             <a href="portal/login.html" style="color:#2563eb; text-decoration:none;">
-              Log in to your portal to send a message or raise a support request →
+              Use the private portal to message, share files, or raise a support request →
             </a>
           </p>
         </div>
@@ -68,91 +75,121 @@
     <div class="container">
       <div class="grid" style="grid-template-columns: 2fr 1fr; gap:24px;">
 
-        <!-- CONTACT FORM -->
+        <!-- CHAT-STYLE INTAKE -->
         <div class="card">
-          <h2 style="margin-bottom:10px;">Start a conversation</h2>
-          <p style="margin-bottom:18px; font-size:0.95rem; color:#4b5563;">
-            Share a rough idea of what you need — don’t worry about using the “right” terminology.
+          <h2 style="margin-bottom:10px;">Quick project questions</h2>
+
+          <!-- NEW: friendly reassurance above chat -->
+          <p style="margin-bottom:10px; font-size:0.95rem; color:#4b5563;">
+            Share a few details at your own pace. No sales script, no pressure.
+            If you’d rather keep it private and simple, choose <strong>email-only</strong> when asked.
           </p>
 
-          <!-- NOTE: this is a static HTML form for now.
-               Later, you can hook it up to a backend, Formspree, Netlify Forms, or your own portal. -->
-          <form action="#" method="post">
-            <div style="margin-bottom:12px;">
-              <label for="name" style="display:block; font-size:0.9rem; margin-bottom:4px;">Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:0.95rem;"
-              />
+          <p style="margin-bottom:18px; font-size:0.95rem; color:#4b5563;">
+            Answer a few quick prompts and you’ll get a tidy summary you can copy or email.
+            (This is a simple intake assistant — not an AI bot.)
+          </p>
+
+          <!-- Honeypot (basic spam trap) -->
+          <div style="position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;">
+            <label for="bf_company">Company</label>
+            <input id="bf_company" name="bf_company" type="text" autocomplete="off" tabindex="-1" />
+          </div>
+
+          <!-- Chat UI -->
+          <div id="bfChat" style="border:1px solid #e5e7eb; border-radius:14px; overflow:hidden;">
+            <div id="bfChatLog" style="padding:14px; max-height:420px; overflow:auto; background:#ffffff;">
+              <!-- Messages injected by JS -->
             </div>
 
-            <div style="margin-bottom:12px;">
-              <label for="email" style="display:block; font-size:0.9rem; margin-bottom:4px;">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:0.95rem;"
-              />
-            </div>
+            <div style="border-top:1px solid #e5e7eb; padding:12px; background:#f9fafb;">
+              <div id="bfChatControls">
 
-            <div style="margin-bottom:12px;">
-              <label for="project-type" style="display:block; font-size:0.9rem; margin-bottom:4px;">What are you interested in?</label>
-              <select
-                id="project-type"
-                name="project-type"
-                style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:0.95rem;"
-              >
-                <option value="">Select an option</option>
-                <option>Website design</option>
-                <option>Web app / client portal</option>
-                <option>AI chatbot / automation</option>
-                <option>Branding / visual identity</option>
-                <option>Media / content</option>
-                <option>Care plan / ongoing support</option>
-                <option>Something else</option>
-              </select>
-            </div>
+                <!-- Step input -->
+                <div style="display:flex; gap:10px; align-items:center;">
+                  <input
+                    id="bfChatInput"
+                    type="text"
+                    placeholder="Type your answer…"
+                    style="flex:1; padding:10px 12px; border-radius:10px; border:1px solid #d1d5db; font-size:0.95rem;"
+                  />
+                  <button id="bfChatSend" class="btn" style="border:none; cursor:pointer; white-space:nowrap;">
+                    Send
+                  </button>
+                </div>
 
-            <div style="margin-bottom:12px;">
-              <label for="budget" style="display:block; font-size:0.9rem; margin-bottom:4px;">Rough budget (optional)</label>
-              <select
-                id="budget"
-                name="budget"
-                style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:0.95rem;"
-              >
-                <option value="">Not sure yet</option>
-                <option>Under £300</option>
-                <option>£300 – £600</option>
-                <option>£600 – £1,500</option>
-                <option>£1,500 – £3,000</option>
-                <option>£3,000+</option>
-              </select>
-            </div>
+                <!-- Quick options -->
+                <div id="bfQuickOptions" style="margin-top:10px; display:none; gap:8px; flex-wrap:wrap;"></div>
 
-            <div style="margin-bottom:16px;">
-              <label for="message" style="display:block; font-size:0.9rem; margin-bottom:4px;">Tell me a bit about your project</label>
-              <textarea
-                id="message"
-                name="message"
-                rows="5"
-                required
-                style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:0.95rem; resize:vertical;"
-              ></textarea>
-            </div>
+                <!-- Hint -->
+                <p id="bfChatHint" style="margin-top:10px; font-size:0.85rem; color:#6b7280;">
+                  Tip: keep it rough — you don’t need perfect wording.
+                </p>
+              </div>
 
-            <button
-              type="submit"
-              class="btn"
-              style="border:none; cursor:pointer;"
-            >
-              Send message
-            </button>
-          </form>
+              <!-- Summary actions -->
+              <div id="bfSummaryActions" style="display:none;">
+                <textarea
+                  id="bfSummaryText"
+                  rows="10"
+                  readonly
+                  style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid #d1d5db; font-size:0.95rem; resize:vertical; background:#ffffff;"
+                ></textarea>
+
+                <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:12px;">
+                  <button id="bfCopySummary" class="btn" style="border:none; cursor:pointer;">
+                    Copy summary
+                  </button>
+
+                  <a id="bfEmailSummary" href="#" class="btn" style="text-decoration:none;">
+                    Compose email
+                  </a>
+
+                  <button id="bfRestart" class="btn btn-small" style="border:none; cursor:pointer;">
+                    Start over
+                  </button>
+                </div>
+
+                <p id="bfCopyStatus" style="margin-top:10px; font-size:0.9rem; color:#6b7280;"></p>
+
+                <p style="margin-top:10px; font-size:0.85rem; color:#6b7280;">
+                  I’ll reply by email first. If a quick call would help, we can decide together — no pressure.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fallback form for no-JS -->
+          <noscript>
+            <div style="margin-top:18px; padding:14px; border:1px solid #e5e7eb; border-radius:12px; background:#f9fafb;">
+              <h3 style="margin-bottom:10px;">No-JS fallback form</h3>
+              <p style="margin-bottom:14px; font-size:0.95rem; color:#4b5563;">
+                JavaScript is disabled, so here’s a simple form. This doesn’t submit anywhere yet — please email the details.
+              </p>
+
+              <form>
+                <div style="margin-bottom:12px;">
+                  <label for="name" style="display:block; font-size:0.9rem; margin-bottom:4px;">Name</label>
+                  <input id="name" type="text" style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:0.95rem;" />
+                </div>
+
+                <div style="margin-bottom:12px;">
+                  <label for="email" style="display:block; font-size:0.9rem; margin-bottom:4px;">Email</label>
+                  <input id="email" type="email" style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:0.95rem;" />
+                </div>
+
+                <div style="margin-bottom:12px;">
+                  <label for="message" style="display:block; font-size:0.9rem; margin-bottom:4px;">Message</label>
+                  <textarea id="message" rows="5" style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:0.95rem; resize:vertical;"></textarea>
+                </div>
+
+                <p style="font-size:0.9rem; color:#6b7280;">
+                  Email: <a href="mailto:hello@brightfoundry.test">hello@brightfoundry.test</a>
+                </p>
+              </form>
+            </div>
+          </noscript>
+
         </div>
 
         <!-- CONTACT INFO / SIDE PANEL -->
@@ -207,6 +244,391 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    (function () {
+      // =========================
+      // CONFIG
+      // =========================
+      const DEST_EMAIL = "hello@brightfoundry.test"; // TODO: replace with your real email
+      const EMAIL_SUBJECT = "BrightFoundry enquiry – project details";
+      const MAX_TEXT = 600;
+
+      // =========================
+      // DOM
+      // =========================
+      const chatLog = document.getElementById("bfChatLog");
+      const chatInput = document.getElementById("bfChatInput");
+      const sendBtn = document.getElementById("bfChatSend");
+      const quickOptions = document.getElementById("bfQuickOptions");
+      const hint = document.getElementById("bfChatHint");
+
+      const summaryActions = document.getElementById("bfSummaryActions");
+      const summaryText = document.getElementById("bfSummaryText");
+      const copyBtn = document.getElementById("bfCopySummary");
+      const emailLink = document.getElementById("bfEmailSummary");
+      const restartBtn = document.getElementById("bfRestart");
+      const copyStatus = document.getElementById("bfCopyStatus");
+
+      // Honeypot
+      const honeypot = document.getElementById("bf_company");
+
+      // =========================
+      // STATE
+      // =========================
+      const answers = {
+        name: "",
+        contact: "",
+        business: "",
+        location: "",
+        website: "",
+        projectType: "",
+        goals: "",
+        pagesFeatures: "",
+        examples: "",
+        contentReady: "",
+        deadline: "",
+        budget: "",
+        contactStyle: ""
+      };
+
+      const steps = [
+        {
+          key: "name",
+          q: "Hi — quick few questions. What’s your name?",
+          type: "text",
+          placeholder: "e.g. Sam"
+        },
+        {
+          key: "contact",
+          q: "Best contact email (or phone number)?",
+          type: "text",
+          placeholder: "e.g. sam@email.com"
+        },
+        {
+          key: "business",
+          q: "What’s your business name (or what should I call the project)?",
+          type: "text",
+          placeholder: "e.g. Harbour & Hearth Café"
+        },
+        {
+          key: "location",
+          q: "Where are you based / what area do you serve?",
+          type: "text",
+          placeholder: "e.g. Bridgend / South Wales / UK-wide"
+        },
+        {
+          key: "website",
+          q: "Do you already have a website? If yes, paste the link (or type “no”).",
+          type: "text",
+          placeholder: "e.g. https://example.com or no"
+        },
+        {
+          key: "projectType",
+          q: "What are you interested in?",
+          type: "options",
+          options: [
+            "Website design",
+            "Web app / client portal",
+            "AI chatbot / automation",
+            "Branding / visual identity",
+            "Media / content",
+            "Care plan / ongoing support",
+            "Not sure yet"
+          ]
+        },
+        {
+          key: "goals",
+          q: "What’s the main goal? (More enquiries, bookings, sales, credibility, something else?)",
+          type: "text",
+          placeholder: "e.g. more enquiries + clearer services"
+        },
+        {
+          key: "pagesFeatures",
+          q: "What pages or features do you think you need? (Keep it rough.)",
+          type: "text",
+          placeholder: "e.g. Home, Services, About, Contact form, Gallery"
+        },
+        {
+          key: "examples",
+          q: "Any websites you like the style of? Paste links (or type “none”).",
+          type: "text",
+          placeholder: "e.g. https://site1.com, https://site2.com"
+        },
+        {
+          key: "contentReady",
+          q: "Do you have content ready (logo, photos, text)?",
+          type: "options",
+          options: [
+            "Yes — mostly ready",
+            "Partly (needs help)",
+            "No (need guidance)"
+          ]
+        },
+        {
+          key: "deadline",
+          q: "Any deadline or important date? (Or type “no deadline”.)",
+          type: "text",
+          placeholder: "e.g. launch before March / no deadline"
+        },
+        {
+          key: "budget",
+          q: "Rough budget range? (Optional — helps me suggest a realistic phase one.)",
+          type: "options",
+          optional: true,
+          options: [
+            "Not sure yet",
+            "Under £300",
+            "£300 – £600",
+            "£600 – £1,500",
+            "£1,500 – £3,000",
+            "£3,000+"
+          ]
+        },
+        {
+          key: "contactStyle",
+          q: "How would you like to handle the next step?",
+          type: "options",
+          options: [
+            "Email-only (no calls)",
+            "Quick call if useful",
+            "Not sure yet"
+          ]
+        }
+      ];
+
+      let stepIndex = 0;
+
+      // =========================
+      // UI HELPERS
+      // =========================
+      function escapeHTML(str) {
+        return String(str || "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function addMsg(role, text) {
+        const wrap = document.createElement("div");
+        wrap.style.display = "flex";
+        wrap.style.marginBottom = "10px";
+        wrap.style.justifyContent = role === "user" ? "flex-end" : "flex-start";
+
+        const bubble = document.createElement("div");
+        bubble.style.maxWidth = "85%";
+        bubble.style.padding = "10px 12px";
+        bubble.style.borderRadius = "12px";
+        bubble.style.border = "1px solid #e5e7eb";
+        bubble.style.background = role === "user" ? "#111827" : "#ffffff";
+        bubble.style.color = role === "user" ? "#ffffff" : "#111827";
+        bubble.style.fontSize = "0.95rem";
+        bubble.innerHTML = escapeHTML(text).replaceAll("\n", "<br/>");
+
+        wrap.appendChild(bubble);
+        chatLog.appendChild(wrap);
+        chatLog.scrollTop = chatLog.scrollHeight;
+      }
+
+      function setQuickOptions(opts) {
+        quickOptions.innerHTML = "";
+        if (!opts || !opts.length) {
+          quickOptions.style.display = "none";
+          return;
+        }
+        quickOptions.style.display = "flex";
+
+        opts.forEach((opt) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "btn btn-small";
+          btn.style.border = "none";
+          btn.style.cursor = "pointer";
+          btn.textContent = opt;
+          btn.addEventListener("click", () => {
+            submitAnswer(opt);
+          });
+          quickOptions.appendChild(btn);
+        });
+      }
+
+      function currentStep() {
+        return steps[stepIndex];
+      }
+
+      function setInputPlaceholder(text) {
+        chatInput.placeholder = text || "Type your answer…";
+      }
+
+      function setInputEnabled(isEnabled) {
+        chatInput.disabled = !isEnabled;
+        sendBtn.disabled = !isEnabled;
+        chatInput.style.opacity = isEnabled ? "1" : "0.7";
+        sendBtn.style.opacity = isEnabled ? "1" : "0.7";
+      }
+
+      function normalise(str) {
+        return String(str || "").trim();
+      }
+
+      function clamp(str) {
+        const s = String(str || "");
+        if (s.length <= MAX_TEXT) return s;
+        return s.slice(0, MAX_TEXT) + "…";
+      }
+
+      // =========================
+      // FLOW
+      // =========================
+      function askNext() {
+        const s = currentStep();
+        if (!s) return;
+
+        addMsg("bot", s.q);
+
+        if (s.type === "options") {
+          setQuickOptions(s.options);
+          setInputPlaceholder("Or type your own answer…");
+        } else {
+          setQuickOptions(null);
+          setInputPlaceholder(s.placeholder || "Type your answer…");
+        }
+
+        chatInput.value = "";
+        chatInput.focus();
+      }
+
+      function submitAnswer(raw) {
+        // spam honeypot
+        if (honeypot && honeypot.value && honeypot.value.trim().length > 0) {
+          hint.textContent = "Thanks — please email your details instead.";
+          setInputEnabled(false);
+          return;
+        }
+
+        const s = currentStep();
+        if (!s) return;
+
+        const val = clamp(normalise(raw));
+        if (!val) return;
+
+        addMsg("user", val);
+        answers[s.key] = val;
+
+        stepIndex += 1;
+
+        if (stepIndex >= steps.length) {
+          finish();
+        } else {
+          askNext();
+        }
+      }
+
+      function buildSummary() {
+        const lines = [
+          "BrightFoundry enquiry — summary",
+          "--------------------------------",
+          `Name: ${answers.name || "-"}`,
+          `Contact: ${answers.contact || "-"}`,
+          `Business/project: ${answers.business || "-"}`,
+          `Location/area: ${answers.location || "-"}`,
+          `Current website: ${answers.website || "-"}`,
+          "",
+          `Interested in: ${answers.projectType || "-"}`,
+          `Main goal: ${answers.goals || "-"}`,
+          `Pages/features: ${answers.pagesFeatures || "-"}`,
+          `Examples/links: ${answers.examples || "-"}`,
+          `Content ready: ${answers.contentReady || "-"}`,
+          `Deadline: ${answers.deadline || "-"}`,
+          `Budget: ${answers.budget || "-"}`,
+          `Preferred next step: ${answers.contactStyle || "-"}`,
+          "",
+          "Notes:",
+          "- If you have any files (logo/photos/text), you can reply to this email with attachments or links.",
+          "- Response time: within 1–2 working days."
+        ];
+        return lines.join("\n");
+      }
+
+      function finish() {
+        setQuickOptions(null);
+        setInputEnabled(false);
+        hint.textContent = "Thanks — generating your summary…";
+
+        addMsg("bot", "Thanks — that’s everything. I’ll reply by email first, and we can keep it email-only if you prefer.");
+
+        const summary = buildSummary();
+        summaryText.value = summary;
+
+        const mailto = "mailto:" + encodeURIComponent(DEST_EMAIL)
+          + "?subject=" + encodeURIComponent(EMAIL_SUBJECT)
+          + "&body=" + encodeURIComponent(summary);
+
+        emailLink.setAttribute("href", mailto);
+
+        document.getElementById("bfChatControls").style.display = "none";
+        summaryActions.style.display = "block";
+      }
+
+      function resetAll() {
+        stepIndex = 0;
+        Object.keys(answers).forEach((k) => answers[k] = "");
+        chatLog.innerHTML = "";
+        copyStatus.textContent = "";
+        summaryText.value = "";
+        summaryActions.style.display = "none";
+        document.getElementById("bfChatControls").style.display = "block";
+        setInputEnabled(true);
+        hint.textContent = "Tip: keep it rough — you don’t need perfect wording.";
+        askNext();
+      }
+
+      // =========================
+      // EVENTS
+      // =========================
+      sendBtn.addEventListener("click", () => submitAnswer(chatInput.value));
+      chatInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          submitAnswer(chatInput.value);
+        }
+      });
+
+      copyBtn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(summaryText.value || "");
+          copyStatus.textContent = "Copied to clipboard ✅";
+        } catch (err) {
+          copyStatus.textContent = "Couldn’t copy automatically — select the text and copy manually.";
+        }
+      });
+
+      restartBtn.addEventListener("click", () => resetAll());
+
+      // =========================
+      // INIT
+      // =========================
+      resetAll();
+    })();
+  </script>
+<footer>
+  <div class="container">
+    <p>© 2025 BrightFoundry. All rights reserved.</p>
+
+    <p style="margin-top:6px; font-size:0.85rem; color:#6b7280;">
+      Privacy-first studio. No spam, no pressure — reach out only if and when it suits you.
+    </p>
+
+    <div style="margin-top:6px;">
+      <a href="privacy.html">Privacy Policy</a> •
+      <a href="terms.html">Terms</a> •
+      <a href="cookies.html">Cookies</a> •
+      <a href="portal/login.html">Client Login</a>
+    </div>
+  </div>
+</footer>
 
 </body>
 </html>

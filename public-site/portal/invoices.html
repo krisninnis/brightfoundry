@@ -14,9 +14,11 @@
     <!-- SIDEBAR -->
     <aside class="portal-sidebar">
       <div class="portal-brand">
-        <img src="../img/brightfoundry-logo-light.png"
-             alt="BrightFoundry logo"
-             class="portal-brand-logo" />
+        <img
+          src="../img/brightfoundry-logo-light.png"
+          alt="BrightFoundry logo"
+          class="portal-brand-logo"
+        />
         <div class="portal-brand-text">Client Portal</div>
       </div>
 
@@ -41,7 +43,7 @@
           <span class="portal-nav-icon">🛟</span>
           <span class="portal-nav-label">Support</span>
         </a>
-        <a href="invoices.html" class="portal-nav-link portal-nav-link-active is-active" aria-current="page">
+        <a href="invoices.html" class="portal-nav-link is-active" aria-current="page">
           <span class="portal-nav-icon">🧾</span>
           <span class="portal-nav-label">Invoices</span>
         </a>
@@ -54,10 +56,10 @@
       <div class="portal-sidebar-bottom">
         <button class="portal-account-chip" type="button" id="portal-account-chip">
           <div class="portal-account-avatar">
-            <img src="" alt="Profile avatar" class="portal-avatar-img" />
+            <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
           </div>
           <div class="portal-account-meta">
-            <div class="portal-account-name">Your Client</div>
+            <div class="portal-account-name" data-user-name>Your Client</div>
             <div class="portal-account-sub">Client account</div>
           </div>
           <div class="portal-account-chevron">▾</div>
@@ -70,9 +72,11 @@
           <button type="button" class="portal-account-menu-item portal-account-menu-item-muted">
             ➕ <span>Add another account</span>
           </button>
-          <a href="login.html"
-             class="portal-account-menu-item portal-account-menu-danger"
-             data-logout>
+          <a
+            href="login.html"
+            class="portal-account-menu-item portal-account-menu-danger"
+            data-logout
+          >
             🚪 <span>Log out</span>
           </a>
         </div>
@@ -89,7 +93,7 @@
             <div class="topbar-title">Invoices</div>
             <div class="topbar-subtitle">
               View your invoices, due dates and payment status in one place,
-              <span class="portal-account-name">Your Client</span>.
+              <span data-user-name>Your Client</span>.
             </div>
           </div>
 
@@ -98,7 +102,7 @@
               Toggle theme
             </button>
             <div class="portal-avatar">
-              <img src="" alt="Profile avatar" class="portal-avatar-img" />
+              <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
             </div>
           </div>
         </div>
@@ -126,28 +130,16 @@
               </div>
 
               <div class="portal-pill-filter">
-                <button
-                  type="button"
-                  class="portal-pill invoices-filter-btn is-active"
-                  data-filter="all">
+                <button type="button" class="portal-pill invoices-filter-btn is-active" data-filter="all">
                   All
                 </button>
-                <button
-                  type="button"
-                  class="portal-pill invoices-filter-btn"
-                  data-filter="outstanding">
+                <button type="button" class="portal-pill invoices-filter-btn" data-filter="outstanding">
                   Outstanding
                 </button>
-                <button
-                  type="button"
-                  class="portal-pill invoices-filter-btn"
-                  data-filter="paid">
+                <button type="button" class="portal-pill invoices-filter-btn" data-filter="paid">
                   Paid
                 </button>
-                <button
-                  type="button"
-                  class="portal-pill invoices-filter-btn"
-                  data-filter="overdue">
+                <button type="button" class="portal-pill invoices-filter-btn" data-filter="overdue">
                   Overdue
                 </button>
               </div>
@@ -216,33 +208,64 @@
 
   <!-- MOBILE BOTTOM NAV -->
   <nav class="portal-bottom-nav">
-    <div class="portal-bottom-nav-inner">
-      <a href="dashboard.html" class="portal-bottom-link" id="nav-dashboard">
-        <div class="portal-bottom-icon">🏠</div>
-        <span>Home</span>
-      </a>
-      <a href="projects.html" class="portal-bottom-link" id="nav-projects">
-        <div class="portal-bottom-icon">📁</div>
-        <span>Projects</span>
-      </a>
-      <a href="files.html" class="portal-bottom-link" id="nav-files">
-        <div class="portal-bottom-icon">📄</div>
-        <span>Files</span>
-      </a>
-      <a href="messages.html" class="portal-bottom-link" id="nav-messages">
-        <div class="portal-bottom-icon">💬</div>
-        <span>Messages</span>
-      </a>
-      <a href="support.html" class="portal-bottom-link" id="nav-support">
-        <div class="portal-bottom-icon">🛟</div>
-        <span>Support</span>
-      </a>
-    </div>
-  </nav>
+  <div class="portal-bottom-nav-inner">
+    <a href="dashboard.html" class="portal-bottom-link" id="nav-dashboard">
+      <div class="portal-bottom-icon">🏠</div>
+      <span>Home</span>
+    </a>
 
-  <!-- Shared config + auth helpers, then main UI logic -->
+    <a href="projects.html" class="portal-bottom-link" id="nav-projects">
+      <div class="portal-bottom-icon">📁</div>
+      <span>Projects</span>
+    </a>
+
+    <a href="files.html" class="portal-bottom-link" id="nav-files">
+      <div class="portal-bottom-icon">📄</div>
+      <span>Files</span>
+    </a>
+
+    <a href="messages.html" class="portal-bottom-link" id="nav-messages">
+      <div class="portal-bottom-icon">💬</div>
+      <span>Messages</span>
+    </a>
+
+    <!-- NEW: More -->
+    <a href="#" class="portal-bottom-link" id="nav-more" data-more>
+      <div class="portal-bottom-icon">⋯</div>
+      <span>More</span>
+    </a>
+  </div>
+</nav>
+
+
+  <!-- Shared config + auth helpers -->
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
+
+  <!-- Auth gate + user hydration -->
+  <script>
+    if (typeof requireAuth === "function" && !requireAuth()) {
+      // requireAuth will redirect
+    } else {
+      const user = typeof getCurrentUser === "function" ? getCurrentUser() : null;
+      const name = (user && (user.name || user.fullName || user.email))
+        ? (user.name || user.fullName || user.email)
+        : "Client";
+
+      document.querySelectorAll("[data-user-name]").forEach(el => (el.textContent = name));
+
+      const avatarUrl = user && (user.avatarUrl || user.avatar) ? (user.avatarUrl || user.avatar) : "";
+      if (avatarUrl) {
+        document.querySelectorAll("[data-avatar]").forEach(img => img.setAttribute("src", avatarUrl));
+      }
+
+      if (typeof verifySession === "function") {
+        verifySession();
+      }
+    }
+  </script>
+
+  <!-- Main UI logic -->
   <script src="js/main.js"></script>
 </body>
 </html>

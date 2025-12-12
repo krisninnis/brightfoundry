@@ -58,10 +58,10 @@
       <div class="portal-sidebar-bottom">
         <button class="portal-account-chip" type="button" id="portal-account-chip">
           <div class="portal-account-avatar">
-            <img src="" alt="Profile avatar" class="portal-avatar-img" />
+            <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
           </div>
           <div class="portal-account-meta">
-            <div class="portal-account-name">Your Client</div>
+            <div class="portal-account-name" data-user-name>Your Client</div>
             <div class="portal-account-sub">Client account</div>
           </div>
           <div class="portal-account-chevron">▾</div>
@@ -94,7 +94,7 @@
           <div class="portal-topbar-left">
             <div class="topbar-title">Files</div>
             <div class="topbar-subtitle">
-              All shared files and assets for your projects.
+              All shared files and assets for <span data-user-name>Your Client</span>.
             </div>
           </div>
 
@@ -103,7 +103,7 @@
               Toggle theme
             </button>
             <div class="portal-avatar">
-              <img src="" alt="Profile avatar" class="portal-avatar-img" />
+              <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
             </div>
           </div>
         </div>
@@ -126,27 +126,9 @@
           />
 
           <div class="files-filter-group">
-            <button
-              type="button"
-              class="files-filter-btn is-active"
-              data-filter="all"
-            >
-              All
-            </button>
-            <button
-              type="button"
-              class="files-filter-btn"
-              data-filter="images"
-            >
-              Images
-            </button>
-            <button
-              type="button"
-              class="files-filter-btn"
-              data-filter="documents"
-            >
-              Documents
-            </button>
+            <button type="button" class="files-filter-btn is-active" data-filter="all">All</button>
+            <button type="button" class="files-filter-btn" data-filter="images">Images</button>
+            <button type="button" class="files-filter-btn" data-filter="documents">Documents</button>
           </div>
         </div>
 
@@ -166,30 +148,63 @@
   </div>
 
   <!-- MOBILE BOTTOM NAV -->
-  <nav class="portal-bottom-nav">
-    <div class="portal-bottom-nav-inner">
-      <a href="dashboard.html" class="portal-bottom-link" id="nav-dashboard">
-        <div class="portal-bottom-icon">🏠</div>
-        <span>Home</span>
-      </a>
-      <a href="projects.html" class="portal-bottom-link" id="nav-projects">
-        <div class="portal-bottom-icon">📁</div>
-        <span>Projects</span>
-      </a>
-      <a href="files.html" class="portal-bottom-link is-active" id="nav-files">
-        <div class="portal-bottom-icon">📄</div>
-        <span>Files</span>
-      </a>
-      <a href="messages.html" class="portal-bottom-link" id="nav-messages">
-        <div class="portal-bottom-icon">💬</div>
-        <span>Messages</span>
-      </a>
-      <a href="support.html" class="portal-bottom-link" id="nav-support">
-        <div class="portal-bottom-icon">🛟</div>
-        <span>Support</span>
-      </a>
-    </div>
-  </nav>
+ <nav class="portal-bottom-nav">
+  <div class="portal-bottom-nav-inner">
+    <a href="dashboard.html" class="portal-bottom-link" id="nav-dashboard">
+      <div class="portal-bottom-icon">🏠</div>
+      <span>Home</span>
+    </a>
+
+    <a href="projects.html" class="portal-bottom-link" id="nav-projects">
+      <div class="portal-bottom-icon">📁</div>
+      <span>Projects</span>
+    </a>
+
+    <a href="files.html" class="portal-bottom-link" id="nav-files">
+      <div class="portal-bottom-icon">📄</div>
+      <span>Files</span>
+    </a>
+
+    <a href="messages.html" class="portal-bottom-link" id="nav-messages">
+      <div class="portal-bottom-icon">💬</div>
+      <span>Messages</span>
+    </a>
+
+    <!-- NEW: More -->
+    <a href="#" class="portal-bottom-link" id="nav-more" data-more>
+      <div class="portal-bottom-icon">⋯</div>
+      <span>More</span>
+    </a>
+  </div>
+</nav>
+
+
+  <!-- Shared config + auth helpers -->
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+
+  <!-- Auth gate + user hydration -->
+  <script>
+    if (typeof requireAuth === "function" && !requireAuth()) {
+      // requireAuth will redirect
+    } else {
+      const user = typeof getCurrentUser === "function" ? getCurrentUser() : null;
+      const name = (user && (user.name || user.fullName || user.email))
+        ? (user.name || user.fullName || user.email)
+        : "Client";
+
+      document.querySelectorAll("[data-user-name]").forEach(el => (el.textContent = name));
+
+      const avatarUrl = user && (user.avatarUrl || user.avatar) ? (user.avatarUrl || user.avatar) : "";
+      if (avatarUrl) {
+        document.querySelectorAll("[data-avatar]").forEach(img => img.setAttribute("src", avatarUrl));
+      }
+
+      if (typeof verifySession === "function") {
+        verifySession();
+      }
+    }
+  </script>
 
   <script src="js/main.js"></script>
 </body>

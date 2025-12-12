@@ -6,11 +6,77 @@
 // - Account chip dropdown + logout
 // - Search & filters
 // - Profile update, support ticket + message creation, invoice status toggling
+// - Offline banner + safe API fetch wrapper (Step 5A)
 
 (function () {
   const THEME_KEY = "bf-portal-theme";
   const AUTH_STORAGE_KEY = "bf-portal-auth"; // same key used in auth.js
   const AVATAR_KEY = "bf-portal-avatar";
+
+  // --------------------
+  // OFFLINE / API STATUS
+  // --------------------
+  let apiOffline = false;
+  let offlineBannerShown = false;
+
+  function ensureOfflineBanner() {
+    if (offlineBannerShown) return;
+
+    const banner = document.createElement("div");
+    banner.className = "portal-offline-banner";
+    banner.setAttribute("role", "status");
+    banner.innerHTML = `
+      <div class="portal-offline-banner-inner">
+        <strong>Offline mode</strong>
+        <span>Some data may be unavailable right now. We’ll reconnect automatically.</span>
+        <button type="button" class="portal-offline-banner-close" aria-label="Dismiss">×</button>
+      </div>
+    `;
+
+    document.body.appendChild(banner);
+
+    const closeBtn = banner.querySelector(".portal-offline-banner-close");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => {
+        banner.remove();
+        offlineBannerShown = false;
+      });
+    }
+
+    offlineBannerShown = true;
+  }
+
+  function setApiOfflineState(isOffline) {
+    apiOffline = !!isOffline;
+    if (apiOffline) ensureOfflineBanner();
+  }
+
+  async function apiFetch(path, options = {}) {
+    if (typeof API_BASE_URL === "undefined" || typeof getAuthHeaders !== "function") {
+      setApiOfflineState(true);
+      throw new Error("API is not configured");
+    }
+
+    const url = `${API_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
+
+    try {
+      const res = await fetch(url, options);
+
+      // Token expired / invalid -> logout and redirect
+      if (res.status === 401) {
+        setApiOfflineState(false);
+        try { localStorage.removeItem(AUTH_STORAGE_KEY); } catch {}
+        redirectToLogin();
+        throw new Error("Not authenticated");
+      }
+
+      setApiOfflineState(false);
+      return res;
+    } catch (err) {
+      setApiOfflineState(true);
+      throw err;
+    }
+  }
 
   // --------------------
   // AUTH HANDLING
@@ -58,7 +124,7 @@
 
     if (!hasHelpers) {
       console.warn(
-        "API config helpers missing; using stored user only (no /auth/me check)."
+        "API config helpers missing; using stored user only (no /me check)."
       );
       return getAuthState()?.user || null;
     }
@@ -66,7 +132,8 @@
     let user = getAuthState()?.user;
 
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/me`, {
+      // ✅ FIX: backend uses /api/me (not /api/auth/me)
+      const res = await apiFetch("/me", {
         headers: getAuthHeaders(),
       });
       if (!res.ok) throw new Error("Not authenticated");
@@ -237,22 +304,14 @@
   // API LOADERS
   // --------------------
   async function loadProjectsFromApi() {
-    if (
-      typeof API_BASE_URL === "undefined" ||
-      typeof getAuthHeaders !== "function"
-    )
-      return;
+    if (typeof API_BASE_URL === "undefined" || typeof getAuthHeaders !== "function") return;
 
     try {
-      const res = await fetch(`${API_BASE_URL}/projects`, {
-        headers: getAuthHeaders(),
-      });
+      const res = await apiFetch("/projects", { headers: getAuthHeaders() });
       if (!res.ok) throw new Error("Failed to fetch projects");
 
       const data = await res.json();
-      if (Array.isArray(data.projects)) {
-        demoProjects = data.projects;
-      }
+      if (Array.isArray(data.projects)) demoProjects = data.projects;
 
       renderDashboardOverview();
       renderDashboardProjects();
@@ -265,22 +324,14 @@
   }
 
   async function loadMessagesFromApi() {
-    if (
-      typeof API_BASE_URL === "undefined" ||
-      typeof getAuthHeaders !== "function"
-    )
-      return;
+    if (typeof API_BASE_URL === "undefined" || typeof getAuthHeaders !== "function") return;
 
     try {
-      const res = await fetch(`${API_BASE_URL}/messages`, {
-        headers: getAuthHeaders(),
-      });
+      const res = await apiFetch("/messages", { headers: getAuthHeaders() });
       if (!res.ok) throw new Error("Failed to fetch messages");
 
       const data = await res.json();
-      if (Array.isArray(data.messages)) {
-        demoMessages = data.messages;
-      }
+      if (Array.isArray(data.messages)) demoMessages = data.messages;
 
       renderDashboardMessages();
       renderMessagesList();
@@ -290,22 +341,14 @@
   }
 
   async function loadFilesFromApi() {
-    if (
-      typeof API_BASE_URL === "undefined" ||
-      typeof getAuthHeaders !== "function"
-    )
-      return;
+    if (typeof API_BASE_URL === "undefined" || typeof getAuthHeaders !== "function") return;
 
     try {
-      const res = await fetch(`${API_BASE_URL}/files`, {
-        headers: getAuthHeaders(),
-      });
+      const res = await apiFetch("/files", { headers: getAuthHeaders() });
       if (!res.ok) throw new Error("Failed to fetch files");
 
       const data = await res.json();
-      if (Array.isArray(data.files)) {
-        demoFiles = data.files;
-      }
+      if (Array.isArray(data.files)) demoFiles = data.files;
 
       renderDashboardFiles();
       renderFilesList();
@@ -315,22 +358,14 @@
   }
 
   async function loadSupportTicketsFromApi() {
-    if (
-      typeof API_BASE_URL === "undefined" ||
-      typeof getAuthHeaders !== "function"
-    )
-      return;
+    if (typeof API_BASE_URL === "undefined" || typeof getAuthHeaders !== "function") return;
 
     try {
-      const res = await fetch(`${API_BASE_URL}/support-tickets`, {
-        headers: getAuthHeaders(),
-      });
+      const res = await apiFetch("/support-tickets", { headers: getAuthHeaders() });
       if (!res.ok) throw new Error("Failed to fetch tickets");
 
       const data = await res.json();
-      if (Array.isArray(data.tickets)) {
-        demoTickets = data.tickets;
-      }
+      if (Array.isArray(data.tickets)) demoTickets = data.tickets;
 
       renderSupportTickets();
       updateDashboardSupportCounts();
@@ -340,22 +375,14 @@
   }
 
   async function loadInvoicesFromApi() {
-    if (
-      typeof API_BASE_URL === "undefined" ||
-      typeof getAuthHeaders !== "function"
-    )
-      return;
+    if (typeof API_BASE_URL === "undefined" || typeof getAuthHeaders !== "function") return;
 
     try {
-      const res = await fetch(`${API_BASE_URL}/invoices`, {
-        headers: getAuthHeaders(),
-      });
+      const res = await apiFetch("/invoices", { headers: getAuthHeaders() });
       if (!res.ok) throw new Error("Failed to fetch invoices");
 
       const data = await res.json();
-      if (Array.isArray(data.invoices)) {
-        demoInvoices = data.invoices;
-      }
+      if (Array.isArray(data.invoices)) demoInvoices = data.invoices;
 
       renderInvoicesList();
       updateDashboardFinancials();
@@ -366,22 +393,14 @@
   }
 
   async function loadTimelineFromApi() {
-    if (
-      typeof API_BASE_URL === "undefined" ||
-      typeof getAuthHeaders !== "function"
-    )
-      return;
+    if (typeof API_BASE_URL === "undefined" || typeof getAuthHeaders !== "function") return;
 
     try {
-      const res = await fetch(`${API_BASE_URL}/timeline`, {
-        headers: getAuthHeaders(),
-      });
+      const res = await apiFetch("/timeline", { headers: getAuthHeaders() });
       if (!res.ok) throw new Error("Failed to fetch timeline");
 
       const data = await res.json();
-      if (Array.isArray(data.events)) {
-        demoTimeline = data.events;
-      }
+      if (Array.isArray(data.events)) demoTimeline = data.events;
 
       renderTimeline();
     } catch (err) {
@@ -393,27 +412,16 @@
   // WRITE HELPERS
   // --------------------
   async function createSupportTicket(subject, projectId) {
-    if (
-      typeof API_BASE_URL === "undefined" ||
-      typeof getAuthHeaders !== "function"
-    ) {
-      throw new Error("API is not configured");
-    }
-
     const trimmed = (subject || "").trim();
-    if (!trimmed) {
-      throw new Error("Please enter a short description of your request.");
-    }
+    if (!trimmed) throw new Error("Please enter a short description of your request.");
 
     const payload = { subject: trimmed };
     if (projectId) {
       const numeric = Number(projectId);
-      if (!Number.isNaN(numeric)) {
-        payload.projectId = numeric;
-      }
+      if (!Number.isNaN(numeric)) payload.projectId = numeric;
     }
 
-    const res = await fetch(`${API_BASE_URL}/support-tickets`, {
+    const res = await apiFetch("/support-tickets", {
       method: "POST",
       headers: getAuthHeaders(),
       body: JSON.stringify(payload),
@@ -433,32 +441,19 @@
   }
 
   async function createMessage(subject, body, projectId) {
-    if (
-      typeof API_BASE_URL === "undefined" ||
-      typeof getAuthHeaders !== "function"
-    ) {
-      throw new Error("API is not configured");
-    }
-
     const trimmedSubject = (subject || "").trim();
     const trimmedBody = (body || "").trim();
 
-    if (!trimmedSubject) {
-      throw new Error("Please add a subject for your message.");
-    }
-    if (!trimmedBody) {
-      throw new Error("Please write a short message.");
-    }
+    if (!trimmedSubject) throw new Error("Please add a subject for your message.");
+    if (!trimmedBody) throw new Error("Please write a short message.");
 
     const payload = { subject: trimmedSubject, body: trimmedBody };
     if (projectId) {
       const numeric = Number(projectId);
-      if (!Number.isNaN(numeric)) {
-        payload.projectId = numeric;
-      }
+      if (!Number.isNaN(numeric)) payload.projectId = numeric;
     }
 
-    const res = await fetch(`${API_BASE_URL}/messages`, {
+    const res = await apiFetch("/messages", {
       method: "POST",
       headers: getAuthHeaders(),
       body: JSON.stringify(payload),
@@ -478,18 +473,11 @@
   }
 
   async function updateProfile(name, email) {
-    if (
-      typeof API_BASE_URL === "undefined" ||
-      typeof getAuthHeaders !== "function"
-    ) {
-      throw new Error("API is not configured");
-    }
-
     const payload = {};
     if (typeof name === "string" && name.trim()) payload.name = name.trim();
     if (typeof email === "string" && email.trim()) payload.email = email.trim();
 
-    const res = await fetch(`${API_BASE_URL}/me`, {
+    const res = await apiFetch("/me", {
       method: "PATCH",
       headers: getAuthHeaders(),
       body: JSON.stringify(payload),
@@ -511,29 +499,14 @@
   }
 
   async function updateInvoiceStatus(invoiceIdLabel, dbStatus) {
-    if (
-      typeof API_BASE_URL === "undefined" ||
-      typeof getAuthHeaders !== "function"
-    ) {
-      throw new Error("API is not configured");
-    }
+    const numeric = parseInt(String(invoiceIdLabel).replace(/^INV-/, ""), 10);
+    if (Number.isNaN(numeric)) throw new Error("Invalid invoice id");
 
-    const numeric = parseInt(
-      String(invoiceIdLabel).replace(/^INV-/, ""),
-      10
-    );
-    if (Number.isNaN(numeric)) {
-      throw new Error("Invalid invoice id");
-    }
-
-    const res = await fetch(
-      `${API_BASE_URL}/invoices/${numeric}/status`,
-      {
-        method: "PATCH",
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ status: dbStatus }),
-      }
-    );
+    const res = await apiFetch(`/invoices/${numeric}/status`, {
+      method: "PATCH",
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ status: dbStatus }),
+    });
 
     if (!res.ok) {
       let message = "Failed to update invoice";
@@ -554,11 +527,8 @@
   function getVisibleProjects() {
     let projects = demoProjects.slice();
 
-    if (projectsFilter === "active") {
-      projects = projects.filter((p) => p.status !== "Completed");
-    } else if (projectsFilter === "completed") {
-      projects = projects.filter((p) => p.status === "Completed");
-    }
+    if (projectsFilter === "active") projects = projects.filter((p) => p.status !== "Completed");
+    else if (projectsFilter === "completed") projects = projects.filter((p) => p.status === "Completed");
 
     if (projectsSearchTerm) {
       const term = projectsSearchTerm.toLowerCase();
@@ -577,28 +547,18 @@
   function isImageFile(file) {
     if (!file.type) return false;
     const lower = file.type.toLowerCase();
-    return (
-      lower.includes("png") ||
-      lower.includes("jpg") ||
-      lower.includes("jpeg") ||
-      lower.includes("gif")
-    );
+    return lower.includes("png") || lower.includes("jpg") || lower.includes("jpeg") || lower.includes("gif");
   }
 
   function getVisibleFiles() {
     let files = demoFiles.slice();
 
-    if (filesFilter === "images") {
-      files = files.filter((f) => isImageFile(f));
-    } else if (filesFilter === "documents") {
-      files = files.filter((f) => !isImageFile(f));
-    }
+    if (filesFilter === "images") files = files.filter((f) => isImageFile(f));
+    else if (filesFilter === "documents") files = files.filter((f) => !isImageFile(f));
 
     if (filesSearchTerm) {
       const term = filesSearchTerm.toLowerCase();
-      files = files.filter((f) =>
-        f.name.toLowerCase().includes(term)
-      );
+      files = files.filter((f) => f.name.toLowerCase().includes(term));
     }
 
     return files;
@@ -607,13 +567,9 @@
   function getVisibleTickets() {
     let tickets = demoTickets.slice();
 
-    if (ticketsFilter === "open") {
-      tickets = tickets.filter((t) => t.status === "Open");
-    } else if (ticketsFilter === "in-progress") {
-      tickets = tickets.filter((t) => t.status === "In progress");
-    } else if (ticketsFilter === "resolved") {
-      tickets = tickets.filter((t) => t.status === "Resolved");
-    }
+    if (ticketsFilter === "open") tickets = tickets.filter((t) => t.status === "Open");
+    else if (ticketsFilter === "in-progress") tickets = tickets.filter((t) => t.status === "In progress");
+    else if (ticketsFilter === "resolved") tickets = tickets.filter((t) => t.status === "Resolved");
 
     if (ticketsSearchTerm) {
       const term = ticketsSearchTerm.toLowerCase();
@@ -632,13 +588,9 @@
   function getVisibleInvoices() {
     let invoices = demoInvoices.slice();
 
-    if (invoicesFilter === "outstanding") {
-      invoices = invoices.filter((i) => i.status === "Outstanding");
-    } else if (invoicesFilter === "paid") {
-      invoices = invoices.filter((i) => i.status === "Paid");
-    } else if (invoicesFilter === "overdue") {
-      invoices = invoices.filter((i) => i.status === "Overdue");
-    }
+    if (invoicesFilter === "outstanding") invoices = invoices.filter((i) => i.status === "Outstanding");
+    else if (invoicesFilter === "paid") invoices = invoices.filter((i) => i.status === "Paid");
+    else if (invoicesFilter === "overdue") invoices = invoices.filter((i) => i.status === "Overdue");
 
     if (invoicesSearchTerm) {
       const term = invoicesSearchTerm.toLowerCase();
@@ -658,22 +610,13 @@
   function getVisibleTimeline() {
     let events = demoTimeline.slice();
 
-    if (timelineFilter === "project") {
-      events = events.filter((e) => e.type === "project");
-    } else if (timelineFilter === "billing") {
-      events = events.filter((e) => e.type === "billing");
-    } else if (timelineFilter === "support") {
-      events = events.filter((e) => e.type === "support");
-    }
+    if (timelineFilter === "project") events = events.filter((e) => e.type === "project");
+    else if (timelineFilter === "billing") events = events.filter((e) => e.type === "billing");
+    else if (timelineFilter === "support") events = events.filter((e) => e.type === "support");
 
     if (timelineSearchTerm) {
       const term = timelineSearchTerm.toLowerCase();
-      events = events.filter((e) => {
-        return (
-          e.label.toLowerCase().includes(term) ||
-          e.project.toLowerCase().includes(term)
-        );
-      });
+      events = events.filter((e) => e.label.toLowerCase().includes(term) || e.project.toLowerCase().includes(term));
     }
 
     return events;
@@ -688,9 +631,7 @@
     const completedProjects = projects.filter((p) => p.status === "Completed");
 
     const openEl = document.getElementById("dashboard-open-projects");
-    const completedEl = document.getElementById(
-      "dashboard-completed-projects"
-    );
+    const completedEl = document.getElementById("dashboard-completed-projects");
 
     if (openEl) openEl.textContent = String(openProjects.length);
     if (completedEl) completedEl.textContent = String(completedProjects.length);
@@ -702,12 +643,12 @@
 
     if (!demoProjects.length) {
       container.innerHTML =
-        "<p class=\"empty-state-text\">No projects yet – once you have an active project, you’ll see it here.</p>";
+        '<p class="empty-state-text">No projects yet – once you have an active project, you’ll see it here.</p>';
       return;
     }
 
     const recent = demoProjects.slice(0, 3);
-    const items = recent
+    container.innerHTML = recent
       .map(
         (p) => `
       <div class="dashboard-project-row">
@@ -722,8 +663,6 @@
       </div>`
       )
       .join("");
-
-    container.innerHTML = items;
   }
 
   function renderDashboardMessages() {
@@ -732,12 +671,12 @@
 
     if (!demoMessages.length) {
       container.innerHTML =
-        "<p class=\"empty-state-text\">No recent messages. When your designer sends updates, they’ll show here.</p>";
+        '<p class="empty-state-text">No recent messages. When your designer sends updates, they’ll show here.</p>';
       return;
     }
 
     const recent = demoMessages.slice(0, 3);
-    const items = recent
+    container.innerHTML = recent
       .map(
         (m) => `
       <div class="dashboard-message-row">
@@ -752,8 +691,6 @@
       </div>`
       )
       .join("");
-
-    container.innerHTML = items;
   }
 
   function renderDashboardFiles() {
@@ -762,12 +699,12 @@
 
     if (!demoFiles.length) {
       container.innerHTML =
-        "<p class=\"empty-state-text\">No files yet. Design drafts, exports and assets will appear here.</p>";
+        '<p class="empty-state-text">No files yet. Design drafts, exports and assets will appear here.</p>';
       return;
     }
 
     const recent = demoFiles.slice(0, 3);
-    const items = recent
+    container.innerHTML = recent
       .map(
         (f) => `
       <div class="dashboard-file-row">
@@ -781,16 +718,12 @@
       </div>`
       )
       .join("");
-
-    container.innerHTML = items;
   }
 
   function updateDashboardSupportCounts() {
     const tickets = demoTickets;
     const openCount = tickets.filter((t) => t.status === "Open").length;
-    const resolvedCount = tickets.filter(
-      (t) => t.status === "Resolved"
-    ).length;
+    const resolvedCount = tickets.filter((t) => t.status === "Resolved").length;
 
     const openEl = document.getElementById("dashboard-open-tickets");
     const resolvedEl = document.getElementById("dashboard-resolved-tickets");
@@ -820,9 +753,7 @@
 
     const invoices = demoInvoices;
     const total = invoices.length;
-    const outstanding = invoices.filter(
-      (i) => i.status === "Outstanding"
-    ).length;
+    const outstanding = invoices.filter((i) => i.status === "Outstanding").length;
     const overdue = invoices.filter((i) => i.status === "Overdue").length;
 
     if (totalEl) totalEl.textContent = String(total);
@@ -837,11 +768,11 @@
     const projects = getVisibleProjects();
     if (!projects.length) {
       container.innerHTML =
-        "<p class=\"empty-state-text\">No projects found. Try adjusting your filters or search.</p>";
+        '<p class="empty-state-text">No projects found. Try adjusting your filters or search.</p>';
       return;
     }
 
-    const rows = projects
+    container.innerHTML = projects
       .map(
         (p) => `
       <div class="projects-row">
@@ -849,17 +780,11 @@
           <div class="projects-name-main">${p.name}</div>
           <div class="projects-name-sub">${p.phase}</div>
         </div>
-        <div class="projects-cell projects-status">
-          ${p.status}
-        </div>
-        <div class="projects-cell projects-updated">
-          ${p.updated}
-        </div>
+        <div class="projects-cell projects-status">${p.status}</div>
+        <div class="projects-cell projects-updated">${p.updated}</div>
       </div>`
       )
       .join("");
-
-    container.innerHTML = rows;
   }
 
   function renderFilesList() {
@@ -869,11 +794,11 @@
     const files = getVisibleFiles();
     if (!files.length) {
       container.innerHTML =
-        "<p class=\"empty-state-text\">No files found. Once your designer shares assets, you’ll see them here.</p>";
+        '<p class="empty-state-text">No files found. Once your designer shares assets, you’ll see them here.</p>';
       return;
     }
 
-    const rows = files
+    container.innerHTML = files
       .map(
         (f) => `
       <div class="files-row">
@@ -881,17 +806,11 @@
           <div class="files-name-main">${f.name}</div>
           <div class="files-name-sub">${f.project}</div>
         </div>
-        <div class="files-cell files-type">
-          ${f.type || ""}
-        </div>
-        <div class="files-cell files-updated">
-          ${f.uploaded}
-        </div>
+        <div class="files-cell files-type">${f.type || ""}</div>
+        <div class="files-cell files-updated">${f.uploaded}</div>
       </div>`
       )
       .join("");
-
-    container.innerHTML = rows;
   }
 
   function renderMessagesList() {
@@ -901,11 +820,11 @@
     const messages = demoMessages.slice();
     if (!messages.length) {
       container.innerHTML =
-        "<p class=\"empty-state-text\">No messages yet. Updates from your designer will appear here.</p>";
+        '<p class="empty-state-text">No messages yet. Updates from your designer will appear here.</p>';
       return;
     }
 
-    const rows = messages
+    container.innerHTML = messages
       .map(
         (m) => `
       <div class="messages-row">
@@ -920,8 +839,6 @@
       </div>`
       )
       .join("");
-
-    container.innerHTML = rows;
   }
 
   function renderSupportTickets() {
@@ -931,11 +848,11 @@
     const tickets = getVisibleTickets();
     if (!tickets.length) {
       container.innerHTML =
-        "<p class=\"empty-state-text\">No support tickets yet. When you raise a request, it’ll appear here.</p>";
+        '<p class="empty-state-text">No support tickets yet. When you raise a request, it’ll appear here.</p>';
       return;
     }
 
-    const rows = tickets
+    container.innerHTML = tickets
       .map((t) => {
         const statusClass = t.status.toLowerCase().replace(" ", "-");
         return `
@@ -944,17 +861,11 @@
             <div class="tickets-subject-main">${t.subject}</div>
             <div class="tickets-subject-sub">${t.id} • ${t.project}</div>
           </div>
-          <div class="tickets-cell tickets-status tickets-status-${statusClass}">
-            ${t.status}
-          </div>
-          <div class="tickets-cell tickets-updated">
-            ${t.updated}
-          </div>
+          <div class="tickets-cell tickets-status tickets-status-${statusClass}">${t.status}</div>
+          <div class="tickets-cell tickets-updated">${t.updated}</div>
         </div>`;
       })
       .join("");
-
-    container.innerHTML = rows;
   }
 
   function renderInvoicesList() {
@@ -964,11 +875,11 @@
     const invoices = getVisibleInvoices();
     if (!invoices.length) {
       container.innerHTML =
-        "<p class=\"empty-state-text\">No invoices found. Try a different search or filter.</p>";
+        '<p class="empty-state-text">No invoices found. Try a different search or filter.</p>';
       return;
     }
 
-    const rows = invoices
+    container.innerHTML = invoices
       .map((inv) => {
         const statusClass = inv.status.toLowerCase();
         return `
@@ -979,20 +890,12 @@
             <div class="invoices-project-main">${inv.project}</div>
             <div class="invoices-project-sub">${inv.id}</div>
           </div>
-          <div class="invoices-cell invoices-amount">
-            ${inv.amount}
-          </div>
-          <div class="invoices-cell invoices-when">
-            ${inv.when || ""}
-          </div>
-          <div class="invoices-cell invoices-status invoices-status-${statusClass}">
-            ${inv.status}
-          </div>
+          <div class="invoices-cell invoices-amount">${inv.amount}</div>
+          <div class="invoices-cell invoices-when">${inv.when || ""}</div>
+          <div class="invoices-cell invoices-status invoices-status-${statusClass}">${inv.status}</div>
         </div>`;
       })
       .join("");
-
-    container.innerHTML = rows;
   }
 
   function renderTimeline() {
@@ -1002,26 +905,22 @@
     const events = getVisibleTimeline();
     if (!events.length) {
       container.innerHTML =
-        "<p class=\"empty-state-text\">Nothing on the timeline yet. As your project moves forward, key milestones will appear here.</p>";
+        '<p class="empty-state-text">Nothing on the timeline yet. As your project moves forward, key milestones will appear here.</p>';
       return;
     }
 
-    const rows = events
+    container.innerHTML = events
       .map(
         (e) => `
       <div class="timeline-row">
         <div class="timeline-icon timeline-icon-${e.type}"></div>
         <div class="timeline-main">
           <div class="timeline-label">${e.label}</div>
-          <div class="timeline-sub">
-            ${e.project} • ${e.date}
-          </div>
+          <div class="timeline-sub">${e.project} • ${e.date}</div>
         </div>
       </div>`
       )
       .join("");
-
-    container.innerHTML = rows;
   }
 
   // --------------------
@@ -1036,8 +935,7 @@
 
     const defaultOption = document.createElement("option");
     defaultOption.value = "";
-    defaultOption.textContent =
-      "General (not linked to a specific project)";
+    defaultOption.textContent = "General (not linked to a specific project)";
     defaultOption.setAttribute("data-default", "true");
     select.appendChild(defaultOption);
 
@@ -1060,8 +958,7 @@
 
     const defaultOption = document.createElement("option");
     defaultOption.value = "";
-    defaultOption.textContent =
-      "General (not linked to a specific project)";
+    defaultOption.textContent = "General (not linked to a specific project)";
     defaultOption.setAttribute("data-default", "true");
     select.appendChild(defaultOption);
 
@@ -1101,11 +998,11 @@
 
       if (!filtered.length) {
         listEl.innerHTML =
-          "<p class=\"empty-state-text\">No messages match that search.</p>";
+          '<p class="empty-state-text">No messages match that search.</p>';
         return;
       }
 
-      const rows = filtered
+      listEl.innerHTML = filtered
         .map(
           (m) => `
         <div class="messages-row">
@@ -1120,8 +1017,6 @@
         </div>`
         )
         .join("");
-
-      listEl.innerHTML = rows;
     });
   }
 
@@ -1169,9 +1064,7 @@
     function applyUserToHeader(u) {
       nameEls.forEach((el) => (el.textContent = u.name || "Your Client"));
       emailEls.forEach((el) => (el.textContent = u.email || ""));
-      displayNameEls.forEach(
-        (el) => (el.textContent = u.name || "Your Client")
-      );
+      displayNameEls.forEach((el) => (el.textContent = u.name || "Your Client"));
     }
 
     applyUserToHeader(user);
@@ -1194,9 +1087,7 @@
     document.querySelectorAll(".portal-bottom-link").forEach((link) => {
       const href = link.getAttribute("href");
       if (!href) return;
-      if (href.endsWith(currentPage)) {
-        link.classList.add("is-active");
-      }
+      if (href.endsWith(currentPage)) link.classList.add("is-active");
     });
 
     const logoutLinks = document.querySelectorAll("[data-logout]");
@@ -1219,9 +1110,7 @@
 
     // PROJECTS filters/search
     const projectsSearchInput = document.getElementById("projects-search");
-    const projectFilterButtons = document.querySelectorAll(
-      ".projects-filter-btn"
-    );
+    const projectFilterButtons = document.querySelectorAll(".projects-filter-btn");
     if (projectsSearchInput) {
       projectsSearchInput.addEventListener("input", function (e) {
         projectsSearchTerm = e.target.value.trim();
@@ -1242,8 +1131,7 @@
 
     // FILES filters/search
     const filesSearchInput = document.getElementById("files-search");
-    const filesFilterButtons =
-      document.querySelectorAll(".files-filter-btn");
+    const filesFilterButtons = document.querySelectorAll(".files-filter-btn");
     if (filesSearchInput) {
       filesSearchInput.addEventListener("input", function (e) {
         filesSearchTerm = e.target.value.trim();
@@ -1267,13 +1155,10 @@
     populateMessageProjectOptions();
 
     const newMessageForm = document.getElementById("new-message-form");
-    const newMessageSubject =
-      document.getElementById("new-message-subject");
+    const newMessageSubject = document.getElementById("new-message-subject");
     const newMessageBody = document.getElementById("new-message-body");
-    const newMessageProject =
-      document.getElementById("new-message-project");
-    const newMessageStatus =
-      document.getElementById("new-message-status");
+    const newMessageProject = document.getElementById("new-message-project");
+    const newMessageStatus = document.getElementById("new-message-status");
 
     if (newMessageForm && newMessageSubject && newMessageBody) {
       newMessageForm.addEventListener("submit", async function (e) {
@@ -1281,31 +1166,19 @@
 
         const subject = newMessageSubject.value.trim();
         const body = newMessageBody.value.trim();
-        const projectValue =
-          newMessageProject && newMessageProject.value
-            ? newMessageProject.value
-            : "";
+        const projectValue = newMessageProject && newMessageProject.value ? newMessageProject.value : "";
 
         if (!subject || !body) {
-          if (newMessageStatus) {
-            newMessageStatus.textContent =
-              "Please add a subject and a short message.";
-          }
+          if (newMessageStatus) newMessageStatus.textContent = "Please add a subject and a short message.";
           return;
         }
 
-        const submitButton = newMessageForm.querySelector(
-          "button[type='submit']"
-        );
+        const submitButton = newMessageForm.querySelector("button[type='submit']");
         if (submitButton) submitButton.disabled = true;
         if (newMessageStatus) newMessageStatus.textContent = "Sending...";
 
         try {
-          const message = await createMessage(
-            subject,
-            body,
-            projectValue
-          );
+          const message = await createMessage(subject, body, projectValue);
           demoMessages = [message, ...demoMessages];
           newMessageSubject.value = "";
           newMessageBody.value = "";
@@ -1313,13 +1186,11 @@
           renderMessagesList();
           renderDashboardMessages();
           if (newMessageStatus) newMessageStatus.textContent = "Message sent.";
+          loadTimelineFromApi();
         } catch (err) {
           console.error("Failed to send message:", err);
           if (newMessageStatus) {
-            newMessageStatus.textContent =
-              err && err.message
-                ? err.message
-                : "Could not send message. Please try again.";
+            newMessageStatus.textContent = err && err.message ? err.message : "Could not send message. Please try again.";
           }
         } finally {
           if (submitButton) submitButton.disabled = false;
@@ -1331,15 +1202,11 @@
     populateTicketProjectOptions();
 
     const ticketsSearchInput = document.getElementById("tickets-search");
-    const ticketFilterButtons =
-      document.querySelectorAll(".tickets-filter-btn");
+    const ticketFilterButtons = document.querySelectorAll(".tickets-filter-btn");
     const newTicketForm = document.getElementById("new-ticket-form");
-    const newTicketSubject =
-      document.getElementById("new-ticket-subject");
-    const newTicketStatus =
-      document.getElementById("new-ticket-status");
-    const newTicketProject =
-      document.getElementById("new-ticket-project");
+    const newTicketSubject = document.getElementById("new-ticket-subject");
+    const newTicketStatus = document.getElementById("new-ticket-status");
+    const newTicketProject = document.getElementById("new-ticket-project");
 
     if (ticketsSearchInput) {
       ticketsSearchInput.addEventListener("input", function (e) {
@@ -1352,9 +1219,7 @@
         btn.addEventListener("click", function () {
           const value = btn.getAttribute("data-filter") || "all";
           ticketsFilter = value;
-          ticketFilterButtons.forEach((b) =>
-            b.classList.remove("is-active")
-          );
+          ticketFilterButtons.forEach((b) => b.classList.remove("is-active"));
           btn.classList.add("is-active");
           renderSupportTickets();
         })
@@ -1366,25 +1231,16 @@
         e.preventDefault();
 
         const subject = newTicketSubject.value.trim();
-        const projectValue =
-          newTicketProject && newTicketProject.value
-            ? newTicketProject.value
-            : "";
+        const projectValue = newTicketProject && newTicketProject.value ? newTicketProject.value : "";
 
         if (!subject) {
-          if (newTicketStatus) {
-            newTicketStatus.textContent =
-              "Please add a short description of your request.";
-          }
+          if (newTicketStatus) newTicketStatus.textContent = "Please add a short description of your request.";
           return;
         }
 
-        const submitButton = newTicketForm.querySelector(
-          "button[type='submit']"
-        );
+        const submitButton = newTicketForm.querySelector("button[type='submit']");
         if (submitButton) submitButton.disabled = true;
-        if (newTicketStatus)
-          newTicketStatus.textContent = "Sending your request...";
+        if (newTicketStatus) newTicketStatus.textContent = "Sending your request...";
 
         try {
           const ticket = await createSupportTicket(subject, projectValue);
@@ -1393,15 +1249,12 @@
           if (newTicketProject) newTicketProject.value = "";
           renderSupportTickets();
           updateDashboardSupportCounts();
-          if (newTicketStatus)
-            newTicketStatus.textContent = "Support request created.";
+          if (newTicketStatus) newTicketStatus.textContent = "Support request created.";
+          loadTimelineFromApi();
         } catch (err) {
           console.error("Failed to create support ticket:", err);
           if (newTicketStatus) {
-            newTicketStatus.textContent =
-              err && err.message
-                ? err.message
-                : "Could not create support ticket. Please try again.";
+            newTicketStatus.textContent = err && err.message ? err.message : "Could not create support ticket. Please try again.";
           }
         } finally {
           if (submitButton) submitButton.disabled = false;
@@ -1411,8 +1264,7 @@
 
     // INVOICES search + filters + click-to-toggle
     const invoicesSearchInput = document.getElementById("invoices-search");
-    const invoiceFilterButtons =
-      document.querySelectorAll(".invoices-filter-btn");
+    const invoiceFilterButtons = document.querySelectorAll(".invoices-filter-btn");
     if (invoicesSearchInput) {
       invoicesSearchInput.addEventListener("input", function (e) {
         invoicesSearchTerm = e.target.value.trim();
@@ -1424,9 +1276,7 @@
         btn.addEventListener("click", function () {
           const value = btn.getAttribute("data-filter") || "all";
           invoicesFilter = value;
-          invoiceFilterButtons.forEach((b) =>
-            b.classList.remove("is-active")
-          );
+          invoiceFilterButtons.forEach((b) => b.classList.remove("is-active"));
           btn.classList.add("is-active");
           renderInvoicesList();
         })
@@ -1456,36 +1306,26 @@
 
         if (!dbStatus) return;
 
-        const ok = window.confirm(
-          `Demo: mark invoice ${idLabel} as ${newLabelStatus}?`
-        );
+        const ok = window.confirm(`Demo: mark invoice ${idLabel} as ${newLabelStatus}?`);
         if (!ok) return;
 
         try {
           const updated = await updateInvoiceStatus(idLabel, dbStatus);
-          demoInvoices = demoInvoices.map((inv) =>
-            inv.id === updated.id ? updated : inv
-          );
+          demoInvoices = demoInvoices.map((inv) => (inv.id === updated.id ? updated : inv));
           renderInvoicesList();
           updateDashboardFinancials();
           updateInvoiceSidebarMetrics();
           loadTimelineFromApi();
         } catch (err) {
           console.error("Failed to update invoice:", err);
-          window.alert(
-            err && err.message
-              ? err.message
-              : "Could not update invoice status."
-          );
+          window.alert(err && err.message ? err.message : "Could not update invoice status.");
         }
       });
     }
 
     // TIMELINE filters/search
-    const timelineSearchInput =
-      document.getElementById("timeline-search");
-    const timelineFilterButtons =
-      document.querySelectorAll(".timeline-filter-btn");
+    const timelineSearchInput = document.getElementById("timeline-search");
+    const timelineFilterButtons = document.querySelectorAll(".timeline-filter-btn");
     if (timelineSearchInput) {
       timelineSearchInput.addEventListener("input", function (e) {
         timelineSearchTerm = e.target.value.trim();
@@ -1497,9 +1337,7 @@
         btn.addEventListener("click", function () {
           const value = btn.getAttribute("data-filter") || "all";
           timelineFilter = value;
-          timelineFilterButtons.forEach((b) =>
-            b.classList.remove("is-active")
-          );
+          timelineFilterButtons.forEach((b) => b.classList.remove("is-active"));
           btn.classList.add("is-active");
           renderTimeline();
         })
@@ -1522,9 +1360,7 @@
         const nameValue = nameInput ? nameInput.value : "";
         const emailValue = emailInput ? emailInput.value : "";
 
-        const submitButton = settingsForm.querySelector(
-          "button[type='submit']"
-        );
+        const submitButton = settingsForm.querySelector("button[type='submit']");
         if (submitButton) submitButton.disabled = true;
         if (statusEl) statusEl.textContent = "Saving your details...";
 
@@ -1537,10 +1373,7 @@
         } catch (err) {
           console.error("Failed to update profile:", err);
           if (statusEl) {
-            statusEl.textContent =
-              err && err.message
-                ? err.message
-                : "Could not update your profile. Please try again.";
+            statusEl.textContent = err && err.message ? err.message : "Could not update your profile. Please try again.";
           }
         } finally {
           if (submitButton) submitButton.disabled = false;
@@ -1565,3 +1398,78 @@
     loadTimelineFromApi();
   });
 })();
+
+// --------------------
+// MOBILE "MORE" MENU
+// --------------------
+function setupMobileMoreMenu() {
+  const moreBtn = document.querySelector("[data-more]");
+  if (!moreBtn) return;
+
+  // Create overlay + sheet once
+  let overlay = document.querySelector(".portal-more-overlay");
+  let sheet = document.querySelector(".portal-more-sheet");
+
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.className = "portal-more-overlay";
+    document.body.appendChild(overlay);
+  }
+
+  if (!sheet) {
+    sheet = document.createElement("div");
+    sheet.className = "portal-more-sheet";
+    sheet.innerHTML = `
+      <a href="invoices.html">🧾 <span>Invoices</span></a>
+      <a href="timeline.html">📅 <span>Timeline</span></a>
+      <a href="settings.html">⚙️ <span>Settings</span></a>
+      <button type="button" class="more-muted" data-logout>🚪 <span>Log out</span></button>
+    `;
+    document.body.appendChild(sheet);
+  }
+
+  function openMenu() {
+    overlay.classList.add("is-open");
+    sheet.classList.add("is-open");
+  }
+
+  function closeMenu() {
+    overlay.classList.remove("is-open");
+    sheet.classList.remove("is-open");
+  }
+
+  moreBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const isOpen = sheet.classList.contains("is-open");
+    if (isOpen) closeMenu();
+    else openMenu();
+  });
+
+  overlay.addEventListener("click", closeMenu);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMenu();
+  });
+
+  // Hook logout inside the More sheet (since it's created dynamically)
+  const sheetLogoutBtn = sheet.querySelector("[data-logout]");
+  if (sheetLogoutBtn) {
+    sheetLogoutBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      try {
+        localStorage.removeItem("bf-portal-auth");
+      } catch {}
+      closeMenu();
+      window.location.href = "login.html";
+    });
+  }
+
+  // Close when navigating via menu links
+  sheet.querySelectorAll("a").forEach((a) =>
+    a.addEventListener("click", closeMenu)
+  );
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  setupMobileMoreMenu();
+});

@@ -1,6 +1,9 @@
 # Node modules
 server/node_modules/
 
+# SQLite databases
+*.db
+
 # Log files
 *.log
 
@@ -10,3 +13,4 @@ Thumbs.db
 
 # Local dev settings
 .env
+🌐 WEBSITE & APP DEVELOPMENT BUSINESS.txt

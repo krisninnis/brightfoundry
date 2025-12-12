@@ -14,9 +14,11 @@
     <!-- SIDEBAR -->
     <aside class="portal-sidebar">
       <div class="portal-brand">
-        <img src="../img/brightfoundry-logo-light.png"
-             alt="BrightFoundry logo"
-             class="portal-brand-logo" />
+        <img
+          src="../img/brightfoundry-logo-light.png"
+          alt="BrightFoundry logo"
+          class="portal-brand-logo"
+        />
         <div class="portal-brand-text">Client Portal</div>
       </div>
 
@@ -51,47 +53,33 @@
         </a>
       </nav>
 
-      <!-- ACCOUNT CHIP + MENU -->
+      <!-- ACCOUNT CHIP + MENU (standardised) -->
       <div class="portal-sidebar-bottom">
         <button class="portal-account-chip" type="button" id="portal-account-chip">
           <div class="portal-account-avatar">
-            <img src="" alt="Profile avatar" class="portal-avatar-img" />
+            <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
           </div>
           <div class="portal-account-meta">
-            <div class="portal-account-name">Your Client</div>
+            <div class="portal-account-name" data-user-name>Your Client</div>
             <div class="portal-account-sub">Client account</div>
           </div>
           <div class="portal-account-chevron">▾</div>
         </button>
 
         <div class="portal-account-menu" id="portal-account-menu">
-          <div class="portal-account-menu-inner">
-            <div class="portal-account-menu-header">
-              <div class="portal-account-avatar portal-account-avatar-inline">
-                <img src="" alt="Profile avatar" class="portal-avatar-img" />
-              </div>
-              <div>
-                <div class="portal-account-name" id="portal-account-name-menu">
-                  Your Client
-                </div>
-                <div class="portal-account-sub" id="portal-account-email-menu">
-                  client@example.com
-                </div>
-              </div>
-            </div>
-
-            <div class="portal-account-menu-body">
-              <a href="settings.html" class="portal-account-menu-link">
-                Account &amp; settings
-              </a>
-            </div>
-
-            <div class="portal-account-menu-footer">
-              <button type="button" class="portal-account-menu-link" data-logout>
-                Log out
-              </button>
-            </div>
-          </div>
+          <a href="settings.html" class="portal-account-menu-item">
+            ⚙️ <span>Account settings</span>
+          </a>
+          <button type="button" class="portal-account-menu-item portal-account-menu-item-muted">
+            ➕ <span>Add another account</span>
+          </button>
+          <a
+            href="login.html"
+            class="portal-account-menu-item portal-account-menu-danger"
+            data-logout
+          >
+            🚪 <span>Log out</span>
+          </a>
         </div>
       </div>
     </aside>
@@ -101,13 +89,9 @@
       <header class="portal-topbar">
         <div class="portal-topbar-inner">
           <div class="portal-topbar-left">
-            <button class="portal-mobile-menu-toggle" type="button" id="portal-mobile-menu-toggle">
-              ☰
-            </button>
-            <div class="portal-breadcrumb">
-              <a href="dashboard.html" class="portal-breadcrumb-link">Dashboard</a>
-              <span class="portal-breadcrumb-separator">/</span>
-              <span class="portal-breadcrumb-current">Messages</span>
+            <div class="topbar-title">Messages</div>
+            <div class="topbar-subtitle">
+              Keep all your conversations with the studio in one place.
             </div>
           </div>
 
@@ -116,7 +100,7 @@
               Toggle theme
             </button>
             <div class="portal-avatar">
-              <img src="" alt="Profile avatar" class="portal-avatar-img" />
+              <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
             </div>
           </div>
         </div>
@@ -215,33 +199,64 @@
   </div>
 
   <!-- MOBILE BOTTOM NAV -->
-  <nav class="portal-bottom-nav">
-    <div class="portal-bottom-nav-inner">
-      <a href="dashboard.html" class="portal-bottom-link" id="nav-dashboard">
-        <div class="portal-bottom-icon">🏠</div>
-        <span>Home</span>
-      </a>
-      <a href="projects.html" class="portal-bottom-link" id="nav-projects">
-        <div class="portal-bottom-icon">📁</div>
-        <span>Projects</span>
-      </a>
-      <a href="files.html" class="portal-bottom-link" id="nav-files">
-        <div class="portal-bottom-icon">📄</div>
-        <span>Files</span>
-      </a>
-      <a href="messages.html" class="portal-bottom-link is-active" id="nav-messages">
-        <div class="portal-bottom-icon">💬</div>
-        <span>Messages</span>
-      </a>
-      <a href="support.html" class="portal-bottom-link" id="nav-support">
-        <div class="portal-bottom-icon">🛟</div>
-        <span>Support</span>
-      </a>
-    </div>
-  </nav>
+ <nav class="portal-bottom-nav">
+  <div class="portal-bottom-nav-inner">
+    <a href="dashboard.html" class="portal-bottom-link" id="nav-dashboard">
+      <div class="portal-bottom-icon">🏠</div>
+      <span>Home</span>
+    </a>
 
+    <a href="projects.html" class="portal-bottom-link" id="nav-projects">
+      <div class="portal-bottom-icon">📁</div>
+      <span>Projects</span>
+    </a>
+
+    <a href="files.html" class="portal-bottom-link" id="nav-files">
+      <div class="portal-bottom-icon">📄</div>
+      <span>Files</span>
+    </a>
+
+    <a href="messages.html" class="portal-bottom-link" id="nav-messages">
+      <div class="portal-bottom-icon">💬</div>
+      <span>Messages</span>
+    </a>
+
+    <!-- NEW: More -->
+    <a href="#" class="portal-bottom-link" id="nav-more" data-more>
+      <div class="portal-bottom-icon">⋯</div>
+      <span>More</span>
+    </a>
+  </div>
+</nav>
+
+
+  <!-- Shared config + auth helpers -->
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
+
+  <!-- Auth gate + user hydration -->
+  <script>
+    if (typeof requireAuth === "function" && !requireAuth()) {
+      // requireAuth will redirect
+    } else {
+      const user = typeof getCurrentUser === "function" ? getCurrentUser() : null;
+      const name = (user && (user.name || user.fullName || user.email))
+        ? (user.name || user.fullName || user.email)
+        : "Client";
+
+      document.querySelectorAll("[data-user-name]").forEach(el => (el.textContent = name));
+
+      const avatarUrl = user && (user.avatarUrl || user.avatar) ? (user.avatarUrl || user.avatar) : "";
+      if (avatarUrl) {
+        document.querySelectorAll("[data-avatar]").forEach(img => img.setAttribute("src", avatarUrl));
+      }
+
+      if (typeof verifySession === "function") {
+        verifySession();
+      }
+    }
+  </script>
+
   <script src="js/main.js"></script>
 </body>
 </html>

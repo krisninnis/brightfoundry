@@ -22,7 +22,7 @@
         <div class="portal-brand-text">Client Portal</div>
       </div>
 
-      <!-- MAIN NAV (wrapped in nav-group so it sits in a container/box) -->
+      <!-- MAIN NAV -->
       <nav class="portal-nav portal-nav-group">
         <a href="dashboard.html" class="portal-nav-link is-active">
           <span class="portal-nav-icon">🏠</span>
@@ -54,14 +54,14 @@
         </a>
       </nav>
 
-      <!-- BOTTOM GROUP (account chip + dropdown) -->
+      <!-- BOTTOM GROUP -->
       <div class="portal-sidebar-bottom">
         <button class="portal-account-chip" type="button" id="portal-account-chip">
           <div class="portal-account-avatar">
-            <img src="" alt="Profile avatar" class="portal-avatar-img" />
+            <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
           </div>
           <div class="portal-account-meta">
-            <div class="portal-account-name">Your Client</div>
+            <div class="portal-account-name" data-user-name>Your Client</div>
             <div class="portal-account-sub">Client account</div>
           </div>
           <div class="portal-account-chevron">▾</div>
@@ -93,7 +93,7 @@
           <div class="portal-topbar-left">
             <div class="topbar-title">Dashboard</div>
             <div class="topbar-subtitle">
-              Welcome back, <span>Your Client</span>
+              Welcome back, <span data-user-name>Your Client</span>
             </div>
           </div>
 
@@ -102,7 +102,7 @@
               Toggle theme
             </button>
             <div class="portal-avatar">
-              <img src="" alt="Profile avatar" class="portal-avatar-img" />
+              <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
             </div>
           </div>
         </div>
@@ -119,7 +119,6 @@
               A quick overview of your projects, messages and support.
             </p>
           </div>
-          <!-- Removed second Toggle theme button to avoid duplicates -->
         </div>
 
         <!-- Overview summary cards -->
@@ -168,34 +167,66 @@
   </div>
 
   <!-- MOBILE BOTTOM NAV -->
-  <nav class="portal-bottom-nav">
-    <div class="portal-bottom-nav-inner">
-      <a href="dashboard.html" class="portal-bottom-link is-active" id="nav-dashboard">
-        <div class="portal-bottom-icon">🏠</div>
-        <span>Home</span>
-      </a>
-      <a href="projects.html" class="portal-bottom-link" id="nav-projects">
-        <div class="portal-bottom-icon">📁</div>
-        <span>Projects</span>
-      </a>
-      <a href="files.html" class="portal-bottom-link" id="nav-files">
-        <div class="portal-bottom-icon">📄</div>
-        <span>Files</span>
-      </a>
-      <a href="messages.html" class="portal-bottom-link" id="nav-messages">
-        <div class="portal-bottom-icon">💬</div>
-        <span>Messages</span>
-      </a>
-      <a href="support.html" class="portal-bottom-link" id="nav-support">
-        <div class="portal-bottom-icon">🛟</div>
-        <span>Support</span>
-      </a>
-    </div>
-  </nav>
+ <nav class="portal-bottom-nav">
+  <div class="portal-bottom-nav-inner">
+    <a href="dashboard.html" class="portal-bottom-link" id="nav-dashboard">
+      <div class="portal-bottom-icon">🏠</div>
+      <span>Home</span>
+    </a>
+
+    <a href="projects.html" class="portal-bottom-link" id="nav-projects">
+      <div class="portal-bottom-icon">📁</div>
+      <span>Projects</span>
+    </a>
+
+    <a href="files.html" class="portal-bottom-link" id="nav-files">
+      <div class="portal-bottom-icon">📄</div>
+      <span>Files</span>
+    </a>
+
+    <a href="messages.html" class="portal-bottom-link" id="nav-messages">
+      <div class="portal-bottom-icon">💬</div>
+      <span>Messages</span>
+    </a>
+
+    <!-- NEW: More -->
+    <a href="#" class="portal-bottom-link" id="nav-more" data-more>
+      <div class="portal-bottom-icon">⋯</div>
+      <span>More</span>
+    </a>
+  </div>
+</nav>
+
 
   <!-- JS: shared config + auth helpers, then main UI logic -->
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
+
+  <!-- Auth gate + user hydration -->
+  <script>
+    // Block page if not logged in
+    if (typeof requireAuth === "function" && !requireAuth()) {
+      // requireAuth will redirect
+    } else {
+      // Populate user name + avatar everywhere
+      const user = typeof getCurrentUser === "function" ? getCurrentUser() : null;
+
+      const name = (user && (user.name || user.fullName || user.email)) ? (user.name || user.fullName || user.email) : "Client";
+      document.querySelectorAll("[data-user-name]").forEach(el => (el.textContent = name));
+
+      // If you have an avatar URL later, set it here; for now keep blank
+      const avatarUrl = user && (user.avatarUrl || user.avatar) ? (user.avatarUrl || user.avatar) : "";
+      if (avatarUrl) {
+        document.querySelectorAll("[data-avatar]").forEach(img => img.setAttribute("src", avatarUrl));
+      }
+
+      // Optional: verify token on load (kicks out expired tokens)
+      if (typeof verifySession === "function") {
+        verifySession();
+      }
+    }
+  </script>
+
   <script src="js/main.js"></script>
 </body>
 </html>

@@ -7,22 +7,52 @@ const prisma = require("./prismaClient");
 const authRoutes = require("./authRoutes");
 
 const app = express();
+
+// -------- ENV --------
 const PORT = process.env.PORT || 4000;
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
+const isProd = process.env.NODE_ENV === "production";
+
+// JWT: never allow a missing secret in production.
+// In dev we allow a fallback so local setup stays easy.
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (isProd && !JWT_SECRET) {
+  throw new Error("JWT_SECRET is required in production");
+}
+
+const effectiveJwtSecret = JWT_SECRET || "dev-secret-change-me";
+
+// CORS: open in dev, restricted in prod via env var
+// Example production env:
+// CORS_ORIGINS=https://brightfoundry.co.uk,https://www.brightfoundry.co.uk
+const allowedOrigins = (process.env.CORS_ORIGINS || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
 
 // ---------- MIDDLEWARE ----------
 app.use(
   cors({
-    origin: "*", // fine for local dev; tighten later if you want
+    origin: isProd
+      ? function (origin, cb) {
+          // allow same-origin / server-to-server requests with no origin header
+          if (!origin) return cb(null, true);
+
+          return allowedOrigins.includes(origin)
+            ? cb(null, true)
+            : cb(new Error("CORS not allowed"), false);
+        }
+      : "*",
     methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
     allowedHeaders: "Content-Type, Authorization",
   })
 );
+
 app.use(express.json());
 
 // Simple health check
 app.get("/api/health", (req, res) => {
-  res.json({ ok: true });
+  res.json({ ok: true, env: process.env.NODE_ENV || "development" });
 });
 
 // ---------- AUTH ROUTES ----------
@@ -38,7 +68,7 @@ async function requireAuth(req, res, next) {
       return res.status(401).json({ message: "Not authenticated" });
     }
 
-    const payload = jwt.verify(token, JWT_SECRET); // { id, email, role }
+    const payload = jwt.verify(token, effectiveJwtSecret); // { id, email, role }
     const user = await prisma.user.findUnique({ where: { id: payload.id } });
 
     if (!user) {
@@ -578,5 +608,7 @@ app.get("/api/timeline", requireAuth, async (req, res) => {
 
 // ---------- START SERVER ----------
 app.listen(PORT, () => {
-  console.log(`BrightFoundry API listening on http://localhost:${PORT}`);
+  console.log(
+    `BrightFoundry API listening on port ${PORT} (${process.env.NODE_ENV || "development"})`
+  );
 });

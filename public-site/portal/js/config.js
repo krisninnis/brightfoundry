@@ -1,7 +1,17 @@
 // config.js – shared API + auth helpers for the BrightFoundry portal
 
+// -------- ENV + API BASE URL --------
+// Auto-detect environment based on hostname so you can't accidentally ship "development" live.
+const ENV =
+  location.hostname === "localhost" || location.hostname === "127.0.0.1"
+    ? "development"
+    : "production";
+
 // Base URL of your Node/Express API
-const API_BASE_URL = "http://localhost:4000/api";
+const API_BASE_URL =
+  ENV === "production"
+    ? "https://api.brightfoundry.co.uk/api"
+    : "http://localhost:4000/api";
 
 // Key used to store auth in localStorage
 const AUTH_STORAGE_KEY = "bf-portal-auth";
@@ -63,10 +73,26 @@ function getAuthHeaders(extra = {}) {
   return headers;
 }
 
+// Redirect helpers (so we can send people back to where they were going)
+function redirectToLoginWithReturn(returnTo = "") {
+  const dest =
+    returnTo || window.location.pathname.split("/").pop() || "dashboard.html";
+  const url = `login.html?returnTo=${encodeURIComponent(dest)}`;
+  window.location.href = url;
+}
+
+function logout() {
+  clearAuth();
+  window.location.href = "login.html";
+}
+
 // Expose globally so auth.js and main.js can use them
+window.ENV = ENV;
 window.API_BASE_URL = API_BASE_URL;
 window.saveAuth = saveAuth;
 window.clearAuth = clearAuth;
 window.getAuthToken = getAuthToken;
 window.getCurrentUser = getCurrentUser;
 window.getAuthHeaders = getAuthHeaders;
+window.redirectToLoginWithReturn = redirectToLoginWithReturn;
+window.logout = logout;
