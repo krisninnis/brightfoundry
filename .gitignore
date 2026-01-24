@@ -29,6 +29,8 @@ server/.env.*
 *.sqlite3
 server/prisma/dev.db
 
+# Prisma dev db (explicit)
+server/prisma/dev.db
 ########################################
 # Build / cache
 ########################################
