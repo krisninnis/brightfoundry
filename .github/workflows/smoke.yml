@@ -26,12 +26,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # IMPORTANT: do NOT enable npm cache in setup-node for this repo layout.
+      # It will fail if it can't find a lockfile at repo root.
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
-          cache-dependency-path: server/package-lock.json
 
       - name: Install server deps
         run: npm ci
