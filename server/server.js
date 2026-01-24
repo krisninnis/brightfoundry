@@ -122,6 +122,9 @@ app.use(
 );
 
 // Health
+app.get("/health", (req, res) => {
+  res.json({ ok: true });
+});
 app.get("/api/health", (req, res) => {
   res.json({ ok: true });
 });
