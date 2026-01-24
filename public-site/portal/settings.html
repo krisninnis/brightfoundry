@@ -1,0 +1,375 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.brightfoundry.co.uk http://localhost:4000 http://127.0.0.1:4000; form-action 'self';" />
+  <title>Client Portal – Settings</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <noscript>
+    <div class="portal-info-banner">
+      This portal requires JavaScript to load and update settings.
+    </div>
+  </noscript>
+
+  <div class="portal-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="portal-sidebar">
+      <div class="portal-brand">
+        <img
+          src="../img/brightfoundry-logo-light.png"
+          alt="BrightFoundry logo"
+          class="portal-brand-logo"
+        />
+        <div class="portal-brand-text">Client Portal</div>
+      </div>
+
+      <nav class="portal-nav portal-nav-group" aria-label="Client portal navigation">
+        <a href="dashboard.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🏠</span>
+          <span class="portal-nav-label">Dashboard</span>
+        </a>
+        <a href="projects.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📁</span>
+          <span class="portal-nav-label">Projects</span>
+        </a>
+        <a href="files.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📄</span>
+          <span class="portal-nav-label">Files</span>
+        </a>
+        <a href="messages.html" class="portal-nav-link">
+          <span class="portal-nav-icon">💬</span>
+          <span class="portal-nav-label">Messages</span>
+        </a>
+        <a href="support.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🛟</span>
+          <span class="portal-nav-label">Support</span>
+        </a>
+        <a href="invoices.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🧾</span>
+          <span class="portal-nav-label">Invoices</span>
+        </a>
+        <a href="timeline.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🕒</span>
+          <span class="portal-nav-label">Timeline</span>
+        </a>
+
+        <a href="settings.html" class="portal-nav-link is-active" aria-current="page">
+          <span class="portal-nav-icon">⚙️</span>
+          <span class="portal-nav-label">Settings</span>
+        </a>
+      </nav>
+
+      <div class="portal-sidebar-bottom">
+        <button
+          class="portal-account-chip"
+          type="button"
+          id="portal-account-chip"
+          aria-haspopup="menu"
+          aria-expanded="false"
+        >
+          <div class="portal-account-avatar">
+            <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
+          </div>
+          <div class="portal-account-meta">
+            <div class="portal-account-name" data-user-name>Your Client</div>
+            <div class="portal-account-sub">Client account</div>
+          </div>
+          <div class="portal-account-chevron" aria-hidden="true">▾</div>
+        </button>
+
+        <div class="portal-account-menu" id="portal-account-menu" role="menu" aria-label="Account menu">
+          <a href="settings.html" class="portal-account-menu-item" role="menuitem" aria-current="page">
+            ⚙️ <span>Account settings</span>
+          </a>
+          <button
+            type="button"
+            class="portal-account-menu-item portal-account-menu-item-muted"
+            role="menuitem"
+            id="portal-add-account"
+          >
+            ➕ <span>Add another account</span>
+          </button>
+          <a
+            href="login.html"
+            class="portal-account-menu-item portal-account-menu-danger"
+            data-logout
+            role="menuitem"
+          >
+            🚪 <span>Log out</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN COLUMN -->
+    <div class="portal-main">
+
+      <!-- TOPBAR -->
+      <header class="portal-topbar">
+        <div class="portal-topbar-inner">
+          <div class="portal-topbar-left">
+            <div class="topbar-title">Settings</div>
+            <div class="topbar-subtitle">
+              Manage your profile, notifications and security,
+              <span data-user-name>Your Client</span>.
+            </div>
+          </div>
+
+          <div class="portal-topbar-right">
+            <button class="portal-theme-toggle" type="button">
+              Toggle theme
+            </button>
+            <div class="portal-avatar">
+              <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <main class="portal-main-inner">
+        <div class="portal-page-heading">
+          <h1>Account settings</h1>
+          <p>Manage your profile, preferences and security details.</p>
+        </div>
+
+        <div class="settings-grid">
+          <!-- LEFT COLUMN -->
+          <div class="settings-column">
+
+            <!-- Account details -->
+            <div class="portal-card">
+              <h3>Account details</h3>
+              <p class="settings-help">
+                These details help BrightFoundry keep your projects and invoices organised.
+              </p>
+
+              <!-- Profile photo -->
+              <div class="settings-field">
+                <label class="settings-label">Profile photo</label>
+
+                <div class="settings-profile-row">
+                  <div class="settings-profile-avatar" id="settings-profile-avatar">
+                    <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
+                  </div>
+
+                  <div class="settings-profile-actions">
+                    <label class="sr-only" for="portal-avatar-input">Upload profile photo</label>
+                    <input
+                      id="portal-avatar-input"
+                      type="file"
+                      class="settings-input"
+                      accept="image/*"
+                    />
+                    <p class="settings-help">
+                      Optional. Upload a square logo or photo – it will be used for your avatar
+                      in the sidebar and top-right.
+                    </p>
+                    <button
+                      type="button"
+                      id="portal-avatar-remove"
+                      class="portal-btn portal-btn-muted u-mt-8"
+                    >
+                      Remove profile photo
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Account form wired to API (name + email are saved in main.js) -->
+              <form id="settings-form" class="settings-form" novalidate>
+                <label class="settings-field" for="settings-name">
+                  <span class="settings-label">Name</span>
+                  <input
+                    id="settings-name"
+                    type="text"
+                    class="settings-input"
+                    placeholder="Your name"
+                    autocomplete="name"
+                  />
+                </label>
+
+                <label class="settings-field" for="settings-email">
+                  <span class="settings-label">Email</span>
+                  <input
+                    id="settings-email"
+                    type="email"
+                    class="settings-input"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                    inputmode="email"
+                  />
+                </label>
+
+                <!-- NOTE: This field is UI-only unless you add it to /me PATCH on the backend + main.js -->
+                <label class="settings-field" for="settings-business">
+                  <span class="settings-label">Business / project name</span>
+                  <input
+                    id="settings-business"
+                    type="text"
+                    class="settings-input"
+                    placeholder="e.g. Bright Bakery"
+                    autocomplete="organization"
+                  />
+                  <p class="settings-help u-mt-8">
+                    Demo note: this field is display-only until it’s connected to your account database.
+                  </p>
+                </label>
+
+                <button type="submit" class="portal-btn settings-btn">
+                  Save account details
+                </button>
+
+                <!-- Let main.js own this text (Saving… / Profile updated. / errors) -->
+                <p class="settings-footnote" id="settings-status" aria-live="polite">
+                  Tip: Update your name/email and press save.
+                </p>
+              </form>
+            </div>
+
+            <!-- Preferences -->
+            <div class="portal-card">
+              <h3>Preferences</h3>
+
+              <div class="settings-field">
+                <label class="settings-label" for="portal-theme-select">Theme</label>
+                <select id="portal-theme-select" class="settings-input">
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                </select>
+                <p class="settings-help">
+                  Choose how the portal looks. This syncs with the toggle in the top-right.
+                </p>
+              </div>
+
+              <div class="settings-field settings-row">
+                <div>
+                  <div class="settings-label">Email notifications</div>
+                  <p class="settings-help">
+                    In a live version, you’d be able to control which updates trigger an email.
+                  </p>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" checked />
+                  <span class="switch-slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN -->
+          <div class="settings-column">
+            <!-- Security -->
+            <div class="portal-card">
+              <h3>Security</h3>
+
+              <div class="settings-field">
+                <label class="settings-label" for="settings-password-current">
+                  Current password
+                </label>
+                <input
+                  id="settings-password-current"
+                  type="password"
+                  class="settings-input"
+                  placeholder="••••••••"
+                  autocomplete="current-password"
+                />
+              </div>
+
+              <div class="settings-field">
+                <label class="settings-label" for="settings-password-new">
+                  New password
+                </label>
+                <input
+                  id="settings-password-new"
+                  type="password"
+                  class="settings-input"
+                  placeholder="New password"
+                  autocomplete="new-password"
+                />
+              </div>
+
+              <div class="settings-field">
+                <label class="settings-label" for="settings-password-confirm">
+                  Confirm new password
+                </label>
+                <input
+                  id="settings-password-confirm"
+                  type="password"
+                  class="settings-input"
+                  placeholder="Repeat new password"
+                  autocomplete="new-password"
+                />
+              </div>
+
+              <button type="button" class="portal-btn settings-btn" id="settings-password-btn">
+                Update password
+              </button>
+
+              <p class="settings-footnote" id="settings-security-note">
+                Password changes are for layout only in this demo.
+              </p>
+            </div>
+
+            <!-- Danger zone -->
+            <div class="portal-card settings-danger">
+              <h3>Danger zone</h3>
+              <p class="settings-help">
+                In the real portal, this area would let you request account deletion or export of your data.
+              </p>
+              <button type="button" class="portal-btn portal-btn-danger" id="settings-delete-btn">
+                Request account deletion
+              </button>
+
+              <p class="settings-footnote u-mt-10" id="settings-danger-note" aria-live="polite"></p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="portal-bottom-nav" aria-label="Mobile navigation">
+    <div class="portal-bottom-nav-inner">
+      <a href="dashboard.html" class="portal-bottom-link" id="nav-dashboard">
+        <div class="portal-bottom-icon">🏠</div>
+        <span>Home</span>
+      </a>
+
+      <a href="projects.html" class="portal-bottom-link" id="nav-projects">
+        <div class="portal-bottom-icon">📁</div>
+        <span>Projects</span>
+      </a>
+
+      <a href="files.html" class="portal-bottom-link" id="nav-files">
+        <div class="portal-bottom-icon">📄</div>
+        <span>Files</span>
+      </a>
+
+      <a href="messages.html" class="portal-bottom-link" id="nav-messages">
+        <div class="portal-bottom-icon">💬</div>
+        <span>Messages</span>
+      </a>
+
+      <!-- More -->
+      <a href="#" class="portal-bottom-link" id="nav-more" data-more>
+        <div class="portal-bottom-icon">⋯</div>
+        <span>More</span>
+      </a>
+    </div>
+  </nav>
+
+  <script src="js/config.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/page-init.js" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "watch": ["*.js", "prisma", "routes", "middleware"],
+  "ignore": [
+    "node_modules",
+    "server.log",
+    "prisma/dev.db",
+    "prisma/*.db",
+    "prisma/*.db-journal",
+    "prisma/migrations",
+    "package-lock.json"
+  ]
+}

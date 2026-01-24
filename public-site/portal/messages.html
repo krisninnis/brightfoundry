@@ -1,0 +1,285 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.brightfoundry.co.uk http://localhost:4000 http://127.0.0.1:4000; form-action 'self';" />
+  <title>Client Portal – Messages</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <noscript>
+    <div class="portal-info-banner">
+      This portal requires JavaScript to display and send messages.
+    </div>
+  </noscript>
+
+  <div class="portal-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="portal-sidebar">
+      <div class="portal-brand">
+        <img
+          src="../img/brightfoundry-logo-light.png"
+          alt="BrightFoundry logo"
+          class="portal-brand-logo"
+        />
+        <div class="portal-brand-text">Client Portal</div>
+      </div>
+
+      <nav class="portal-nav portal-nav-group" aria-label="Client portal navigation">
+        <a href="dashboard.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🏠</span>
+          <span class="portal-nav-label">Dashboard</span>
+        </a>
+
+        <a href="projects.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📁</span>
+          <span class="portal-nav-label">Projects</span>
+        </a>
+
+        <a href="files.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📄</span>
+          <span class="portal-nav-label">Files</span>
+        </a>
+
+        <a href="messages.html" class="portal-nav-link is-active" aria-current="page">
+          <span class="portal-nav-icon">💬</span>
+          <span class="portal-nav-label">Messages</span>
+        </a>
+
+        <a href="support.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🛟</span>
+          <span class="portal-nav-label">Support</span>
+        </a>
+
+        <a href="invoices.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🧾</span>
+          <span class="portal-nav-label">Invoices</span>
+        </a>
+
+        <a href="timeline.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🕒</span>
+          <span class="portal-nav-label">Timeline</span>
+        </a>
+
+        <a href="settings.html" class="portal-nav-link">
+          <span class="portal-nav-icon">⚙️</span>
+          <span class="portal-nav-label">Settings</span>
+        </a>
+      </nav>
+
+      <!-- ACCOUNT CHIP + MENU -->
+      <div class="portal-sidebar-bottom">
+        <button
+          class="portal-account-chip"
+          type="button"
+          id="portal-account-chip"
+          aria-haspopup="menu"
+          aria-expanded="false"
+        >
+          <div class="portal-account-avatar">
+            <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
+          </div>
+          <div class="portal-account-meta">
+            <div class="portal-account-name" data-user-name>Your Client</div>
+            <div class="portal-account-sub">Client account</div>
+          </div>
+          <div class="portal-account-chevron" aria-hidden="true">▾</div>
+        </button>
+
+        <div class="portal-account-menu" id="portal-account-menu" role="menu" aria-label="Account menu">
+          <a href="settings.html" class="portal-account-menu-item" role="menuitem">
+            ⚙️ <span>Account settings</span>
+          </a>
+          <button
+            type="button"
+            class="portal-account-menu-item portal-account-menu-item-muted"
+            role="menuitem"
+            id="portal-add-account"
+          >
+            ➕ <span>Add another account</span>
+          </button>
+          <a
+            href="login.html"
+            class="portal-account-menu-item portal-account-menu-danger"
+            data-logout
+            role="menuitem"
+          >
+            🚪 <span>Log out</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="portal-main">
+      <header class="portal-topbar">
+        <div class="portal-topbar-inner">
+          <div class="portal-topbar-left">
+            <div class="topbar-title">Messages</div>
+            <div class="topbar-subtitle">
+              Keep all your conversations with the studio in one place.
+            </div>
+          </div>
+
+          <div class="portal-topbar-right">
+            <button class="portal-theme-toggle" type="button">
+              Toggle theme
+            </button>
+            <div class="portal-avatar">
+              <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <main class="portal-main-inner">
+        <div class="portal-page-heading">
+          <h1>Messages</h1>
+          <p>Keep all your conversations with the studio in one place.</p>
+        </div>
+
+        <div class="tickets-layout">
+          <!-- LEFT: messages list -->
+          <div>
+
+            <!-- Empty-state friendly helper card -->
+            <div class="portal-card u-mb-14">
+              <h2 class="dashboard-section-title u-mt-0">How messaging works</h2>
+              <p class="settings-help u-mb-0">
+                Ask questions, send feedback, and approve changes here. In production this would also send
+                email notifications, and messages can include attachments.
+              </p>
+            </div>
+
+            <div class="tickets-toolbar">
+              <label class="sr-only" for="messages-search">Search messages</label>
+              <input
+                id="messages-search"
+                type="search"
+                class="tickets-search-input"
+                placeholder="Search messages..."
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="tickets-list" aria-label="Messages list" role="table">
+              <div class="tickets-header" role="row">
+                <div role="columnheader">Message</div>
+                <div role="columnheader">Project</div>
+                <div role="columnheader">Updated</div>
+              </div>
+
+              <div id="messages-list" role="rowgroup">
+                <!-- filled by JS -->
+              </div>
+            </div>
+
+            <p class="settings-footnote u-mt-10">
+              Tip: If this list is empty, send your first message on the right — it will appear here.
+            </p>
+          </div>
+
+          <!-- RIGHT: new message -->
+          <div class="settings-column">
+            <div class="portal-card">
+              <h3>Send a new message</h3>
+              <p class="settings-help">
+                Share feedback, ask questions or let us know about anything related to your project.
+              </p>
+
+              <form id="new-message-form" class="settings-form" novalidate>
+                <label class="settings-field" for="new-message-subject">
+                  <span class="settings-label">Subject</span>
+                  <input
+                    type="text"
+                    id="new-message-subject"
+                    class="settings-input"
+                    placeholder="e.g. Feedback on homepage layout"
+                    required
+                    autocomplete="off"
+                  />
+                </label>
+
+                <label class="settings-field" for="new-message-project">
+                  <span class="settings-label">Project</span>
+                  <select id="new-message-project" class="settings-input">
+                    <option value="" data-default>
+                      General (not linked to a specific project)
+                    </option>
+                  </select>
+                </label>
+
+                <label class="settings-field" for="new-message-body">
+                  <span class="settings-label">Message</span>
+                  <textarea
+                    id="new-message-body"
+                    class="settings-input"
+                    rows="4"
+                    placeholder="Write your message here..."
+                    required
+                  ></textarea>
+                </label>
+
+                <p class="settings-footnote" id="new-message-status" aria-live="polite"></p>
+
+                <button type="submit" class="portal-btn">
+                  Send message
+                </button>
+              </form>
+            </div>
+
+            <div class="portal-card">
+              <h3>Good to know</h3>
+              <p class="settings-help">
+                Big decisions and approvals stay in the portal so there’s always a record of what was agreed.
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="portal-bottom-nav" aria-label="Mobile navigation">
+    <div class="portal-bottom-nav-inner">
+      <a href="dashboard.html" class="portal-bottom-link" id="nav-dashboard">
+        <div class="portal-bottom-icon">🏠</div>
+        <span>Home</span>
+      </a>
+
+      <a href="projects.html" class="portal-bottom-link" id="nav-projects">
+        <div class="portal-bottom-icon">📁</div>
+        <span>Projects</span>
+      </a>
+
+      <a href="files.html" class="portal-bottom-link" id="nav-files">
+        <div class="portal-bottom-icon">📄</div>
+        <span>Files</span>
+      </a>
+
+      <a href="messages.html" class="portal-bottom-link" id="nav-messages">
+        <div class="portal-bottom-icon">💬</div>
+        <span>Messages</span>
+      </a>
+
+      <!-- More -->
+      <a href="#" class="portal-bottom-link" id="nav-more" data-more>
+        <div class="portal-bottom-icon">⋯</div>
+        <span>More</span>
+      </a>
+    </div>
+  </nav>
+
+  <script src="js/config.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/page-init.js" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.brightfoundry.co.uk http://localhost:4000 http://127.0.0.1:4000; form-action 'self';" />
+  <title>Client Portal – Invoices</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <noscript>
+    <div class="portal-info-banner">
+      This portal requires JavaScript to load and manage invoices.
+    </div>
+  </noscript>
+
+  <div class="portal-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="portal-sidebar">
+      <div class="portal-brand">
+        <img
+          src="../img/brightfoundry-logo-light.png"
+          alt="BrightFoundry logo"
+          class="portal-brand-logo"
+        />
+        <div class="portal-brand-text">Client Portal</div>
+      </div>
+
+      <nav class="portal-nav portal-nav-group" aria-label="Client portal navigation">
+        <a href="dashboard.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🏠</span>
+          <span class="portal-nav-label">Dashboard</span>
+        </a>
+        <a href="projects.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📁</span>
+          <span class="portal-nav-label">Projects</span>
+        </a>
+        <a href="files.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📄</span>
+          <span class="portal-nav-label">Files</span>
+        </a>
+        <a href="messages.html" class="portal-nav-link">
+          <span class="portal-nav-icon">💬</span>
+          <span class="portal-nav-label">Messages</span>
+        </a>
+        <a href="support.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🛟</span>
+          <span class="portal-nav-label">Support</span>
+        </a>
+        <a href="invoices.html" class="portal-nav-link is-active" aria-current="page">
+          <span class="portal-nav-icon">🧾</span>
+          <span class="portal-nav-label">Invoices</span>
+        </a>
+        <a href="timeline.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🕒</span>
+          <span class="portal-nav-label">Timeline</span>
+        </a>
+
+        <a href="settings.html" class="portal-nav-link">
+          <span class="portal-nav-icon">⚙️</span>
+          <span class="portal-nav-label">Settings</span>
+        </a>
+      </nav>
+
+      <div class="portal-sidebar-bottom">
+        <button
+          class="portal-account-chip"
+          type="button"
+          id="portal-account-chip"
+          aria-haspopup="menu"
+          aria-expanded="false"
+        >
+          <div class="portal-account-avatar">
+            <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
+          </div>
+          <div class="portal-account-meta">
+            <div class="portal-account-name" data-user-name>Your Client</div>
+            <div class="portal-account-sub">Client account</div>
+          </div>
+          <div class="portal-account-chevron" aria-hidden="true">▾</div>
+        </button>
+
+        <div class="portal-account-menu" id="portal-account-menu" role="menu" aria-label="Account menu">
+          <a href="settings.html" class="portal-account-menu-item" role="menuitem">
+            ⚙️ <span>Account settings</span>
+          </a>
+          <button
+            type="button"
+            class="portal-account-menu-item portal-account-menu-item-muted"
+            role="menuitem"
+            id="portal-add-account"
+          >
+            ➕ <span>Add another account</span>
+          </button>
+          <a
+            href="login.html"
+            class="portal-account-menu-item portal-account-menu-danger"
+            data-logout
+            role="menuitem"
+          >
+            🚪 <span>Log out</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN COLUMN -->
+    <div class="portal-main">
+
+      <!-- TOPBAR -->
+      <header class="portal-topbar">
+        <div class="portal-topbar-inner">
+          <div class="portal-topbar-left">
+            <div class="topbar-title">Invoices</div>
+            <div class="topbar-subtitle">
+              View your invoices, due dates and payment status in one place,
+              <span data-user-name>Your Client</span>.
+            </div>
+          </div>
+
+          <div class="portal-topbar-right">
+            <button class="portal-theme-toggle" type="button">
+              Toggle theme
+            </button>
+            <div class="portal-avatar">
+              <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <main class="portal-main-inner">
+        <div class="portal-page-heading">
+          <h1>Invoices</h1>
+          <p>See what’s due, what’s paid, and what’s coming up.</p>
+        </div>
+
+        <div class="portal-layout-grid portal-layout-grid-wide">
+          <!-- LEFT: INVOICES LIST -->
+          <section class="portal-layout-main">
+
+            <div class="portal-controls-row">
+              <div class="portal-search">
+                <label class="sr-only" for="invoices-search">Search invoices</label>
+                <input
+                  id="invoices-search"
+                  type="search"
+                  class="portal-search-input"
+                  placeholder="Search invoices…"
+                  autocomplete="off"
+                />
+              </div>
+
+              <!-- Optional status note (used by JS if needed) -->
+              <p id="invoices-note" class="portal-note" aria-live="polite"></p>
+
+              <div
+                class="portal-pill-filter"
+                role="tablist"
+                aria-label="Invoice filters"
+              >
+                <button type="button" class="portal-pill invoices-filter-btn is-active" data-filter="all" role="tab" aria-selected="true">
+                  All
+                </button>
+                <button type="button" class="portal-pill invoices-filter-btn" data-filter="outstanding" role="tab" aria-selected="false">
+                  Outstanding
+                </button>
+                <button type="button" class="portal-pill invoices-filter-btn" data-filter="paid" role="tab" aria-selected="false">
+                  Paid
+                </button>
+                <button type="button" class="portal-pill invoices-filter-btn" data-filter="overdue" role="tab" aria-selected="false">
+                  Overdue
+                </button>
+              </div>
+            </div>
+
+            <div class="portal-card invoices-card" role="table" aria-label="Invoices table">
+              <div class="invoices-header-row" role="row">
+                <div class="invoices-header-col" role="columnheader">Invoice</div>
+                <div class="invoices-header-col" role="columnheader">Amount</div>
+                <div class="invoices-header-col" role="columnheader">Due / paid</div>
+                <div class="invoices-header-col" role="columnheader">Status</div>
+              </div>
+
+              <!-- JS will render rows into this container -->
+              <div id="invoices-list" class="invoices-list" role="rowgroup"></div>
+            </div>
+          </section>
+
+          <!-- RIGHT: INFO CARDS -->
+          <aside class="portal-layout-side">
+
+            <div class="portal-card">
+              <h3>Paying an invoice</h3>
+              <p class="settings-help">
+                When this portal is connected to payments, each invoice can include a PDF download and a secure payment link.
+              </p>
+              <button type="button" class="portal-btn portal-btn-muted" disabled aria-disabled="true" title="Coming soon">
+                Payment links coming soon
+              </button>
+              <p class="settings-help u-mt-12">
+                If you need help with an invoice, send us a message from the Messages page and we’ll sort it quickly.
+              </p>
+            </div>
+
+            <div class="portal-card">
+              <h3>Summary</h3>
+              <p class="settings-help">
+                A quick snapshot of your invoices.
+              </p>
+              <ul class="portal-metric-list">
+                <li>
+                  <span>Total invoices</span>
+                  <span id="invoice-metric-total">–</span>
+                </li>
+                <li>
+                  <span>Outstanding</span>
+                  <span id="invoice-metric-outstanding">–</span>
+                </li>
+                <li>
+                  <span>Overdue</span>
+                  <span id="invoice-metric-overdue">–</span>
+                </li>
+              </ul>
+              <p class="settings-help">
+                We’ll also add “next due” and quick pay actions when payments are connected.
+              </p>
+            </div>
+
+          </aside>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="portal-bottom-nav" aria-label="Mobile navigation">
+    <div class="portal-bottom-nav-inner">
+      <a href="dashboard.html" class="portal-bottom-link" id="nav-dashboard">
+        <div class="portal-bottom-icon">🏠</div>
+        <span>Home</span>
+      </a>
+
+      <a href="projects.html" class="portal-bottom-link" id="nav-projects">
+        <div class="portal-bottom-icon">📁</div>
+        <span>Projects</span>
+      </a>
+
+      <a href="files.html" class="portal-bottom-link" id="nav-files">
+        <div class="portal-bottom-icon">📄</div>
+        <span>Files</span>
+      </a>
+
+      <a href="messages.html" class="portal-bottom-link" id="nav-messages">
+        <div class="portal-bottom-icon">💬</div>
+        <span>Messages</span>
+      </a>
+
+      <!-- More -->
+      <a href="#" class="portal-bottom-link" id="nav-more" data-more>
+        <div class="portal-bottom-icon">⋯</div>
+        <span>More</span>
+      </a>
+    </div>
+  </nav>
+
+  <script src="js/config.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/page-init.js" defer></script>
+
+</body>
+</html>

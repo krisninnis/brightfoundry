@@ -1,0 +1,19 @@
+.portal-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: none;
+  background: $color-brand;
+  color: #111827;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.portal-btn-ghost {
+  background: transparent;
+  border: 1px solid $color-border;
+  color: $color-text;
+}

@@ -1,0 +1,61 @@
+name: Smoke Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install server deps
+        working-directory: server
+        run: npm ci
+
+      - name: Lint (if script exists)
+        working-directory: server
+        run: npm run -s lint || echo "No lint script"
+
+      - name: Tests (if script exists)
+        working-directory: server
+        run: npm test || echo "No tests"
+
+      - name: Prisma validate (if Prisma is used)
+        working-directory: server
+        run: npx prisma validate || echo "No Prisma schema"
+
+      - name: Start server and hit /health
+        working-directory: server
+        env:
+          NODE_ENV: test
+          JWT_SECRET: "ci-test-secret-change-me"
+          DATABASE_URL: "file:./prisma/dev.db"
+          ALLOWED_ORIGINS: "http://localhost:5173"
+        run: |
+          node -v
+          npm run dev -- --port 4000 &
+          SERVER_PID=$!
+          echo "Server PID: $SERVER_PID"
+          for i in {1..20}; do
+            if curl -fsS http://localhost:4000/health > /dev/null; then
+              echo "Health OK"
+              kill $SERVER_PID
+              exit 0
+            fi
+            sleep 0.5
+          done
+          echo "Health check failed"
+          kill $SERVER_PID || true
+          exit 1

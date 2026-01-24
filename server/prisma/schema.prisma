@@ -1,0 +1,112 @@
+datasource db {
+  provider = "sqlite"
+  // no url in Prisma 7 (your project uses prisma.config.ts)
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  password  String    // hashed password
+  role      String    @default("client") // "admin" or "client"
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  projects        Project[]
+  messages        Message[]      @relation("UserMessages")
+  invoices        Invoice[]
+  files           File[]
+  supportTickets  SupportTicket[]
+  timelineEvents  TimelineEvent[]
+}
+
+model Project {
+  id          Int       @id @default(autoincrement())
+  name        String
+  status      String    @default("planning") // planning/design/build/launched
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  owner       User      @relation(fields: [ownerId], references: [id])
+  ownerId     Int
+
+  messages       Message[]      @relation("ProjectMessages")
+  invoices       Invoice[]
+  files          File[]
+  supportTickets SupportTicket[]
+  timelineEvents TimelineEvent[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  body      String
+  fromRole  String   // "client" or "admin" (for display)
+  createdAt DateTime @default(now())
+
+  user      User?    @relation("UserMessages", fields: [userId], references: [id])
+  userId    Int?
+
+  project   Project? @relation("ProjectMessages", fields: [projectId], references: [id])
+  projectId Int?
+}
+
+model Invoice {
+  id          Int      @id @default(autoincrement())
+  title       String
+  amount      Float
+  status      String   @default("unpaid") // unpaid/paid/overdue
+  dueDate     DateTime?
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+
+  project     Project? @relation(fields: [projectId], references: [id])
+  projectId   Int?
+}
+
+model File {
+  id         Int      @id @default(autoincrement())
+  filename   String
+  url        String
+  type       String?
+  uploadedAt DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+
+  project    Project? @relation(fields: [projectId], references: [id])
+  projectId  Int?
+}
+
+model SupportTicket {
+  id          Int      @id @default(autoincrement())
+  subject     String
+  status      String   @default("open") // open/closed
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+
+  project     Project? @relation(fields: [projectId], references: [id])
+  projectId   Int?
+}
+
+model TimelineEvent {
+  id        Int      @id @default(autoincrement())
+  label     String
+  type      String   // "milestone" | "activity" | etc
+  createdAt DateTime @default(now())
+
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+
+  project   Project? @relation(fields: [projectId], references: [id])
+  projectId Int?
+}

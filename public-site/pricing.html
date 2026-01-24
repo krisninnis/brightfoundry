@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pricing – BrightFoundry</title>
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Minimal header/mobile nav styles -->
+  
+</head>
+<body>
+
+  <!-- ==========================
+       HEADER
+  =========================== -->
+  <header>
+    <div class="container">
+      <div class="nav-inner">
+
+        <!-- LOGO -->
+        <div class="logo">
+          <a href="index.html">
+            <img
+              src="img/brightfoundry-logo-light.png"
+              alt="BrightFoundry logo"
+              class="logo-only"
+            />
+          </a>
+        </div>
+
+        <!-- NAVIGATION (DESKTOP) -->
+        <nav class="nav-links" aria-label="Primary">
+          <a href="services.html">Services</a>
+          <a href="portfolio.html">Portfolio</a>
+          <a href="pricing.html">Pricing</a>
+
+          <!-- ✅ NEW -->
+          <a href="client-portal.html">Client Portal</a>
+
+          <a href="about.html">About</a>
+          <a href="faqs.html">FAQs</a>
+          <a href="contact.html" class="btn">Contact</a>
+          <a href="portal/login.html" class="nav-link-muted">Client Login</a>
+        </nav>
+
+        <!-- ✅ MOBILE BURGER -->
+        <button
+          class="nav-toggle"
+          type="button"
+          id="navToggle"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="navMobile"
+        >
+          <span class="bars" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+        </button>
+
+        <!-- MOBILE OVERLAY -->
+        <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+        <!-- MOBILE MENU PANEL -->
+        <nav class="nav-mobile" id="navMobile" aria-label="Mobile">
+          <a href="services.html">Services</a>
+          <a href="portfolio.html">Portfolio</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="client-portal.html">Client Portal</a>
+          <a href="about.html">About</a>
+          <a href="faqs.html">FAQs</a>
+          <a href="portal/login.html" class="nav-link-muted">Client Login</a>
+          <a href="contact.html" class="btn">Contact</a>
+        </nav>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <span class="badge">Pricing</span>
+        <div>
+          <h1>Simple, realistic pricing for small businesses.</h1>
+          <p>
+            Clear ranges so you know what to expect. Exact quotes depend on scope, but everything
+            is explained upfront with no surprise add-ons.
+          </p>
+          <p style="margin-top:10px; font-size:0.95rem; color:#4b5563;">
+            Every project is delivered with a clear process and a private client area for updates, files and next steps.
+          </p>
+        </div>
+        <div class="hero-actions">
+          <a href="contact.html" class="btn">Get a tailored quote</a>
+          <a href="faqs.html" style="font-size:0.95rem; color:#4b5563; text-decoration:none;">
+            Pricing FAQs →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEBSITE PACKAGES -->
+  <section class="section">
+    <div class="container">
+      <div class="section-heading">
+        <h2>Website design packages</h2>
+        <p>Built for where you are now, with room to grow later.</p>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>Starter Website</h3>
+          <p>Perfect for new businesses, solo founders and simple brochure sites.</p>
+          <ul style="margin-top:8px; font-size:0.9rem; color:#4b5563; padding-left:18px;">
+            <li>Up to ~4–5 pages (Home, About, Services, Contact, etc.)</li>
+            <li>Clean, modern, mobile-friendly layout</li>
+            <li>Basic on-page SEO</li>
+            <li>Contact form</li>
+            <li>Private client area for updates + files</li>
+          </ul>
+          <p class="u-mt-10"><strong>Typical range: £900 – £1,200</strong></p>
+        </div>
+
+        <div class="card">
+          <h3>Business Website</h3>
+          <p>For growing businesses that need more pages, structure and content.</p>
+          <ul style="margin-top:8px; font-size:0.9rem; color:#4b5563; padding-left:18px;">
+            <li>~6–12 pages with custom sections</li>
+            <li>Better content structure & CTAs</li>
+            <li>Blog or resources section (optional)</li>
+            <li>Integrated forms & basic automations</li>
+            <li>Private client area for progress + support</li>
+          </ul>
+          <p class="u-mt-10"><strong>Typical range: £1,500 – £2,500</strong></p>
+        </div>
+
+        <div class="card">
+          <h3>E-commerce Website</h3>
+          <p>For selling products online with a clean storefront.</p>
+          <ul style="margin-top:8px; font-size:0.9rem; color:#4b5563; padding-left:18px;">
+            <li>Product catalogue & categories</li>
+            <li>Basket & checkout flow</li>
+            <li>Payments via Stripe/PayPal (platform-dependent)</li>
+            <li>Basic order notifications</li>
+            <li>Private client area for launch + ongoing support</li>
+          </ul>
+          <p class="u-mt-10"><strong>Typical range: £2,500 – £6,000+</strong></p>
+        </div>
+      </div>
+      <p style="margin-top:14px; font-size:0.9rem; color:#6b7280;">
+        Domain, hosting and premium tools are usually billed separately — we’ll go through options together.
+      </p>
+    </div>
+  </section>
+
+  <!-- WEB APPS & PORTALS -->
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="section-heading">
+        <h2>Web apps & client portals</h2>
+        <p>Custom tools priced based on complexity rather than pages.</p>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>Mini portal / tool</h3>
+          <p>Login + a few focused screens (e.g. simple client area or internal tool).</p>
+          <p><strong>From ~£1,200</strong></p>
+          <p style="margin-top:8px; font-size:0.9rem; color:#6b7280;">
+            Ideal for a tight first phase.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Full client portal</h3>
+          <p>Projects, files, messages, invoices and support in one place.</p>
+          <p><strong>From ~£3,000 – £8,000+</strong></p>
+          <p style="margin-top:8px; font-size:0.9rem; color:#6b7280;">
+            Built in phases so you can start small and expand.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Custom internal system</h3>
+          <p>Tailored admin tools to match your exact workflow.</p>
+          <p><strong>From ~£5,000+</strong></p>
+          <p style="margin-top:8px; font-size:0.9rem; color:#6b7280;">
+            Best for teams with repeat processes.
+          </p>
+        </div>
+      </div>
+      <p style="margin-top:8px; font-size:0.9rem; color:#6b7280;">
+        Want a feel for how the portal experience works?
+        <a href="client-portal.html" style="color:#2563eb; text-decoration:none;">
+          See portal features & screenshots →
+        </a>
+      </p>
+      <p style="margin-top:6px; font-size:0.9rem; color:#6b7280;">
+        For app work, we’ll usually break projects into phases so you can start small and grow over time.
+      </p>
+    </div>
+  </section>
+
+  <!-- AI & AUTOMATION -->
+  <section class="section">
+    <div class="container">
+      <div class="section-heading">
+        <h2>AI chatbots & automation</h2>
+        <p>Pricing depends on complexity, data sources and integrations.</p>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>FAQ chatbot</h3>
+          <p>Basic bot trained on your website and FAQ content.</p>
+          <p><strong>From ~£500 – £900</strong></p>
+        </div>
+        <div class="card">
+          <h3>Lead-capture assistant</h3>
+          <p>Bot that asks smart questions, collects details and sends leads to you.</p>
+          <p><strong>From ~£900 – £1,800</strong></p>
+        </div>
+        <div class="card">
+          <h3>Support / portal bot</h3>
+          <p>Deeper integration with your client portal or internal system.</p>
+          <p><strong>From ~£1,800+</strong></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BRANDING & CONTENT -->
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="section-heading">
+        <h2>Branding, media & content</h2>
+        <p>Small, practical packages to support your website and socials.</p>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>Logo refresh</h3>
+          <p>Refine an existing logo and export proper files.</p>
+          <p><strong>From ~£250 – £500</strong></p>
+        </div>
+        <div class="card">
+          <h3>Starter brand kit</h3>
+          <p>Logo, colour palette, fonts and a simple brand guide.</p>
+          <p><strong>From ~£500 – £1,200</strong></p>
+        </div>
+        <div class="card">
+          <h3>Graphics & content packs</h3>
+          <p>Bundles of graphics, banners or short video edits.</p>
+          <p><strong>From ~£150 – £600+</strong></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARE PLANS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-heading">
+        <h2>Care plans & ongoing support</h2>
+        <p>Optional monthly plans to keep everything running smoothly.</p>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>Essential Care</h3>
+          <p>For small sites that rarely change.</p>
+          <p><strong>~£50 – £90 / month</strong></p>
+        </div>
+        <div class="card">
+          <h3>Business Care</h3>
+          <p>For sites with regular updates and more traffic.</p>
+          <p><strong>~£100 – £200 / month</strong></p>
+        </div>
+        <div class="card">
+          <h3>App & Portal Care</h3>
+          <p>For more complex systems and web apps.</p>
+          <p><strong>~£200 – £500+ / month</strong></p>
+        </div>
+      </div>
+
+      <p style="margin-top:14px; font-size:0.9rem; color:#6b7280;">
+        Care plan pricing depends on how your site or app is built and how often you need changes.
+      </p>
+    </div>
+  </section>
+
+  <!-- NOTES & CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="card">
+        <h2 style="margin-bottom:8px;">How quotes actually work</h2>
+        <p style="margin-bottom:10px; font-size:0.95rem;">
+          These ranges are here to give you a feel for typical budgets. Once we chat about your project,
+          you’ll get a simple proposal that clearly lists:
+        </p>
+        <ul style="margin-bottom:16px; font-size:0.9rem; color:#4b5563; padding-left:18px;">
+          <li>Exactly what’s included</li>
+          <li>Any ongoing costs (hosting, tools, AI usage, etc.)</li>
+          <li>Timeline and payment schedule</li>
+        </ul>
+        <p style="margin-bottom:16px; font-size:0.95rem;">
+          I’m also happy to be upfront if your budget is lower and suggest a “phase one” that gets you online
+          now, with a plan to build on it later.
+        </p>
+        <a href="contact.html" class="btn">Tell me your budget & goals</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p>© 2025 BrightFoundry. All rights reserved.</p>
+
+      <p style="margin-top:6px; font-size:0.85rem; color:#6b7280;">
+        Privacy-first studio. No spam, no pressure — reach out only if and when it suits you.
+      </p>
+
+      <div style="margin-top:6px;">
+        <a href="privacy.html">Privacy Policy</a> •
+        <a href="terms.html">Terms</a> •
+        <a href="cookies.html">Cookies</a> •
+        <a href="portal/login.html">Client Login</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile menu script -->
+  <script>
+    (function () {
+      const toggle = document.getElementById("navToggle");
+      const menu = document.getElementById("navMobile");
+      const overlay = document.getElementById("navOverlay");
+      if (!toggle || !menu || !overlay) return;
+
+      function openMenu() {
+        menu.classList.add("is-open");
+        overlay.classList.add("is-open");
+        toggle.setAttribute("aria-expanded", "true");
+      }
+
+      function closeMenu() {
+        menu.classList.remove("is-open");
+        overlay.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+      }
+
+      toggle.addEventListener("click", () => {
+        const isOpen = menu.classList.contains("is-open");
+        if (isOpen) closeMenu();
+        else openMenu();
+      });
+
+      overlay.addEventListener("click", closeMenu);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeMenu();
+      });
+
+      menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeMenu));
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,272 @@
+﻿<!DOCTYPE html>
+<!-- BUILD-MARKER: 2026-01-17-1 -->
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- NOTE: frame-ancestors cannot be enforced via meta CSP; set it as an HTTP header in production -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.brightfoundry.co.uk http://localhost:4000 http://127.0.0.1:4000; form-action 'self';" />
+
+  <title>Client Portal – Dashboard</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <noscript>
+    <div class="portal-info-banner">
+      This portal requires JavaScript to display your projects and updates.
+    </div>
+  </noscript>
+
+  <div class="portal-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="portal-sidebar">
+      <div class="portal-brand">
+        <img
+          src="../img/brightfoundry-logo-light.png"
+          alt="BrightFoundry logo"
+          class="portal-brand-logo"
+        />
+        <div class="portal-brand-text">Client Portal</div>
+      </div>
+
+      <!-- MAIN NAV -->
+      <nav class="portal-nav portal-nav-group" aria-label="Client portal navigation">
+        <a href="dashboard.html" class="portal-nav-link is-active" aria-current="page">
+          <span class="portal-nav-icon">🏠</span>
+          <span class="portal-nav-label">Dashboard</span>
+        </a>
+        <a href="projects.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📁</span>
+          <span class="portal-nav-label">Projects</span>
+        </a>
+        <a href="files.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📄</span>
+          <span class="portal-nav-label">Files</span>
+        </a>
+        <a href="messages.html" class="portal-nav-link">
+          <span class="portal-nav-icon">💬</span>
+          <span class="portal-nav-label">Messages</span>
+        </a>
+        <a href="support.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🛟</span>
+          <span class="portal-nav-label">Support</span>
+        </a>
+        <a href="invoices.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🧾</span>
+          <span class="portal-nav-label">Invoices</span>
+        </a>
+        <a href="timeline.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🕒</span>
+          <span class="portal-nav-label">Timeline</span>
+        </a>
+
+        <a href="settings.html" class="portal-nav-link">
+          <span class="portal-nav-icon">⚙️</span>
+          <span class="portal-nav-label">Settings</span>
+        </a>
+      </nav>
+
+      <!-- ACCOUNT CHIP + MENU -->
+      <div class="portal-sidebar-bottom">
+        <button
+          class="portal-account-chip"
+          type="button"
+          id="portal-account-chip"
+          aria-haspopup="menu"
+          aria-expanded="false"
+        >
+          <div class="portal-account-avatar">
+            <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
+          </div>
+          <div class="portal-account-meta">
+            <div class="portal-account-name" data-user-name>Your Client</div>
+            <div class="portal-account-sub">Client account</div>
+          </div>
+          <div class="portal-account-chevron" aria-hidden="true">▾</div>
+        </button>
+
+        <div class="portal-account-menu" id="portal-account-menu" role="menu" aria-label="Account menu">
+          <a href="settings.html" class="portal-account-menu-item" role="menuitem">
+            ⚙️ <span>Account settings</span>
+          </a>
+          <button
+            type="button"
+            class="portal-account-menu-item portal-account-menu-item-muted"
+            role="menuitem"
+            id="portal-add-account"
+          >
+            ➕ <span>Add another account</span>
+          </button>
+          <a
+            href="login.html"
+            class="portal-account-menu-item portal-account-menu-danger"
+            data-logout
+            role="menuitem"
+          >
+            🚪 <span>Log out</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN COLUMN -->
+    <div class="portal-main">
+
+      <!-- TOPBAR -->
+      <header class="portal-topbar">
+        <div class="portal-topbar-inner">
+          <div class="portal-topbar-left">
+            <div class="topbar-title">Dashboard</div>
+            <div class="topbar-subtitle">
+              Welcome back, <span data-user-name>Your Client</span>.
+            </div>
+          </div>
+
+          <div class="portal-topbar-right">
+            <button class="portal-theme-toggle" type="button">
+              Toggle theme
+            </button>
+            <div class="portal-avatar">
+              <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- MAIN CONTENT -->
+      <main class="portal-main-inner">
+
+        <!-- Page header -->
+        <div class="portal-page-header">
+          <div>
+            <h1 class="portal-page-title">Your dashboard</h1>
+            <p class="portal-page-subtitle">
+              Everything in one place — projects, files, messages and support.
+            </p>
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <section class="dashboard-section" aria-label="Quick actions">
+          <h2 class="dashboard-section-title">Quick actions</h2>
+
+          <div class="portal-card dashboard-quick-actions">
+            <a href="projects.html" class="portal-btn">View projects</a>
+            <a href="messages.html" class="portal-btn portal-btn-muted">Send a message</a>
+            <a href="support.html" class="portal-btn portal-btn-muted">Request support</a>
+            <a href="files.html" class="portal-btn portal-btn-muted">Browse files</a>
+          </div>
+        </section>
+
+        <!-- GETTING STARTED (never empty) -->
+        <section class="dashboard-section" aria-label="Getting started">
+          <div class="portal-card">
+            <h2 class="dashboard-section-title u-mt-0">Getting started</h2>
+            <p class="settings-help">
+              As updates are shared, you’ll see key milestones, files and messages appear here automatically.
+            </p>
+            <ul class="portal-metric-list u-mt-12">
+              <li>
+                <span>Next step</span>
+                <span>Check your project overview</span>
+              </li>
+              <li>
+                <span>Fastest way to reach us</span>
+                <span>Send a message</span>
+              </li>
+              <li>
+                <span>Need a change?</span>
+                <span>Request support</span>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Overview summary cards -->
+        <section class="dashboard-section" aria-label="Summary">
+          <h2 class="dashboard-section-title">Summary</h2>
+          <div id="dashboard-cards" class="dashboard-summary-grid">
+            <!-- JS fills this with cards -->
+          </div>
+        </section>
+
+        <!-- Recent activity -->
+        <section class="dashboard-section dashboard-section-split" aria-label="Recent activity">
+          <div class="dashboard-column">
+            <h2 class="dashboard-section-title">Recent projects</h2>
+            <div id="dashboard-projects" class="dashboard-list-card">
+              <!-- Rendered in JS -->
+            </div>
+          </div>
+
+          <div class="dashboard-column">
+            <h2 class="dashboard-section-title">Latest messages</h2>
+            <div id="dashboard-messages" class="dashboard-list-card">
+              <!-- Rendered in JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Support snapshot -->
+        <section class="dashboard-section" aria-label="Support summary">
+          <h2 class="dashboard-section-title">Support</h2>
+          <div class="dashboard-support-strip">
+            <div class="support-pill">
+              <span class="support-pill-label">Open tickets</span>
+              <span class="support-pill-value" id="dashboard-open-tickets">0</span>
+            </div>
+            <div class="support-pill">
+              <span class="support-pill-label">Resolved</span>
+              <span class="support-pill-value" id="dashboard-resolved-tickets">0</span>
+            </div>
+            <a href="support.html" class="support-link">View support →</a>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="portal-bottom-nav" aria-label="Mobile navigation">
+    <div class="portal-bottom-nav-inner">
+      <a href="dashboard.html" class="portal-bottom-link" id="nav-dashboard">
+        <div class="portal-bottom-icon">🏠</div>
+        <span>Home</span>
+      </a>
+
+      <a href="projects.html" class="portal-bottom-link" id="nav-projects">
+        <div class="portal-bottom-icon">📁</div>
+        <span>Projects</span>
+      </a>
+
+      <a href="files.html" class="portal-bottom-link" id="nav-files">
+        <div class="portal-bottom-icon">📄</div>
+        <span>Files</span>
+      </a>
+
+      <a href="messages.html" class="portal-bottom-link" id="nav-messages">
+        <div class="portal-bottom-icon">💬</div>
+        <span>Messages</span>
+      </a>
+
+      <a href="#" class="portal-bottom-link" id="nav-more" data-more>
+        <div class="portal-bottom-icon">⋯</div>
+        <span>More</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- JS: shared config + auth helpers, then main UI logic -->
+  <script src="js/config.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/page-init.js" defer></script>
+
+</body>
+</html>

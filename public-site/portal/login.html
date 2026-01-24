@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!--
+    CSP notes:
+    - Dev: allow localhost API (4000) for fetch/XHR
+    - Prod: keep connect-src tight (only 'self' + api.brightfoundry.co.uk)
+    - IMPORTANT:
+      - frame-ancestors is ignored in meta CSP; enforce it via HTTP response headers in production.
+      - upgrade-insecure-requests breaks local http:// testing; do not include it in dev CSP.
+  -->
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.brightfoundry.co.uk http://localhost:4000 http://127.0.0.1:4000; form-action 'self';"
+  />
+
+  <title>Client Login - BrightFoundry</title>
+
+  <!-- Public site base styles -->
+  <link rel="stylesheet" href="../css/styles.css" />
+
+  <!-- Portal/auth styles -->
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+
+<body class="portal-auth-body">
+  <header class="portal-topbar">
+    <div class="container">
+      <div class="portal-topbar-inner">
+        <div class="logo">
+          <a href="../index.html" aria-label="Back to BrightFoundry website">
+            <img src="../img/brightfoundry-logo-light.png" alt="BrightFoundry" />
+          </a>
+        </div>
+
+        <nav class="portal-nav-links" aria-label="Portal header">
+          <a href="../client-portal.html">Client Portal</a>
+          <a href="../contact.html" class="btn">Start a project</a>
+          <a href="../contact.html" class="nav-link-muted">Get access</a>
+        </nav>
+
+        <button
+          class="nav-toggle"
+          type="button"
+          id="navToggle"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="navMobile"
+        >
+          <span class="bars" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+        </button>
+
+        <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+        <nav class="nav-mobile" id="navMobile" aria-label="Mobile menu">
+          <a href="../index.html">Back to website</a>
+          <a href="../client-portal.html">Client Portal</a>
+          <a href="../contact.html" class="btn">Start a project</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="portal-auth-layout">
+    <div class="portal-auth-wrapper">
+      <h1 class="portal-auth-title">Sign in</h1>
+      <p class="portal-auth-intro portal-auth-intro-center">
+        Log in to view your projects, files and support tickets.
+      </p>
+
+      <div class="portal-auth-card">
+        <form id="login-form" class="portal-auth-form" novalidate>
+          <div class="auth-providers" aria-label="Sign in options">
+            <button
+              type="button"
+              class="auth-provider-btn auth-provider-google"
+              data-provider="google"
+              aria-disabled="true"
+              title="Coming soon"
+            >
+              <span class="auth-provider-icon auth-provider-icon-google" aria-hidden="true">G</span>
+              <span>Continue with Google</span>
+              <span class="auth-provider-badge" aria-hidden="true">Soon</span>
+            </button>
+
+            <button
+              type="button"
+              class="auth-provider-btn auth-provider-apple"
+              data-provider="apple"
+              aria-disabled="true"
+              title="Coming soon"
+            >
+              <span class="auth-provider-icon auth-provider-icon-apple" aria-hidden="true">&#63743;</span>
+              <span>Continue with Apple</span>
+              <span class="auth-provider-badge" aria-hidden="true">Soon</span>
+            </button>
+
+            <button
+              type="button"
+              class="auth-provider-btn auth-provider-phone"
+              data-provider="phone"
+              aria-disabled="true"
+              title="Coming soon"
+            >
+              <span class="auth-provider-icon auth-provider-icon-phone" aria-hidden="true">&#128241;</span>
+              <span>Sign in with mobile</span>
+              <span class="auth-provider-badge" aria-hidden="true">Soon</span>
+            </button>
+          </div>
+
+          <div class="auth-divider" role="separator" aria-label="Or sign in with email">
+            <span></span>
+            <span>or sign in with email</span>
+            <span></span>
+          </div>
+
+          <div class="auth-field">
+            <label for="login-email">Email</label>
+            <input
+              id="login-email"
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              autocomplete="email"
+              inputmode="email"
+              required
+            />
+          </div>
+
+          <div class="auth-field">
+            <label for="login-password">Password</label>
+            <input
+              id="login-password"
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+
+          <div class="auth-row">
+            <label class="auth-remember">
+              <input id="login-remember" type="checkbox" />
+              <span>Remember me on this device</span>
+            </label>
+
+            <a href="#" class="auth-link" aria-disabled="true" title="Coming soon">
+              Forgot password?
+            </a>
+          </div>
+
+          <button type="submit" class="portal-btn auth-btn">Sign in</button>
+
+          <p id="login-error" class="auth-error" role="alert" aria-live="polite"></p>
+
+          <button id="login-retry" type="button" class="portal-btn auth-btn auth-btn-secondary">
+            Retry connection
+          </button>
+        </form>
+      </div>
+
+      <p class="portal-auth-footer">
+        This portal is for active BrightFoundry clients.
+        <a href="../contact.html" class="auth-link">Start a project</a> to receive access.
+      </p>
+    </div>
+  </main>
+
+  <!-- JS (no inline scripts; CSP-safe) -->
+  <script src="js/config.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/page-init.js" defer></script>
+</body>
+</html>

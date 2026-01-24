@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.brightfoundry.co.uk http://localhost:4000 http://127.0.0.1:4000; form-action 'self';" />
+  <title>Client Portal – Support</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <noscript>
+    <div class="portal-info-banner">
+      This portal requires JavaScript to load and manage support tickets.
+    </div>
+  </noscript>
+
+  <div class="portal-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="portal-sidebar">
+      <div class="portal-brand">
+        <img
+          src="../img/brightfoundry-logo-light.png"
+          alt="BrightFoundry logo"
+          class="portal-brand-logo"
+        />
+        <div class="portal-brand-text">Client Portal</div>
+      </div>
+
+      <!-- MAIN NAV -->
+      <nav class="portal-nav portal-nav-group" aria-label="Client portal navigation">
+        <a href="dashboard.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🏠</span>
+          <span class="portal-nav-label">Dashboard</span>
+        </a>
+        <a href="projects.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📁</span>
+          <span class="portal-nav-label">Projects</span>
+        </a>
+        <a href="files.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📄</span>
+          <span class="portal-nav-label">Files</span>
+        </a>
+        <a href="messages.html" class="portal-nav-link">
+          <span class="portal-nav-icon">💬</span>
+          <span class="portal-nav-label">Messages</span>
+        </a>
+        <a href="support.html" class="portal-nav-link is-active" aria-current="page">
+          <span class="portal-nav-icon">🛟</span>
+          <span class="portal-nav-label">Support</span>
+        </a>
+        <a href="invoices.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🧾</span>
+          <span class="portal-nav-label">Invoices</span>
+        </a>
+        <a href="timeline.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🕒</span>
+          <span class="portal-nav-label">Timeline</span>
+        </a>
+
+        <a href="settings.html" class="portal-nav-link">
+          <span class="portal-nav-icon">⚙️</span>
+          <span class="portal-nav-label">Settings</span>
+        </a>
+      </nav>
+
+      <!-- ACCOUNT CHIP + MENU -->
+      <div class="portal-sidebar-bottom">
+        <button
+          class="portal-account-chip"
+          type="button"
+          id="portal-account-chip"
+          aria-haspopup="menu"
+          aria-expanded="false"
+        >
+          <div class="portal-account-avatar">
+            <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
+          </div>
+          <div class="portal-account-meta">
+            <div class="portal-account-name" data-user-name>Your Client</div>
+            <div class="portal-account-sub">Client account</div>
+          </div>
+          <div class="portal-account-chevron" aria-hidden="true">▾</div>
+        </button>
+
+        <div class="portal-account-menu" id="portal-account-menu" role="menu" aria-label="Account menu">
+          <a href="settings.html" class="portal-account-menu-item" role="menuitem">
+            ⚙️ <span>Account settings</span>
+          </a>
+          <button
+            type="button"
+            class="portal-account-menu-item portal-account-menu-item-muted"
+            role="menuitem"
+            id="portal-add-account"
+          >
+            ➕ <span>Add another account</span>
+          </button>
+          <a
+            href="login.html"
+            class="portal-account-menu-item portal-account-menu-danger"
+            data-logout
+            role="menuitem"
+          >
+            🚪 <span>Log out</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="portal-main">
+      <header class="portal-topbar">
+        <div class="portal-topbar-inner">
+          <div class="portal-topbar-left">
+            <div class="topbar-title">Support</div>
+            <div class="topbar-subtitle">
+              View your open issues, resolved requests and project-related questions.
+            </div>
+          </div>
+
+          <div class="portal-topbar-right">
+            <button class="portal-theme-toggle" type="button">
+              Toggle theme
+            </button>
+            <div class="portal-avatar">
+              <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <main class="portal-main-inner">
+        <div class="portal-page-heading">
+          <h1>Support &amp; tickets</h1>
+          <p>Raise requests, track progress and keep decisions in one place.</p>
+        </div>
+
+        <div class="tickets-layout">
+          <!-- LEFT: tickets list + controls -->
+          <div>
+
+            <!-- Empty-state friendly helper card -->
+            <div class="portal-card u-mb-14">
+              <h2 class="dashboard-section-title u-mt-0">How support works</h2>
+              <p class="settings-help u-mb-0">
+                Use tickets for fixes, content updates, and new ideas. In a live portal, you’d see assignees,
+                priorities, and email notifications for updates.
+              </p>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="tickets-toolbar">
+              <label class="sr-only" for="tickets-search">Search tickets</label>
+              <input
+                id="tickets-search"
+                type="search"
+                class="tickets-search-input"
+                placeholder="Search tickets..."
+                autocomplete="off"
+              />
+
+              <div
+                class="tickets-filter-group"
+                role="tablist"
+                aria-label="Ticket filters"
+              >
+                <button type="button" class="tickets-filter-btn is-active" data-filter="all" role="tab" aria-selected="true">
+                  All
+                </button>
+                <button type="button" class="tickets-filter-btn" data-filter="open" role="tab" aria-selected="false">
+                  Open
+                </button>
+                <button type="button" class="tickets-filter-btn" data-filter="in-progress" role="tab" aria-selected="false">
+                  In progress
+                </button>
+                <button type="button" class="tickets-filter-btn" data-filter="resolved" role="tab" aria-selected="false">
+                  Resolved
+                </button>
+              </div>
+            </div>
+
+            <!-- Tickets list -->
+            <div class="tickets-list" aria-label="Support tickets list" role="table">
+              <div class="tickets-header" role="row">
+                <div role="columnheader">Ticket</div>
+                <div role="columnheader">Status</div>
+                <div role="columnheader">Updated</div>
+              </div>
+
+              <div id="tickets-list" role="rowgroup">
+                <!-- Rows filled by JS in main.js -->
+              </div>
+            </div>
+
+            <p class="settings-footnote u-mt-10">
+              Tip: If there are no tickets yet, create your first one on the right.
+            </p>
+          </div>
+
+          <!-- RIGHT: helper / summary column -->
+          <div class="settings-column">
+            <div class="portal-card">
+              <h3>Create a support request</h3>
+              <p class="settings-help">
+                Report bugs, request content changes or share new ideas. We’ll follow up via the portal and email.
+              </p>
+
+              <form id="new-ticket-form" class="settings-form" novalidate>
+                <label class="settings-field" for="new-ticket-subject">
+                  <span class="settings-label">What do you need help with?</span>
+                  <input
+                    type="text"
+                    id="new-ticket-subject"
+                    class="settings-input"
+                    placeholder="e.g. Update homepage hero text"
+                    required
+                    autocomplete="off"
+                  />
+                </label>
+
+                <label class="settings-field" for="new-ticket-project">
+                  <span class="settings-label">Which project is this about?</span>
+                  <select id="new-ticket-project" class="settings-input">
+                    <option value="" data-default>
+                      General (not linked to a specific project)
+                    </option>
+                  </select>
+                </label>
+
+                <p class="settings-footnote" id="new-ticket-status" aria-live="polite"></p>
+                <button type="submit" class="portal-btn">
+                  + Create support request
+                </button>
+              </form>
+            </div>
+
+            <div class="portal-card">
+              <h3>Ticket status</h3>
+              <p class="settings-help">
+                Quick snapshot of how things are looking across your tickets.
+              </p>
+              <p>
+                <strong id="dashboard-open-tickets">0</strong> open ticket(s)<br />
+                <strong id="dashboard-resolved-tickets">0</strong> resolved
+              </p>
+              <p class="settings-footnote">
+                These numbers come from the same data powering your dashboard.
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="portal-bottom-nav" aria-label="Mobile navigation">
+    <div class="portal-bottom-nav-inner">
+      <a href="dashboard.html" class="portal-bottom-link" id="nav-dashboard">
+        <div class="portal-bottom-icon">🏠</div>
+        <span>Home</span>
+      </a>
+
+      <a href="projects.html" class="portal-bottom-link" id="nav-projects">
+        <div class="portal-bottom-icon">📁</div>
+        <span>Projects</span>
+      </a>
+
+      <a href="files.html" class="portal-bottom-link" id="nav-files">
+        <div class="portal-bottom-icon">📄</div>
+        <span>Files</span>
+      </a>
+
+      <a href="messages.html" class="portal-bottom-link" id="nav-messages">
+        <div class="portal-bottom-icon">💬</div>
+        <span>Messages</span>
+      </a>
+
+      <!-- More -->
+      <a href="#" class="portal-bottom-link" id="nav-more" data-more>
+        <div class="portal-bottom-icon">⋯</div>
+        <span>More</span>
+      </a>
+    </div>
+  </nav>
+
+  <script src="js/config.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/page-init.js" defer></script>
+
+</body>
+</html>

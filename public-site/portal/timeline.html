@@ -1,0 +1,302 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.brightfoundry.co.uk http://localhost:4000 http://127.0.0.1:4000; form-action 'self';" />
+  <title>Client Portal – Timeline</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <noscript>
+    <div class="portal-info-banner">
+      This portal requires JavaScript to load your timeline.
+    </div>
+  </noscript>
+
+  <div class="portal-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="portal-sidebar">
+      <div class="portal-brand">
+        <img
+          src="../img/brightfoundry-logo-light.png"
+          alt="BrightFoundry logo"
+          class="portal-brand-logo"
+        />
+        <div class="portal-brand-text">Client Portal</div>
+      </div>
+
+      <!-- MAIN NAV -->
+      <nav class="portal-nav portal-nav-group" aria-label="Client portal navigation">
+        <a href="dashboard.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🏠</span>
+          <span class="portal-nav-label">Dashboard</span>
+        </a>
+        <a href="projects.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📁</span>
+          <span class="portal-nav-label">Projects</span>
+        </a>
+        <a href="files.html" class="portal-nav-link">
+          <span class="portal-nav-icon">📄</span>
+          <span class="portal-nav-label">Files</span>
+        </a>
+        <a href="messages.html" class="portal-nav-link">
+          <span class="portal-nav-icon">💬</span>
+          <span class="portal-nav-label">Messages</span>
+        </a>
+        <a href="support.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🛟</span>
+          <span class="portal-nav-label">Support</span>
+        </a>
+        <a href="invoices.html" class="portal-nav-link">
+          <span class="portal-nav-icon">🧾</span>
+          <span class="portal-nav-label">Invoices</span>
+        </a>
+        <a href="timeline.html" class="portal-nav-link is-active" aria-current="page">
+          <span class="portal-nav-icon">🕒</span>
+          <span class="portal-nav-label">Timeline</span>
+        </a>
+
+        <a href="settings.html" class="portal-nav-link">
+          <span class="portal-nav-icon">⚙️</span>
+          <span class="portal-nav-label">Settings</span>
+        </a>
+      </nav>
+
+      <!-- ACCOUNT CHIP + MENU -->
+      <div class="portal-sidebar-bottom">
+        <button
+          class="portal-account-chip"
+          type="button"
+          id="portal-account-chip"
+          aria-haspopup="menu"
+          aria-expanded="false"
+        >
+          <div class="portal-account-avatar">
+            <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
+          </div>
+          <div class="portal-account-meta">
+            <div class="portal-account-name" data-user-name>Your Client</div>
+            <div class="portal-account-sub">Client account</div>
+          </div>
+          <div class="portal-account-chevron" aria-hidden="true">▾</div>
+        </button>
+
+        <div
+          class="portal-account-menu"
+          id="portal-account-menu"
+          role="menu"
+          aria-label="Account menu"
+        >
+          <a href="settings.html" class="portal-account-menu-item" role="menuitem">
+            ⚙️ <span>Account settings</span>
+          </a>
+          <button
+            type="button"
+            class="portal-account-menu-item portal-account-menu-item-muted"
+            role="menuitem"
+            id="portal-add-account"
+          >
+            ➕ <span>Add another account</span>
+          </button>
+          <a
+            href="login.html"
+            class="portal-account-menu-item portal-account-menu-danger"
+            data-logout
+            role="menuitem"
+          >
+            🚪 <span>Log out</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN COLUMN -->
+    <div class="portal-main">
+
+      <!-- TOPBAR -->
+      <header class="portal-topbar">
+        <div class="portal-topbar-inner">
+          <div class="portal-topbar-left">
+            <div class="topbar-title">Timeline</div>
+            <div class="topbar-subtitle">
+              A unified view of project milestones, billing and support activity for
+              <span data-user-name>Your Client</span>.
+            </div>
+          </div>
+
+          <div class="portal-topbar-right">
+            <button class="portal-theme-toggle" type="button">
+              Toggle theme
+            </button>
+            <div class="portal-avatar">
+              <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <main class="portal-main-inner">
+        <div class="portal-page-heading">
+          <h1>Project timeline</h1>
+          <p>See everything that’s happened across your projects, in one place.</p>
+        </div>
+
+        <div class="timeline-layout">
+          <!-- LEFT: timeline list + controls -->
+          <div>
+
+            <!-- Empty-state friendly helper card -->
+            <div class="portal-card u-mb-14">
+              <h2 class="dashboard-section-title u-mt-0">How to use this</h2>
+              <p class="settings-help u-mb-0">
+                Search for projects, invoice numbers, or ticket subjects. Use filters to focus on milestones,
+                billing, or support updates.
+              </p>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="timeline-toolbar">
+              <label class="sr-only" for="timeline-search">Search timeline events</label>
+              <input
+                id="timeline-search"
+                type="search"
+                class="timeline-search-input"
+                placeholder="Search events, projects, invoices..."
+                autocomplete="off"
+              />
+
+              <div class="timeline-toolbar-right">
+                <div
+                  class="timeline-filter-group"
+                  role="tablist"
+                  aria-label="Timeline filters"
+                >
+                  <button
+                    type="button"
+                    class="timeline-filter-btn is-active"
+                    data-filter="all"
+                    role="tab"
+                    aria-selected="true"
+                  >
+                    All
+                  </button>
+                  <button
+                    type="button"
+                    class="timeline-filter-btn"
+                    data-filter="project"
+                    role="tab"
+                    aria-selected="false"
+                  >
+                    Projects
+                  </button>
+                  <button
+                    type="button"
+                    class="timeline-filter-btn"
+                    data-filter="billing"
+                    role="tab"
+                    aria-selected="false"
+                  >
+                    Billing
+                  </button>
+                  <button
+                    type="button"
+                    class="timeline-filter-btn"
+                    data-filter="support"
+                    role="tab"
+                    aria-selected="false"
+                  >
+                    Support
+                  </button>
+                </div>
+
+                <div class="timeline-toolbar-meta">
+                  <span id="timeline-count" aria-live="polite">0</span> event(s)
+                </div>
+              </div>
+            </div>
+
+            <!-- Timeline list -->
+            <div class="timeline-list" aria-label="Timeline events list">
+              <div id="timeline-list">
+                <!-- Events filled by JS in main.js -->
+              </div>
+            </div>
+
+            <p class="settings-footnote u-mt-10">
+              Tip: If nothing appears yet, that just means this demo account doesn’t have timeline activity loaded.
+            </p>
+          </div>
+
+          <!-- RIGHT: helper / legend -->
+          <div class="settings-column">
+            <div class="portal-card">
+              <h3>How this would work live</h3>
+              <p class="settings-help">
+                In a real portal, this timeline would be powered by your project
+                management, billing and support tools – all feeding into a single view.
+              </p>
+              <p class="settings-footnote">
+                Perfect for impressing clients: “You’ll never have to guess where things are at.”
+              </p>
+            </div>
+
+            <div class="portal-card">
+              <h3>Event types</h3>
+              <ul class="timeline-legend">
+                <li><span class="timeline-pill timeline-pill-project">Project</span> Kick-offs, milestones, launches.</li>
+                <li><span class="timeline-pill timeline-pill-billing">Billing</span> Invoices sent, paid, overdue.</li>
+                <li><span class="timeline-pill timeline-pill-support">Support</span> Tickets opened, updated, resolved.</li>
+              </ul>
+              <p class="settings-footnote">
+                You can easily re-use this pattern for your own internal tools (ClickUp, Notion, etc.).
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="portal-bottom-nav" aria-label="Mobile navigation">
+    <div class="portal-bottom-nav-inner">
+      <a href="dashboard.html" class="portal-bottom-link" id="nav-dashboard">
+        <div class="portal-bottom-icon">🏠</div>
+        <span>Home</span>
+      </a>
+
+      <a href="projects.html" class="portal-bottom-link" id="nav-projects">
+        <div class="portal-bottom-icon">📁</div>
+        <span>Projects</span>
+      </a>
+
+      <a href="files.html" class="portal-bottom-link" id="nav-files">
+        <div class="portal-bottom-icon">📄</div>
+        <span>Files</span>
+      </a>
+
+      <a href="messages.html" class="portal-bottom-link" id="nav-messages">
+        <div class="portal-bottom-icon">💬</div>
+        <span>Messages</span>
+      </a>
+
+      <!-- More -->
+      <a href="#" class="portal-bottom-link" id="nav-more" data-more>
+        <div class="portal-bottom-icon">⋯</div>
+        <span>More</span>
+      </a>
+    </div>
+  </nav>
+
+  <script src="js/config.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/page-init.js" defer></script>
+
+</body>
+</html>

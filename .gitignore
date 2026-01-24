@@ -1,0 +1,63 @@
+########################################
+# Node / JS
+########################################
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+########################################
+# Environment / Secrets
+########################################
+.env
+.env.*
+server/.env
+server/.env.*
+*.key
+*.pem
+
+# Allow example env
+!.env.example
+
+########################################
+# Databases
+########################################
+*.db
+*.sqlite
+*.sqlite3
+server/prisma/dev.db
+
+########################################
+# Build / cache
+########################################
+dist/
+build/
+.cache/
+.tmp/
+.tmp/*
+
+########################################
+# Logs
+########################################
+logs/
+*.log
+
+########################################
+# OS / Editor junk
+########################################
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+########################################
+# Local-only content
+########################################
+public-site/demo-cafe/
+🌐 WEBSITE & APP DEVELOPMENT BUSINESS.txt
+########################################
+# Local notes / docs at repo root
+########################################
+*.txt
