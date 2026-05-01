@@ -3,9 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Portfolio – BrightFoundry</title>
+  <meta
+    name="description"
+    content="Explore BrightFoundry portfolio examples, demo sites and prototype layouts for small-business websites, client portals and practical digital experiences."
+  />
+
   <link rel="stylesheet" href="css/styles.css" />
+  <script src="theme.js" defer></script>
 </head>
+
 <body>
 
   <!-- ==========================
@@ -17,7 +25,7 @@
 
         <!-- LOGO -->
         <div class="logo">
-          <a href="index.html">
+          <a href="index.html" aria-label="BrightFoundry home">
             <img
               src="img/brightfoundry-logo-light.png"
               alt="BrightFoundry logo"
@@ -28,8 +36,15 @@
 
         <!-- NAVIGATION (DESKTOP) -->
         <nav class="nav-links" aria-label="Primary">
+          <button
+            class="site-theme-toggle"
+            type="button"
+            aria-label="Toggle dark mode"
+            aria-pressed="false"
+          ></button>
+
           <a href="services.html">Services</a>
-          <a href="portfolio.html">Portfolio</a>
+          <a href="portfolio.html" aria-current="page">Portfolio</a>
           <a href="pricing.html">Pricing</a>
           <a href="client-portal.html">Client Portal</a>
           <a href="about.html">About</a>
@@ -58,7 +73,7 @@
         <!-- MOBILE MENU PANEL -->
         <nav class="nav-mobile" id="navMobile" aria-label="Mobile">
           <a href="services.html">Services</a>
-          <a href="portfolio.html">Portfolio</a>
+          <a href="portfolio.html" aria-current="page">Portfolio</a>
           <a href="pricing.html">Pricing</a>
           <a href="client-portal.html">Client Portal</a>
           <a href="about.html">About</a>
@@ -75,12 +90,14 @@
   <section class="hero">
     <div class="container">
       <div class="hero-inner">
-        <span class="badge">Portfolio & Demo Sites</span>
+        <span class="badge">Portfolio &amp; Demo Sites</span>
+
         <div>
           <h1>Examples of the kind of work we can create together.</h1>
+
           <p>
-            A growing collection of demo sites and real-world builds — showing different layouts, styles and features
-            for small businesses, web apps and client portals.
+            A growing collection of demo sites and early builds — showing different layouts,
+            styles and features for small businesses, web apps and client portals.
           </p>
         </div>
       </div>
@@ -91,23 +108,29 @@
   <section class="section">
     <div class="container">
       <div class="section-heading">
-        <h2>Early builds & prototypes</h2>
+        <h2>Early builds &amp; prototypes</h2>
+
         <p>
-          A few examples of what BrightFoundry can build today. As client projects go live, they’ll be added here with links and write-ups.
+          A few examples of what BrightFoundry can build today. As client projects go live,
+          they’ll be added here with links and write-ups.
         </p>
       </div>
 
       <div class="grid grid-3">
         <div class="card">
           <h3>Local Service Website Example</h3>
+
           <p style="font-size:0.9rem; color:#4b5563;">
-            A clear brochure-style site layout aimed at enquiries and trust — ideal for trades, salons and local services.
+            A clear brochure-style site layout aimed at enquiries and trust — ideal for trades,
+            salons and local services.
           </p>
+
           <p style="margin-top:8px; font-size:0.85rem; color:#6b7280;">
             • Services grid • Reviews section • Contact CTA • Mobile-friendly
           </p>
+
           <p style="margin-top:10px; font-size:0.9rem;">
-            <a href="demo-local-service/index.html" target="_blank" style="text-decoration:none; color:#2563eb;">
+            <a href="demo-local-service/index.html" target="_blank" rel="noopener" style="text-decoration:none; color:#2563eb;">
               View demo →
             </a>
           </p>
@@ -115,30 +138,36 @@
 
         <div class="card">
           <h3>Creator / Coach Website Example</h3>
+
           <p style="font-size:0.9rem; color:#4b5563;">
             A personal, story-led layout for coaches and solo professionals — designed to guide visitors to clear offers.
           </p>
+
           <p style="margin-top:8px; font-size:0.85rem; color:#6b7280;">
             • Offers • About story • Testimonials • Contact CTA
           </p>
+
           <p style="margin-top:10px; font-size:0.9rem;">
-            <a href="demo-creator/index.html" target="_blank" style="text-decoration:none; color:#2563eb;">
+            <a href="demo-creator/index.html" target="_blank" rel="noopener" style="text-decoration:none; color:#2563eb;">
               View demo →
             </a>
           </p>
         </div>
 
         <div class="card">
-          <h3>Client Portal (Prototype)</h3>
+          <h3>Client Portal Prototype</h3>
+
           <p style="font-size:0.9rem; color:#4b5563;">
             A private dashboard for clients to view progress, files, messages and invoices in one organised place.
           </p>
+
           <p style="margin-top:8px; font-size:0.85rem; color:#6b7280;">
             • Projects • Files • Messaging • Support tickets • Invoices
           </p>
+
           <p style="margin-top:10px; font-size:0.9rem;">
             <a href="client-portal.html" style="color:#2563eb; text-decoration:none;">
-              View client portal screenshots & details →
+              View client portal screenshots &amp; details →
             </a>
           </p>
         </div>
@@ -150,27 +179,31 @@
   <section class="section" style="padding-top:0;">
     <div class="container">
       <div class="section-heading">
-        <h2>Demo sites & templates</h2>
+        <h2>Demo sites &amp; templates</h2>
+
         <p>
           These are example websites you can explore. They’re starting points we can customise together —
-          and they’re clearly labelled as demos (not real client work).
+          and they’re clearly labelled as demos, not real client work.
         </p>
       </div>
 
       <div class="grid grid-3">
         <div class="card">
           <h3>Local Service Template</h3>
+
           <p style="font-size:0.9rem; color:#4b5563;">
             A simple, trustworthy layout for trades, salons, small clinics and other local services.
           </p>
+
           <ul style="margin-top:8px; font-size:0.9rem; color:#4b5563; padding-left:18px;">
             <li>Hero with clear call-to-action</li>
             <li>Services overview</li>
             <li>Reviews/testimonials</li>
             <li>Contact section layout</li>
           </ul>
+
           <p style="margin-top:10px; font-size:0.9rem;">
-            <a href="demo-local-service/index.html" target="_blank" style="text-decoration:none; color:#2563eb;">
+            <a href="demo-local-service/index.html" target="_blank" rel="noopener" style="text-decoration:none; color:#2563eb;">
               View live demo site →
             </a>
           </p>
@@ -178,17 +211,20 @@
 
         <div class="card">
           <h3>Creator / Coach Template</h3>
+
           <p style="font-size:0.9rem; color:#4b5563;">
             Designed for coaches, creators and solo professionals who sell services or sessions.
           </p>
+
           <ul style="margin-top:8px; font-size:0.9rem; color:#4b5563; padding-left:18px;">
             <li>Hero with personal intro</li>
             <li>Offer / packages section</li>
             <li>About story + values</li>
             <li>Testimonials + contact CTA</li>
           </ul>
+
           <p style="margin-top:10px; font-size:0.9rem;">
-            <a href="demo-creator/index.html" target="_blank" style="text-decoration:none; color:#2563eb;">
+            <a href="demo-creator/index.html" target="_blank" rel="noopener" style="text-decoration:none; color:#2563eb;">
               View live demo site →
             </a>
           </p>
@@ -196,17 +232,21 @@
 
         <div class="card">
           <h3>Café / Coffee Shop Template</h3>
+
           <p style="font-size:0.9rem; color:#4b5563;">
-            A warm, practical layout for cafés and food spots — menu highlights, opening times, gallery and location info.
+            A warm, practical layout for cafés and food spots — menu highlights, opening times,
+            gallery and location info.
           </p>
+
           <ul style="margin-top:8px; font-size:0.9rem; color:#4b5563; padding-left:18px;">
             <li>Menu preview with categories</li>
-            <li>Opening times & location section</li>
+            <li>Opening times &amp; location section</li>
             <li>Simple gallery placeholders</li>
             <li>Contact CTA</li>
           </ul>
+
           <p style="margin-top:10px; font-size:0.9rem;">
-            <a href="demo-cafe/index.html" target="_blank" style="text-decoration:none; color:#2563eb;">
+            <a href="demo-cafe/index.html" target="_blank" rel="noopener" style="text-decoration:none; color:#2563eb;">
               View live demo site →
             </a>
           </p>
@@ -214,11 +254,13 @@
       </div>
 
       <p style="margin-top:14px; font-size:0.9rem; color:#6b7280;">
-        Want something like one of these? I’ll tailor it to your brand, goals and content — and deliver it through a private client area.
+        Want something like one of these? I’ll tailor it to your brand, goals and content —
+        and deliver it through a private client area.
       </p>
 
       <div style="margin-top:16px;">
-        <a href="contact.html" class="btn">Get a quote</a>
+        <a href="contact.html" class="btn">Ask about a launch slot</a>
+
         <a href="pricing.html" style="margin-left:12px; font-size:0.95rem; color:#4b5563; text-decoration:none;">
           See pricing →
         </a>
@@ -237,18 +279,24 @@
       <div class="grid grid-3">
         <div class="card">
           <h3>1. Browse demo sites</h3>
+
           <p style="font-size:0.95rem; color:#4b5563;">
             Click through live demos and get a feel for layout, structure and what’s possible.
           </p>
         </div>
+
         <div class="card">
           <h3>2. Choose a base layout</h3>
+
           <p style="font-size:0.95rem; color:#4b5563;">
-            Pick the template that’s closest to what you need — local service, personal brand, café, and more.
+            Pick the template that’s closest to what you need — local service, personal brand,
+            café or another simple business layout.
           </p>
         </div>
+
         <div class="card">
           <h3>3. Make it yours</h3>
+
           <p style="font-size:0.95rem; color:#4b5563;">
             We customise colours, fonts, content, images and sections so it becomes your unique site — not a clone.
           </p>
@@ -262,10 +310,12 @@
     <div class="container">
       <div class="card">
         <h2 style="margin-bottom:8px;">Want to be one of the first live case studies?</h2>
+
         <p style="margin-bottom:16px;">
           If you’re open to a modern small-business site — or a portal-based client experience —
           I’d love to build something strong and add it here with your permission once it’s live.
         </p>
+
         <a href="contact.html" class="btn">Talk about a project</a>
       </div>
     </div>
@@ -274,7 +324,7 @@
   <!-- FOOTER -->
   <footer>
     <div class="container">
-      <p>© 2025 BrightFoundry. All rights reserved.</p>
+      <p>© 2026 BrightFoundry. All rights reserved.</p>
 
       <p style="margin-top:6px; font-size:0.85rem; color:#6b7280;">
         Privacy-first studio. No spam, no pressure — reach out only if and when it suits you.
@@ -289,41 +339,7 @@
     </div>
   </footer>
 
-  <!-- Mobile menu script -->
-  <script>
-    (function () {
-      const toggle = document.getElementById("navToggle");
-      const menu = document.getElementById("navMobile");
-      const overlay = document.getElementById("navOverlay");
-      if (!toggle || !menu || !overlay) return;
-
-      function openMenu() {
-        menu.classList.add("is-open");
-        overlay.classList.add("is-open");
-        toggle.setAttribute("aria-expanded", "true");
-      }
-
-      function closeMenu() {
-        menu.classList.remove("is-open");
-        overlay.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-      }
-
-      toggle.addEventListener("click", () => {
-        const isOpen = menu.classList.contains("is-open");
-        if (isOpen) closeMenu();
-        else openMenu();
-      });
-
-      overlay.addEventListener("click", closeMenu);
-
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeMenu();
-      });
-
-      menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeMenu));
-    })();
-  </script>
+  <script src="js/site-nav.js" defer></script>
 
 </body>
 </html>

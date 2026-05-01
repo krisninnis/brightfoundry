@@ -1,15 +1,42 @@
 // page-init.js
-// Consolidates tiny per-page inline scripts so the portal can use a strict CSP (no inline scripts).
+// Consolidates tiny per-page scripts so the portal can use a strict CSP with no inline scripts.
 
 (function () {
+  "use strict";
+
   function on(el, event, handler, opts) {
     if (el) el.addEventListener(event, handler, opts);
   }
 
+  function currentPageSlug() {
+    // pathname excludes query, but can be:
+    // /portal/login.html
+    // /portal/login
+    // /portal/login/
+    const parts = String(window.location.pathname || "")
+      .split("/")
+      .filter(Boolean);
+
+    const last = (parts[parts.length - 1] || "").toLowerCase();
+    return last;
+  }
+
   function isProtectedPortalPage() {
-    const page = (window.location.pathname.split("/").pop() || "").toLowerCase();
-    // Only login (and optional register) are public
-    return !["login.html", "register.html", ""].includes(page);
+    const page = currentPageSlug();
+
+    const PUBLIC = new Set([
+      "login.html",
+      "login",
+      "register.html",
+      "register"
+    ]);
+
+    if (PUBLIC.has(page)) return false;
+
+    // If someone hits /portal/ directly, avoid guarding the ambiguous root here.
+    if (!page || page === "portal") return false;
+
+    return true;
   }
 
   async function runAuthGuardIfNeeded() {
@@ -21,11 +48,10 @@
       return;
     }
 
-    // If no token, requireAuth will redirect to login
     const ok = window.requireAuth();
     if (!ok) return;
 
-    // Optional verification via /api/me (do not hard-fail on offline)
+    // Optional verification via /api/me. Do not hard-fail on offline.
     if (typeof window.verifySession === "function") {
       try {
         await window.verifySession();
@@ -36,69 +62,71 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    // Run auth guard first (protected pages only)
-    // Use a microtask so all deferred scripts that also hook DOMContentLoaded have registered.
+    // Run auth guard first on protected pages only.
     Promise.resolve().then(runAuthGuardIfNeeded);
 
-    // --- Shared: "Add another account" (demo-only) ---
+    // --- Shared: Add another account ---
     const addAccount = document.getElementById("portal-add-account");
     on(addAccount, "click", () => {
-      window.alert("Multi-account switching is coming soon.");
+      window.alert("To add or switch accounts, please contact BrightFoundry support.");
     });
 
-    // --- Shared: keep aria-expanded in sync with menu open/close (main.js toggles class) ---
+    // --- Shared: keep aria-expanded in sync with account menu open/close ---
     const chip = document.getElementById("portal-account-chip");
     const menu = document.getElementById("portal-account-menu");
+
     if (chip && menu && typeof MutationObserver !== "undefined") {
       const obs = new MutationObserver(() => {
         const open = menu.classList.contains("is-open");
         chip.setAttribute("aria-expanded", open ? "true" : "false");
       });
+
       obs.observe(menu, { attributes: true, attributeFilter: ["class"] });
     }
 
-    // --- Filters: keep aria-selected in sync (a11y polish) ---
+    // --- Filters: keep aria-selected in sync ---
     function wireSimpleAriaSelected(wrapperSelector, buttonSelector) {
       const wrap = document.querySelector(wrapperSelector);
       if (!wrap) return;
+
       wrap.addEventListener("click", (e) => {
         const btn = e.target.closest(buttonSelector);
         if (!btn) return;
+
         wrap.querySelectorAll(buttonSelector).forEach((b) => {
           b.setAttribute("aria-selected", b === btn ? "true" : "false");
         });
       });
     }
 
-    // Projects, files, invoices
     wireSimpleAriaSelected(".projects-filters", "button[data-filter]");
     wireSimpleAriaSelected(".files-filter-group", "button[data-filter]");
     wireSimpleAriaSelected(".portal-pill-filter[role='tablist']", "button[data-filter]");
-
-    // Support tickets
     wireSimpleAriaSelected(".tickets-filter-group[role='tablist']", "button.tickets-filter-btn");
 
-    // Timeline: aria-selected mirrors the active class (main.js toggles it)
     const timelineWrap = document.querySelector(".timeline-filter-group[role='tablist']");
     if (timelineWrap) {
       timelineWrap.addEventListener("click", (e) => {
         const btn = e.target.closest("button.timeline-filter-btn");
         if (!btn) return;
+
         timelineWrap.querySelectorAll("button.timeline-filter-btn").forEach((b) => {
           b.setAttribute("aria-selected", b.classList.contains("is-active") ? "true" : "false");
         });
       });
     }
 
-    // --- Light validation polish (doesn't replace main.js; improves UX) ---
+    // --- Light validation polish ---
     const msgForm = document.getElementById("new-message-form");
     const msgStatus = document.getElementById("new-message-status");
+
     if (msgForm && msgStatus) {
       msgForm.addEventListener(
         "submit",
         () => {
           const subject = document.getElementById("new-message-subject");
           const body = document.getElementById("new-message-body");
+
           if (
             (subject && !String(subject.value || "").trim()) ||
             (body && !String(body.value || "").trim())
@@ -112,14 +140,15 @@
 
     const ticketForm = document.getElementById("new-ticket-form");
     const ticketStatus = document.getElementById("new-ticket-status");
+
     if (ticketForm && ticketStatus) {
       ticketForm.addEventListener(
         "submit",
         () => {
           const subject = document.getElementById("new-ticket-subject");
+
           if (subject && !String(subject.value || "").trim()) {
-            ticketStatus.textContent =
-              "Please add a short description so we know what you need.";
+            ticketStatus.textContent = "Please add a short description so we know what you need.";
           }
         },
         true
@@ -128,6 +157,7 @@
 
     const settingsForm = document.getElementById("settings-form");
     const settingsStatus = document.getElementById("settings-status");
+
     if (settingsForm && settingsStatus) {
       settingsForm.addEventListener(
         "submit",
@@ -148,33 +178,38 @@
 
     const pwBtn = document.getElementById("settings-password-btn");
     const pwNote = document.getElementById("settings-security-note");
+
     on(pwBtn, "click", () => {
-      if (pwNote)
+      if (pwNote) {
         pwNote.textContent =
-          "Demo only: password updates will be available when the portal is connected to a real user database.";
+          "For password changes or access help, please contact BrightFoundry support so we can handle it safely.";
+      }
     });
 
     const delBtn = document.getElementById("settings-delete-btn");
     const dangerNote = document.getElementById("settings-danger-note");
+
     on(delBtn, "click", () => {
-      if (dangerNote)
+      if (dangerNote) {
         dangerNote.textContent =
-          "Demo only: account deletion requests would be handled securely (verification + email confirmation).";
+          "For account deletion, data export or privacy requests, please contact BrightFoundry support.";
+      }
     });
 
     // --- Login page helpers ---
-    // Providers are "Soon"
     document.querySelectorAll("[data-provider]").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         e.preventDefault();
+
         const errorEl = document.getElementById("login-error");
-        if (errorEl)
+        if (errorEl) {
           errorEl.textContent =
-            "Single sign-on is coming soon. Please sign in with email for now.";
+            "Single sign-on is not available yet. Please sign in with email for now.";
+        }
       });
     });
 
-    // Mobile menu behaviour (login page)
+    // Mobile menu behaviour for portal auth pages.
     const toggle = document.getElementById("navToggle");
     const mobileMenu = document.getElementById("navMobile");
     const overlay = document.getElementById("navOverlay");
@@ -194,6 +229,7 @@
 
       toggle.addEventListener("click", () => {
         const isOpen = mobileMenu.classList.contains("is-open");
+
         if (isOpen) closeMenu();
         else openMenu();
       });
@@ -204,7 +240,9 @@
         if (e.key === "Escape") closeMenu();
       });
 
-      mobileMenu.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeMenu));
+      mobileMenu.querySelectorAll("a").forEach((a) => {
+        a.addEventListener("click", closeMenu);
+      });
     }
   });
 })();

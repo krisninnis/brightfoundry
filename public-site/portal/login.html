@@ -4,35 +4,41 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <meta name="robots" content="noindex, nofollow" />
+
   <!--
     CSP notes:
-    - Dev: allow localhost API (4000) for fetch/XHR
-    - Prod: keep connect-src tight (only 'self' + api.brightfoundry.co.uk)
-    - IMPORTANT:
-      - frame-ancestors is ignored in meta CSP; enforce it via HTTP response headers in production.
-      - upgrade-insecure-requests breaks local http:// testing; do not include it in dev CSP.
+    - Dev: allow localhost API if needed for local testing.
+    - Prod: keep connect-src tight: 'self' + https://api.brightfoundry.co.uk.
+    - frame-ancestors is ignored in meta CSP; enforce it via HTTP response headers in production.
+    - upgrade-insecure-requests can break local http:// testing; do not include it in dev CSP.
+
+    Suggested production CSP:
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.brightfoundry.co.uk; form-action 'self';"
+    />
   -->
-  <meta
-    http-equiv="Content-Security-Policy"
-    content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.brightfoundry.co.uk http://localhost:4000 http://127.0.0.1:4000; form-action 'self';"
-  />
 
-  <title>Client Login - BrightFoundry</title>
+  <title>Client Login – BrightFoundry</title>
 
-  <!-- Public site base styles -->
   <link rel="stylesheet" href="../css/styles.css" />
-
-  <!-- Portal/auth styles -->
   <link rel="stylesheet" href="css/main.css" />
+  <script src="../theme.js" defer></script>
 </head>
 
 <body class="portal-auth-body">
+
   <header class="portal-topbar">
     <div class="container">
       <div class="portal-topbar-inner">
+
         <div class="logo">
           <a href="../index.html" aria-label="Back to BrightFoundry website">
-            <img src="../img/brightfoundry-logo-light.png" alt="BrightFoundry" />
+            <img
+              src="../img/brightfoundry-logo-light.png"
+              alt="BrightFoundry"
+            />
           </a>
         </div>
 
@@ -41,6 +47,25 @@
           <a href="../contact.html" class="btn">Start a project</a>
           <a href="../contact.html" class="nav-link-muted">Get access</a>
         </nav>
+
+        <button
+          type="button"
+          class="portal-theme-toggle"
+          id="themeToggle"
+          data-theme-toggle
+          aria-label="Toggle theme"
+          aria-pressed="false"
+        >
+          <img
+            data-theme-icon
+            class="bf-theme-toggle-icon"
+            src="img/icons/moon.svg"
+            alt=""
+            width="18"
+            height="18"
+            decoding="async"
+          />
+        </button>
 
         <button
           class="nav-toggle"
@@ -62,6 +87,7 @@
           <a href="../client-portal.html">Client Portal</a>
           <a href="../contact.html" class="btn">Start a project</a>
         </nav>
+
       </div>
     </div>
   </header>
@@ -69,19 +95,22 @@
   <main class="portal-auth-layout">
     <div class="portal-auth-wrapper">
       <h1 class="portal-auth-title">Sign in</h1>
+
       <p class="portal-auth-intro portal-auth-intro-center">
         Log in to view your projects, files and support tickets.
       </p>
 
       <div class="portal-auth-card">
         <form id="login-form" class="portal-auth-form" novalidate>
-          <div class="auth-providers" aria-label="Sign in options">
+
+          <div class="auth-providers" aria-label="Additional sign in options">
             <button
               type="button"
               class="auth-provider-btn auth-provider-google"
               data-provider="google"
+              disabled
               aria-disabled="true"
-              title="Coming soon"
+              title="Single sign-on is not available yet"
             >
               <span class="auth-provider-icon auth-provider-icon-google" aria-hidden="true">G</span>
               <span>Continue with Google</span>
@@ -92,8 +121,9 @@
               type="button"
               class="auth-provider-btn auth-provider-apple"
               data-provider="apple"
+              disabled
               aria-disabled="true"
-              title="Coming soon"
+              title="Single sign-on is not available yet"
             >
               <span class="auth-provider-icon auth-provider-icon-apple" aria-hidden="true">&#63743;</span>
               <span>Continue with Apple</span>
@@ -104,14 +134,19 @@
               type="button"
               class="auth-provider-btn auth-provider-phone"
               data-provider="phone"
+              disabled
               aria-disabled="true"
-              title="Coming soon"
+              title="Mobile sign-in is not available yet"
             >
               <span class="auth-provider-icon auth-provider-icon-phone" aria-hidden="true">&#128241;</span>
               <span>Sign in with mobile</span>
               <span class="auth-provider-badge" aria-hidden="true">Soon</span>
             </button>
           </div>
+
+          <p class="portal-auth-intro portal-auth-intro-center" style="font-size:0.88rem; margin-top:10px;">
+            Email sign-in is available for active BrightFoundry clients.
+          </p>
 
           <div class="auth-divider" role="separator" aria-label="Or sign in with email">
             <span></span>
@@ -145,13 +180,13 @@
           </div>
 
           <div class="auth-row">
-            <label class="auth-remember">
+            <div class="auth-remember">
               <input id="login-remember" type="checkbox" />
-              <span>Remember me on this device</span>
-            </label>
+              <label for="login-remember">Remember me on this device</label>
+            </div>
 
-            <a href="#" class="auth-link" aria-disabled="true" title="Coming soon">
-              Forgot password?
+            <a href="../contact.html" class="auth-link">
+              Need help signing in?
             </a>
           </div>
 
@@ -172,10 +207,9 @@
     </div>
   </main>
 
-  <!-- JS (no inline scripts; CSP-safe) -->
   <script src="js/config.js" defer></script>
   <script src="js/auth.js" defer></script>
-  <script src="js/main.js" defer></script>
   <script src="js/page-init.js" defer></script>
+
 </body>
 </html>

@@ -27,8 +27,12 @@
   const ENV = forcedEnv || (isDevHost ? "development" : "production");
 
   // Host only (no trailing /api). All callers must use `${API_BASE_URL}/api/...`
+  // DEV: derive host from current page to avoid localhost vs 127.0.0.1 CORS mismatches.
+  // PROD: fixed API domain.
   const API_BASE_URL_RAW =
-    ENV === "production" ? "https://api.brightfoundry.co.uk" : "http://localhost:4000";
+    ENV === "production"
+      ? "https://api.brightfoundry.co.uk"
+      : `${window.location.protocol}//${window.location.hostname}:4000`;
 
   // Normalize: remove any trailing slashes to avoid // in URLs
   const API_BASE_URL = String(API_BASE_URL_RAW || "").replace(/\/+$/, "");

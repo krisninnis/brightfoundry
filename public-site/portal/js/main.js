@@ -9,7 +9,6 @@
 // - Offline banner + safe API fetch wrapper
 
 (function () {
-  const THEME_KEY = "bf-portal-theme";
   const AUTH_STORAGE_KEY = "bf-portal-auth"; // kept for legacy cleanup only
   const AVATAR_KEY = "bf-portal-avatar";
 
@@ -194,44 +193,26 @@ const url = `${base}${p.startsWith("/") ? "" : "/"}${p}`;
       throw err;
     }
   }
-
   // --------------------
   // THEME
   // --------------------
-  function applyTheme(theme) {
-    const body = document.body;
-    if (theme === "dark") {
-      body.classList.add("theme-dark");
-    } else {
-      body.classList.remove("theme-dark");
-    }
+  // Theme is controlled globally by /theme.js (window.BFTheme). Do not add
+  // additional click handlers here (double-toggles were breaking UI).
+  function initThemeSelect() {
+    const themeSelect = document.getElementById("portal-theme-select");
+    if (!themeSelect || !window.BFTheme) return;
+
+    const current = (window.BFTheme.get && window.BFTheme.get()) || "";
+    themeSelect.value = current === "dark" ? "dark" : "light";
+
+    themeSelect.addEventListener("change", () => {
+      const chosen = themeSelect.value === "dark" ? "dark" : "light";
+      if (window.BFTheme && typeof window.BFTheme.set === "function") {
+        window.BFTheme.set(chosen);
+      }
+    });
   }
 
-  function getStoredTheme() {
-    return localStorage.getItem(THEME_KEY);
-  }
-
-  function storeTheme(theme) {
-    localStorage.setItem(THEME_KEY, theme);
-  }
-
-  function initTheme() {
-    const saved = getStoredTheme();
-    if (saved === "dark" || saved === "light") {
-      applyTheme(saved);
-    } else {
-      applyTheme("light");
-    }
-  }
-
-  function toggleTheme() {
-    const isDark = document.body.classList.contains("theme-dark");
-    const next = isDark ? "light" : "dark";
-    applyTheme(next);
-    storeTheme(next);
-  }
-
-  // --------------------
   // AVATAR
   // --------------------
   function getStoredAvatar() {
@@ -319,6 +300,51 @@ const url = `${base}${p.startsWith("/") ? "" : "/"}${p}`;
   let demoTimeline = [];
 
   // --------------------
+  // API → UI NORMALISERS
+  // --------------------
+  function formatDateShort(value) {
+    if (!value) return "";
+    try {
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return "";
+      return d.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    } catch {
+      return "";
+    }
+  }
+
+  function normaliseProject(p) {
+    const id = p && p.id != null ? String(p.id) : "";
+    const name = (p && p.name ? String(p.name) : "").trim();
+    const status = (p && p.status ? String(p.status) : "").trim();
+    const updated = (p && p.updated ? String(p.updated) : "").trim() || formatDateShort(p && (p.updatedAt || p.createdAt));
+
+    // Older UI expects `phase`; backend currently provides `status`.
+    const phase = (p && p.phase ? String(p.phase) : "").trim() || status;
+
+    return { ...p, id, name, status, phase, updated };
+  }
+
+  function normaliseMessage(m) {
+    const id = m && m.id != null ? String(m.id) : "";
+    const project = (m && m.project ? String(m.project) : "").trim() || "General";
+    const createdAt = m && (m.createdAt || m.updatedAt) ? String(m.createdAt || m.updatedAt) : "";
+    const updated = (m && m.updated ? String(m.updated) : "").trim() || formatDateShort(createdAt);
+
+    const rawBody = (m && m.body ? String(m.body) : "").replace(/\r\n/g, "\n");
+    const parts = rawBody.split("\n");
+    const subject = (m && m.subject ? String(m.subject) : "").trim() || (parts[0] || "").trim() || "Message";
+    const previewFromBody = parts.slice(1).join(" ").trim();
+    const preview = (m && m.preview ? String(m.preview) : "").trim() || previewFromBody || rawBody.slice(0, 140);
+
+    return { ...m, id, project, subject, preview, updated };
+  }
+
+  // --------------------
   // SMALL HELPERS (timeline + projects)
   // --------------------
   function projectNameFromId(id) {
@@ -359,7 +385,7 @@ const url = `${base}${p.startsWith("/") ? "" : "/"}${p}`;
       if (!res.ok) throw new Error("Failed to fetch projects");
 
       const data = await res.json();
-      if (Array.isArray(data.projects)) demoProjects = data.projects;
+      if (Array.isArray(data.projects)) demoProjects = data.projects.map(normaliseProject);
 
       renderDashboardOverview();
       renderDashboardProjects();
@@ -379,7 +405,7 @@ const url = `${base}${p.startsWith("/") ? "" : "/"}${p}`;
       if (!res.ok) throw new Error("Failed to fetch messages");
 
       const data = await res.json();
-      if (Array.isArray(data.messages)) demoMessages = data.messages;
+      if (Array.isArray(data.messages)) demoMessages = data.messages.map(normaliseMessage);
 
       renderDashboardMessages();
       renderMessagesList();
@@ -533,7 +559,7 @@ const url = `${base}${p.startsWith("/") ? "" : "/"}${p}`;
     }
 
     const data = await res.json();
-    return data.message;
+    return normaliseMessage(data.message || data);
   }
 
   async function updateProfile(name, email) {
@@ -1167,8 +1193,6 @@ return;
   // --------------------
   // DOM READY
   // --------------------
-    // Apply theme ASAP (before auth) so it also works on login/register and reduces flash.
-  initTheme();
 
   document.addEventListener("DOMContentLoaded", async function () {
     let user = null;
@@ -1178,9 +1202,6 @@ return;
       console.warn("Auth failed", err);
     }
     if (!user) return;
-
-        const themeToggleBtn = document.querySelector(".portal-theme-toggle");
-if (themeToggleBtn) themeToggleBtn.addEventListener("click", toggleTheme);
 
     const nameEls = document.querySelectorAll("#portal-account-name-menu");
     const emailEls = document.querySelectorAll("#portal-account-email-menu");
@@ -1197,16 +1218,8 @@ if (themeToggleBtn) themeToggleBtn.addEventListener("click", toggleTheme);
     initAvatar();
     initAccountMenu();
 
-    const themeSelect = document.getElementById("portal-theme-select");
-    if (themeSelect) {
-      const saved = getStoredTheme() || "light";
-      themeSelect.value = saved;
-      themeSelect.addEventListener("change", function (e) {
-        const chosen = e.target.value === "dark" ? "dark" : "light";
-        applyTheme(chosen);
-        storeTheme(chosen);
-      });
-    }
+    // Theme select (Settings page)
+    initThemeSelect();
 
     const currentPage = window.location.pathname.split("/").pop();
     document.querySelectorAll(".portal-bottom-link").forEach((link) => {

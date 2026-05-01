@@ -1,0 +1,230 @@
+/* =========================================================
+   HOTFIX OVERRIDES — Theme + Mobile Bottom Nav (CSP-safe)
+   Single theme authority: <html data-theme="light|dark">
+   ========================================================= */
+
+:root {
+  --portal-bg: #f6f7fb;
+  --portal-text: #0f172a;
+
+  --topbar-bg: rgba(255, 255, 255, 0.92);
+  --topbar-border: #e5e7eb;
+
+  --sidebar-bg: #ffffff;
+  --sidebar-text: #0f172a;
+  --sidebar-border: #e5e7eb;
+  --sidebar-active-bg: #f3f4f6;
+
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+
+  --muted-text: #6b7280;
+}
+
+/* DARK THEME — driven by html[data-theme="dark"] */
+html[data-theme="dark"] {
+  --portal-bg: #0b1220;
+  --portal-text: #e5e7eb;
+
+  --topbar-bg: rgba(2, 6, 23, 0.72);
+  --topbar-border: rgba(148, 163, 184, 0.18);
+
+  --sidebar-bg: #0b1220;
+  --sidebar-text: #e5e7eb;
+  --sidebar-border: rgba(148, 163, 184, 0.18);
+  --sidebar-active-bg: rgba(255, 255, 255, 0.08);
+
+  --card-bg: rgba(15, 23, 42, 0.9);
+  --card-border: rgba(148, 163, 184, 0.18);
+
+  --muted-text: rgba(229, 231, 235, 0.72);
+}
+
+/* Force key surfaces to use variables */
+body {
+  background: var(--portal-bg) !important;
+  color: var(--portal-text) !important;
+}
+
+.portal-shell,
+.portal-main,
+.portal-main-inner {
+  background: transparent !important;
+  color: inherit !important;
+}
+
+.portal-sidebar {
+  background: var(--sidebar-bg) !important;
+  color: var(--sidebar-text) !important;
+  border-right: 1px solid var(--sidebar-border) !important;
+  min-height: 100vh;
+}
+
+.portal-sidebar a,
+.portal-sidebar .portal-nav-link,
+.portal-sidebar .portal-nav-item,
+.portal-sidebar .portal-brand-text,
+.portal-sidebar .portal-account-name {
+  color: var(--sidebar-text) !important;
+}
+
+.portal-sidebar .is-active,
+.portal-sidebar a.is-active {
+  background: var(--sidebar-active-bg) !important;
+}
+
+.portal-topbar {
+  background: var(--topbar-bg) !important;
+  border-bottom: 1px solid var(--topbar-border) !important;
+}
+
+.portal-topbar-left,
+.topbar-title,
+.portal-account-name {
+  color: var(--portal-text) !important;
+}
+
+.topbar-subtitle {
+  color: var(--muted-text) !important;
+}
+
+.portal-card,
+.card,
+.panel {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--card-border) !important;
+  color: var(--portal-text) !important;
+}
+
+/* =========================================================
+   THEME TOGGLE — FIX THE REAL PROBLEM (theme.css pseudo-elements + clipping)
+   ========================================================= */
+
+/* Make the button big enough */
+.site-theme-toggle,
+.portal-theme-toggle {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 48px !important;
+  height: 48px !important;
+
+  padding: 0 !important;
+  border-radius: 999px !important;
+
+  /* theme.css sets overflow:hidden — that clips big icons */
+  overflow: visible !important;
+
+  /* keep it clean and clickable */
+  background: transparent !important;
+  border: 1px solid rgba(148, 163, 184, 0.28) !important;
+}
+
+/* theme.css draws the ring using ::before/::after — remove that so the icon can scale */
+.portal-theme-toggle::before,
+.portal-theme-toggle::after,
+.site-theme-toggle::before,
+.site-theme-toggle::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Make the icon bigger */
+.bf-theme-toggle-icon,
+.site-theme-toggle img[data-theme-icon],
+.portal-theme-toggle img[data-theme-icon] {
+  width: 28px !important;
+  height: 28px !important;
+  display: block !important;
+  object-fit: contain !important;
+}
+
+/* Focus style */
+.site-theme-toggle:focus-visible,
+.portal-theme-toggle:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ==============================
+   MOBILE OVERRIDES
+   ============================== */
+@media (max-width: 900px) {
+  .portal-sidebar {
+    display: none !important;
+  }
+
+  .portal-main,
+  .portal-content,
+  .portal-page {
+    margin-left: 0 !important;
+    padding-bottom: 84px !important;
+  }
+
+  .portal-bottom-nav {
+    display: block !important;
+    position: fixed !important;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2000;
+    background: var(--topbar-bg) !important;
+    border-top: 1px solid var(--topbar-border) !important;
+    backdrop-filter: blur(10px);
+  }
+
+  .portal-bottom-nav-inner {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-around;
+    height: 72px;
+    padding: 8px 10px;
+  }
+
+  .portal-bottom-link {
+    flex: 1;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+    color: var(--portal-text) !important;
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  .portal-bottom-link span {
+    display: block !important;
+    opacity: 0.9;
+  }
+
+  .portal-bottom-icon {
+    width: 22px !important;
+    height: 22px !important;
+  }
+}
+/* ===== Theme toggle: make button + icon bigger everywhere ===== */
+
+/* Make the button itself bigger */
+.portal-topbar .portal-theme-toggle[data-theme-toggle]{
+  width: 72px !important;
+  height: 72px !important;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  /* in case something clips it */
+  overflow: visible !important;
+}
+
+/* Make the icon bigger */
+.portal-topbar .portal-theme-toggle[data-theme-toggle] img.bf-theme-toggle-icon[data-theme-icon]{
+  width: 50px !important;
+  height: 50px !important;
+  display: block !important;
+  object-fit: contain !important;
+}

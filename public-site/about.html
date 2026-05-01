@@ -3,9 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>About – BrightFoundry</title>
+  <meta
+    name="description"
+    content="Learn about BrightFoundry, a solo web studio run by Kristian in South Wales, helping small businesses launch clear websites with calm one-to-one support."
+  />
+
   <link rel="stylesheet" href="css/styles.css" />
+  <script src="theme.js" defer></script>
 </head>
+
 <body>
 
   <!-- ==========================
@@ -17,7 +25,7 @@
 
         <!-- LOGO -->
         <div class="logo">
-          <a href="index.html">
+          <a href="index.html" aria-label="BrightFoundry home">
             <img
               src="img/brightfoundry-logo-light.png"
               alt="BrightFoundry logo"
@@ -28,12 +36,17 @@
 
         <!-- NAVIGATION (DESKTOP) -->
         <nav class="nav-links" aria-label="Primary">
+          <button
+            class="site-theme-toggle"
+            type="button"
+            aria-label="Toggle dark mode"
+            aria-pressed="false"
+          ></button>
+
           <a href="services.html">Services</a>
           <a href="portfolio.html">Portfolio</a>
           <a href="pricing.html">Pricing</a>
-
           <a href="client-portal.html">Client Portal</a>
-
           <a href="about.html" aria-current="page">About</a>
           <a href="faqs.html">FAQs</a>
           <a href="contact.html" class="btn">Contact</a>
@@ -78,11 +91,13 @@
     <div class="container">
       <div class="hero-inner">
         <span class="badge">About BrightFoundry</span>
+
         <div>
           <h1>A small studio for people who want a human behind their website.</h1>
+
           <p>
             BrightFoundry is a one-to-one web studio based in South Wales, combining modern design,
-            practical development and new AI tools — with the kind of support you’d expect from a friend,
+            practical development and useful AI tools — with the kind of support you’d expect from a person,
             not a faceless agency.
           </p>
         </div>
@@ -111,7 +126,7 @@
 
         <p>
           BrightFoundry is built around a simple idea: <strong>you shouldn’t have to chase a web project</strong>.
-          You’ll get calm communication, realistic expectations, and a clear process — plus a private client area where you can see
+          You’ll get calm communication, realistic expectations and a clear process — plus a private client area where you can see
           updates, files and next steps in one place.
         </p>
 
@@ -122,7 +137,7 @@
 
         <p>
           I take on a focused mix of work: clean business websites, small web apps and tools, client portals, branding support,
-          and practical AI features where they genuinely help (not gimmicks).
+          and practical AI features where they genuinely help.
         </p>
       </div>
     </div>
@@ -132,19 +147,19 @@
   <section class="section">
     <div class="container">
       <div class="section-heading">
-        <h2>Professional Standards</h2>
+        <h2>Professional standards</h2>
         <p>Clear communication, good processes and responsible data handling.</p>
       </div>
 
       <div class="card">
         <p>
           I hold a certification in GDPR compliance, meaning every project is designed with responsible data handling,
-          privacy awareness, and UK best practices in mind. Whether it’s a simple contact form or a custom login system,
+          privacy awareness and UK best practices in mind. Whether it’s a simple contact form or a custom login system,
           your users’ information is treated with care.
         </p>
 
         <p>
-          I’m also constantly improving through study and real-world building — so the work you get is modern, functional,
+          I’m also constantly improving through study and real-world building — so the work you get is modern, functional
           and built on solid foundations.
         </p>
       </div>
@@ -164,22 +179,27 @@
           <h3>Clarity over chaos</h3>
           <p>Your site or app should feel simple and easy to use — for you and your customers.</p>
         </div>
+
         <div class="card">
           <h3>One-to-one communication</h3>
           <p>You talk to the person doing the work. No hand-offs or departments.</p>
         </div>
+
         <div class="card">
           <h3>Step-by-step improvements</h3>
           <p>You don’t need everything at once. Start small, then evolve.</p>
         </div>
+
         <div class="card">
           <h3>Honest expectations</h3>
           <p>You’ll always know what’s realistic within your budget and timeline.</p>
         </div>
+
         <div class="card">
           <h3>AI as an assistant</h3>
-          <p>AI helps speed things up and add features — never a replacement for the human touch.</p>
+          <p>AI can help speed things up and add useful features — never replace the human touch.</p>
         </div>
+
         <div class="card">
           <h3>Support after launch</h3>
           <p>Care plans and the client portal give you long-term stability.</p>
@@ -201,22 +221,27 @@
           <h3>1. Friendly chat</h3>
           <p>We explore your goals and challenges.</p>
         </div>
+
         <div class="card">
           <h3>2. Clear plan</h3>
           <p>You get a written outline of scope, time and cost.</p>
         </div>
+
         <div class="card">
           <h3>3. Design &amp; build</h3>
           <p>Small steps, regular check-ins and iteration.</p>
         </div>
+
         <div class="card">
           <h3>4. Launch</h3>
           <p>We push the project live and ensure it runs smoothly.</p>
         </div>
+
         <div class="card">
           <h3>5. Support</h3>
           <p>You can request changes and support through the portal.</p>
         </div>
+
         <div class="card">
           <h3>6. Partnership</h3>
           <p>If it works well, we keep improving your system long-term.</p>
@@ -236,16 +261,18 @@
       <div class="grid grid-3">
         <div class="card">
           <h3>A good fit if…</h3>
+
           <ul>
             <li>You’re a small business, solo founder or local service</li>
             <li>You value honest communication</li>
             <li>You want a clean, reliable, modern website</li>
-            <li>You’re open to using modern tools (including AI)</li>
+            <li>You’re open to using modern tools, including AI where useful</li>
           </ul>
         </div>
 
         <div class="card">
           <h3>Not a good fit if…</h3>
+
           <ul>
             <li>You need enterprise-scale systems</li>
             <li>You expect 24/7 instant support</li>
@@ -255,6 +282,7 @@
 
         <div class="card">
           <h3>Not sure?</h3>
+
           <p>
             If you’re in the middle, send a message and we’ll work out whether
             your project makes sense for what BrightFoundry does.
@@ -269,11 +297,13 @@
     <div class="container">
       <div class="card">
         <h2>Want to see if BrightFoundry is right for you?</h2>
+
         <p>
-          Send a quick overview of your idea, your current website (if any)
+          Send a quick overview of your idea, your current website if you have one,
           and what you’d like to improve. I’ll reply with honest thoughts and
           a suggested next step.
         </p>
+
         <a href="contact.html" class="btn">Say hello</a>
 
         <p class="muted-note muted-note-tight">
@@ -289,7 +319,7 @@
   <!-- FOOTER -->
   <footer>
     <div class="container">
-      <p>© 2025 BrightFoundry. All rights reserved.</p>
+      <p>© 2026 BrightFoundry. All rights reserved.</p>
 
       <p class="muted-note muted-note-tight">
         Privacy-first studio. No spam, no pressure — reach out only if and when it suits you.
@@ -304,8 +334,7 @@
     </div>
   </footer>
 
-  <!-- Mobile menu script (external; CSP-safe) -->
-  <script src="js/nav.js" defer></script>
+  <script src="js/site-nav.js" defer></script>
 
 </body>
 </html>

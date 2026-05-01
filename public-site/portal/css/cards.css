@@ -1,0 +1,53 @@
+/* ==============================
+   DASHBOARD / GRID CARDS
+   ============================== */
+
+.portal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.portal-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 16px 16px 18px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+}
+
+.portal-card h3 {
+  font-size: 0.98rem;
+  margin-bottom: 6px;
+}
+
+.portal-card p {
+  font-size: 0.88rem;
+  color: #6b7280;
+}
+
+.portal-card ul {
+  margin: 6px 0 0;
+  padding-left: 1.1rem;
+  list-style-position: outside;
+}
+
+.portal-card ul li {
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+body.theme-dark .portal-card ul li {
+  color: #e5e7eb;
+}
+
+@media (max-width: 900px) {
+  .portal-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .portal-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -3,11 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.brightfoundry.co.uk http://localhost:4000 http://127.0.0.1:4000; form-action 'self';" />
+
+  <meta name="robots" content="noindex, nofollow" />
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.brightfoundry.co.uk; form-action 'self';"
+  />
+
   <title>Client Portal – Projects</title>
-  <link rel="stylesheet" href="../css/styles.css" />
-  <link rel="stylesheet" href="css/main.css" />
+
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/portal/css/main.css" />
+  <script src="/theme.js" defer></script>
 </head>
+
 <body>
 
   <noscript>
@@ -32,42 +41,42 @@
       <!-- MAIN NAV -->
       <nav class="portal-nav portal-nav-group" aria-label="Client portal navigation">
         <a href="dashboard.html" class="portal-nav-link">
-          <span class="portal-nav-icon">🏠</span>
+          <img class="portal-nav-icon" src="./assets/icons/dashboard.png" alt="" aria-hidden="true" />
           <span class="portal-nav-label">Dashboard</span>
         </a>
 
         <a href="projects.html" class="portal-nav-link is-active" aria-current="page">
-          <span class="portal-nav-icon">📁</span>
+          <img class="portal-nav-icon" src="./assets/icons/projects.png" alt="" aria-hidden="true" />
           <span class="portal-nav-label">Projects</span>
         </a>
 
         <a href="files.html" class="portal-nav-link">
-          <span class="portal-nav-icon">📄</span>
+          <img class="portal-nav-icon" src="./assets/icons/files.png" alt="" aria-hidden="true" />
           <span class="portal-nav-label">Files</span>
         </a>
 
         <a href="messages.html" class="portal-nav-link">
-          <span class="portal-nav-icon">💬</span>
+          <img class="portal-nav-icon" src="./assets/icons/messages.png" alt="" aria-hidden="true" />
           <span class="portal-nav-label">Messages</span>
         </a>
 
         <a href="support.html" class="portal-nav-link">
-          <span class="portal-nav-icon">🛟</span>
+          <img class="portal-nav-icon" src="./assets/icons/support.png" alt="" aria-hidden="true" />
           <span class="portal-nav-label">Support</span>
         </a>
 
         <a href="invoices.html" class="portal-nav-link">
-          <span class="portal-nav-icon">🧾</span>
+          <img class="portal-nav-icon" src="./assets/icons/invoices.png" alt="" aria-hidden="true" />
           <span class="portal-nav-label">Invoices</span>
         </a>
 
         <a href="timeline.html" class="portal-nav-link">
-          <span class="portal-nav-icon">🕒</span>
+          <img class="portal-nav-icon" src="./assets/icons/timeline.png" alt="" aria-hidden="true" />
           <span class="portal-nav-label">Timeline</span>
         </a>
 
         <a href="settings.html" class="portal-nav-link">
-          <span class="portal-nav-icon">⚙️</span>
+          <img class="portal-nav-icon" src="./assets/icons/settings.png" alt="" aria-hidden="true" />
           <span class="portal-nav-label">Settings</span>
         </a>
       </nav>
@@ -84,32 +93,39 @@
           <div class="portal-account-avatar">
             <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
           </div>
+
           <div class="portal-account-meta">
             <div class="portal-account-name" data-user-name>Your Client</div>
             <div class="portal-account-sub">Client account</div>
           </div>
+
           <div class="portal-account-chevron" aria-hidden="true">▾</div>
         </button>
 
         <div class="portal-account-menu" id="portal-account-menu" role="menu" aria-label="Account menu">
           <a href="settings.html" class="portal-account-menu-item" role="menuitem">
-            ⚙️ <span>Account settings</span>
+            <img class="portal-menu-icon" src="./assets/icons/settings.png" alt="" aria-hidden="true" />
+            <span>Account settings</span>
           </a>
+
           <button
             type="button"
             class="portal-account-menu-item portal-account-menu-item-muted"
             role="menuitem"
             id="portal-add-account"
           >
-            ➕ <span>Add another account</span>
+            <img class="portal-menu-icon" src="./assets/icons/add.png" alt="" aria-hidden="true" />
+            <span>Add another account</span>
           </button>
+
           <a
             href="login.html"
             class="portal-account-menu-item portal-account-menu-danger"
             data-logout
             role="menuitem"
           >
-            🚪 <span>Log out</span>
+            <img class="portal-menu-icon" src="./assets/icons/logout.png" alt="" aria-hidden="true" />
+            <span>Log out</span>
           </a>
         </div>
       </div>
@@ -123,6 +139,7 @@
         <div class="portal-topbar-inner">
           <div class="portal-topbar-left">
             <div class="topbar-title">Projects</div>
+
             <div class="topbar-subtitle">
               A clear view of what’s in progress and what’s been delivered for
               <span data-user-name>Your Client</span>.
@@ -130,9 +147,16 @@
           </div>
 
           <div class="portal-topbar-right">
-            <button class="portal-theme-toggle" type="button">
-              Toggle theme
+            <button
+              class="portal-theme-toggle"
+              type="button"
+              data-theme-toggle
+              aria-label="Toggle theme"
+              aria-pressed="false"
+            >
+              <img data-theme-icon class="bf-theme-toggle-icon" alt="" decoding="async" />
             </button>
+
             <div class="portal-avatar">
               <img src="" alt="Profile avatar" class="portal-avatar-img" data-avatar />
             </div>
@@ -144,16 +168,17 @@
       <main class="portal-main-inner">
         <div class="portal-page-heading">
           <h1>Your projects</h1>
-          <p>Track status, current phase, and the latest updates.</p>
+          <p>Track status, current phase and the latest updates.</p>
         </div>
 
         <!-- QUICK HELP / EMPTY-STATE FRIENDLY CARD -->
         <section class="dashboard-section" aria-label="How projects work">
           <div class="portal-card">
             <h2 class="dashboard-section-title u-mt-0">How projects are shown here</h2>
+
             <p class="settings-help">
-              Each project shows its current phase and status (active / completed). As we deliver
-              milestones, you’ll see progress updates and links to relevant files.
+              Each project shows its current phase and status. As milestones are delivered,
+              you’ll see progress updates and links to relevant files.
             </p>
           </div>
         </section>
@@ -161,6 +186,7 @@
         <!-- PROJECTS CONTROLS -->
         <div class="projects-controls">
           <label class="sr-only" for="projects-search">Search projects</label>
+
           <input
             type="text"
             id="projects-search"
@@ -170,13 +196,33 @@
           />
 
           <div class="projects-filters" role="tablist" aria-label="Project filters">
-            <button type="button" class="projects-filter-btn is-active" data-filter="all" role="tab" aria-selected="true">
+            <button
+              type="button"
+              class="projects-filter-btn is-active"
+              data-filter="all"
+              role="tab"
+              aria-selected="true"
+            >
               All
             </button>
-            <button type="button" class="projects-filter-btn" data-filter="active" role="tab" aria-selected="false">
+
+            <button
+              type="button"
+              class="projects-filter-btn"
+              data-filter="active"
+              role="tab"
+              aria-selected="false"
+            >
               Active
             </button>
-            <button type="button" class="projects-filter-btn" data-filter="completed" role="tab" aria-selected="false">
+
+            <button
+              type="button"
+              class="projects-filter-btn"
+              data-filter="completed"
+              role="tab"
+              aria-selected="false"
+            >
               Completed
             </button>
           </div>
@@ -202,36 +248,36 @@
   <nav class="portal-bottom-nav" aria-label="Mobile navigation">
     <div class="portal-bottom-nav-inner">
       <a href="dashboard.html" class="portal-bottom-link" id="nav-dashboard">
-        <div class="portal-bottom-icon">🏠</div>
+        <img class="portal-bottom-icon" src="./assets/icons/dashboard.png" alt="" aria-hidden="true" />
         <span>Home</span>
       </a>
 
-      <a href="projects.html" class="portal-bottom-link" id="nav-projects">
-        <div class="portal-bottom-icon">📁</div>
+      <a href="projects.html" class="portal-bottom-link is-active" id="nav-projects" aria-current="page">
+        <img class="portal-bottom-icon" src="./assets/icons/projects.png" alt="" aria-hidden="true" />
         <span>Projects</span>
       </a>
 
       <a href="files.html" class="portal-bottom-link" id="nav-files">
-        <div class="portal-bottom-icon">📄</div>
+        <img class="portal-bottom-icon" src="./assets/icons/files.png" alt="" aria-hidden="true" />
         <span>Files</span>
       </a>
 
       <a href="messages.html" class="portal-bottom-link" id="nav-messages">
-        <div class="portal-bottom-icon">💬</div>
+        <img class="portal-bottom-icon" src="./assets/icons/messages.png" alt="" aria-hidden="true" />
         <span>Messages</span>
       </a>
 
       <a href="#" class="portal-bottom-link" id="nav-more" data-more>
-        <div class="portal-bottom-icon">⋯</div>
+        <img class="portal-bottom-icon" src="./assets/icons/more.png" alt="" aria-hidden="true" />
         <span>More</span>
       </a>
     </div>
   </nav>
 
-  <script src="js/config.js" defer></script>
-  <script src="js/auth.js" defer></script>
-  <script src="js/main.js" defer></script>
-  <script src="js/page-init.js" defer></script>
+  <script src="/portal/js/config.js" defer></script>
+  <script src="/portal/js/auth.js" defer></script>
+  <script src="/portal/js/main.js" defer></script>
+  <script src="/portal/js/page-init.js" defer></script>
 
 </body>
 </html>

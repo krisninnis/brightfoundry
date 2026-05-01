@@ -3,30 +3,78 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Privacy Policy – BrightFoundry</title>
+  <meta
+    name="description"
+    content="BrightFoundry’s privacy policy explaining how personal data is collected, used, stored and protected when you enquire, work with us or use the website."
+  />
+
   <link rel="stylesheet" href="css/styles.css" />
+  <script src="theme.js" defer></script>
 </head>
+
 <body>
 
   <!-- HEADER -->
   <header>
     <div class="container">
       <div class="nav-inner">
-   <div class="logo">
-  <a href="index.html">
-    <img src="img/brightfoundry-logo-light.png" alt="BrightFoundry logo" class="logo-only" />
-  </a>
-</div>
 
+        <div class="logo">
+          <a href="index.html">
+            <img
+              src="img/brightfoundry-logo-light.png"
+              alt="BrightFoundry logo"
+              class="logo-only"
+            />
+          </a>
+        </div>
 
-        <div class="nav-links">
+        <nav class="nav-links" aria-label="Primary">
+          <button
+            class="site-theme-toggle"
+            type="button"
+            aria-label="Toggle dark mode"
+            aria-pressed="false"
+          ></button>
+
           <a href="services.html">Services</a>
           <a href="portfolio.html">Portfolio</a>
           <a href="pricing.html">Pricing</a>
+          <a href="client-portal.html">Client Portal</a>
           <a href="about.html">About</a>
           <a href="faqs.html">FAQs</a>
           <a href="contact.html" class="btn">Contact</a>
-        </div>
+          <a href="portal/login.html" class="nav-link-muted">Client Login</a>
+        </nav>
+
+        <button
+          class="nav-toggle"
+          type="button"
+          id="navToggle"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="navMobile"
+        >
+          <span class="bars" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+        </button>
+
+        <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+        <nav class="nav-mobile" id="navMobile" aria-label="Mobile">
+          <a href="services.html">Services</a>
+          <a href="portfolio.html">Portfolio</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="client-portal.html">Client Portal</a>
+          <a href="about.html">About</a>
+          <a href="faqs.html">FAQs</a>
+          <a href="portal/login.html" class="nav-link-muted">Client Login</a>
+          <a href="contact.html" class="btn">Contact</a>
+        </nav>
+
       </div>
     </div>
   </header>
@@ -36,6 +84,7 @@
     <div class="container">
       <div class="hero-inner">
         <span class="badge">Privacy Policy</span>
+
         <div>
           <h1>Your privacy matters.</h1>
           <p>This Privacy Policy explains how BrightFoundry collects, uses, stores and protects your personal data.</p>
@@ -53,21 +102,23 @@
         <h2>1. Who we are</h2>
         <p>
           BrightFoundry is a web design and development studio based in the UK.
-          We provide websites, web applications, AI tools, branding, and digital services to clients.
+          We provide websites, web applications, AI tools, branding and digital services to clients.
         </p>
 
         <h2>2. Information we collect</h2>
         <p>We may collect the following information:</p>
+
         <ul>
           <li>Name, email address and contact details</li>
           <li>Business information you choose to share</li>
           <li>Project requirements, content and files you send</li>
-          <li>Payment and invoicing details (processed securely through third-party providers)</li>
-          <li>Website usage data (analytics, cookies, browsing behaviour)</li>
+          <li>Payment and invoicing details, processed securely through third-party providers</li>
+          <li>Website usage data, such as analytics, cookies and browsing behaviour where enabled</li>
         </ul>
 
         <h2>3. How we use your information</h2>
         <p>We use your information to:</p>
+
         <ul>
           <li>Communicate with you about your enquiry or project</li>
           <li>Prepare proposals, quotes and work agreements</li>
@@ -78,10 +129,11 @@
 
         <h2>4. Legal basis for processing</h2>
         <p>We process data under:</p>
+
         <ul>
-          <li><strong>Contract:</strong> when delivering a service you've requested</li>
-          <li><strong>Legitimate interests:</strong> basic analytics, communication, portfolio updates</li>
-          <li><strong>Consent:</strong> when you opt-in to newsletters or optional updates</li>
+          <li><strong>Contract:</strong> when delivering a service you have requested</li>
+          <li><strong>Legitimate interests:</strong> basic analytics, communication and portfolio updates</li>
+          <li><strong>Consent:</strong> when you opt in to newsletters or optional updates</li>
         </ul>
 
         <h2>5. How we store and protect your data</h2>
@@ -92,12 +144,14 @@
 
         <h2>6. Third-party services</h2>
         <p>We may use third-party services for:</p>
+
         <ul>
-          <li>Analytics (e.g., Google Analytics)</li>
-          <li>Email (e.g., Gmail, Outlook)</li>
-          <li>Payments (e.g., Stripe)</li>
-          <li>Hosting (e.g., Vercel, Netlify)</li>
+          <li>Analytics, such as Google Analytics or privacy-friendly alternatives</li>
+          <li>Email, such as Gmail or Outlook</li>
+          <li>Payments, such as Stripe</li>
+          <li>Hosting, such as Vercel or Netlify</li>
         </ul>
+
         <p>
           These providers may process data under their own privacy policies.
         </p>
@@ -105,11 +159,12 @@
         <h2>7. Cookies</h2>
         <p>
           Our website may use cookies for analytics and basic functionality.
-          See our Cookies Policy for more details.
+          See our <a href="cookies.html">Cookies Policy</a> for more details.
         </p>
 
         <h2>8. Your rights</h2>
         <p>You have the right to:</p>
+
         <ul>
           <li>Request a copy of your data</li>
           <li>Ask us to correct or delete your data</li>
@@ -120,6 +175,7 @@
         <p>
           If you have questions about this policy or want to make a data request, contact:
         </p>
+
         <p><strong>Email:</strong> brightfoundry.contact@gmail.com</p>
 
       </div>
@@ -128,18 +184,24 @@
   </section>
 
   <!-- FOOTER -->
- <footer>
-  <div class="container">
-    <p>© 2025 BrightFoundry. All rights reserved.</p>
-    <div style="margin-top:6px;">
-      <a href="privacy.html">Privacy Policy</a> •
-      <a href="terms.html">Terms</a> •
-      <a href="cookies.html">Cookies</a> •
-      <a href="portal/login.html">Client Login</a>
-    </div>
-  </div>
-</footer>
+  <footer>
+    <div class="container">
+      <p>© 2026 BrightFoundry. All rights reserved.</p>
 
+      <p style="margin-top:6px; font-size:0.85rem; color:#6b7280;">
+        Privacy-first studio. No spam, no pressure — reach out only if and when it suits you.
+      </p>
+
+      <div style="margin-top:6px;">
+        <a href="privacy.html">Privacy Policy</a> •
+        <a href="terms.html">Terms</a> •
+        <a href="cookies.html">Cookies</a> •
+        <a href="portal/login.html">Client Login</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/site-nav.js" defer></script>
 
 </body>
 </html>

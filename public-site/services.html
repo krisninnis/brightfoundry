@@ -3,9 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Services – BrightFoundry</title>
+  <meta
+    name="description"
+    content="BrightFoundry services for small businesses, led by the Website Launch Sprint with optional AI, automation, branding, media, care plan and custom web app add-ons."
+  />
+
   <link rel="stylesheet" href="css/styles.css" />
+  <script src="theme.js" defer></script>
 </head>
+
 <body>
 
   <!-- ==========================
@@ -17,7 +25,7 @@
 
         <!-- LOGO -->
         <div class="logo">
-          <a href="index.html">
+          <a href="index.html" aria-label="BrightFoundry home">
             <img
               src="img/brightfoundry-logo-light.png"
               alt="BrightFoundry logo"
@@ -28,12 +36,17 @@
 
         <!-- NAVIGATION (DESKTOP) -->
         <nav class="nav-links" aria-label="Primary">
+          <button
+            class="site-theme-toggle"
+            type="button"
+            aria-label="Toggle dark mode"
+            aria-pressed="false"
+          ></button>
+
           <a href="services.html">Services</a>
           <a href="portfolio.html">Portfolio</a>
           <a href="pricing.html">Pricing</a>
-
           <a href="client-portal.html">Client Portal</a>
-
           <a href="about.html">About</a>
           <a href="faqs.html">FAQs</a>
           <a href="contact.html" class="btn">Contact</a>
@@ -77,12 +90,17 @@
   <section class="hero">
     <div class="container">
       <div class="hero-inner">
-        <span class="badge">Web, apps, branding, AI & more</span>
         <div>
-          <h1>Everything you need to look professional online.</h1>
+          <span class="badge" style="display:block; margin-bottom:14px;">
+            Website launch first, add-ons second
+          </span>
+
+          <h1>One clear website offer, with useful add-ons when needed.</h1>
+
           <p>
-            BrightFoundry is a small, friendly studio that can handle your website, web app,
-            branding, media and AI tools — all under one roof. No jargon, no drama.
+            BrightFoundry’s main offer is the Website Launch Sprint for small businesses,
+            solo founders and local service providers. AI, branding, media, care plans
+            and custom app work stay secondary and are only suggested when they support the launch.
           </p>
         </div>
       </div>
@@ -93,85 +111,124 @@
   <section class="section">
     <div class="container">
       <div class="section-heading">
-        <h2>Core Services</h2>
-        <p>Pick the main thing you need right now — we can always grow it later.</p>
+        <h2>Primary offer</h2>
+        <p>A structured launch package for small businesses that need trust, clarity, calls, bookings and enquiries.</p>
       </div>
 
       <div class="grid grid-3">
         <div class="card">
-          <h3>Website Design</h3>
+          <h3>Local Business Website Launch Sprint</h3>
+
           <p>
-            Clean, modern websites for small businesses, creators and local services.
-            Fast, mobile-friendly and SEO-ready.
+            A polished small business website with up to 5 focused pages, local SEO basics,
+            enquiry flow and a private client portal for the delivery process.
           </p>
+
           <p class="u-mt-10">
-            <a href="website-design.html">View Website Design →</a>
+            <a href="website-design.html">View the Launch Sprint →</a>
           </p>
         </div>
 
         <div class="card">
-          <h3>Web Apps &amp; Client Portals</h3>
+          <h3>Private client portal included</h3>
+
           <p>
-            Custom dashboards, booking systems, client areas and internal tools that keep everything organised.
+            Every website project is managed through a private portal for updates, files,
+            messages, invoices and support so the launch stays organised.
           </p>
+
           <p class="u-mt-10">
-            <a href="web-apps.html">View Web Apps &amp; Portals →</a>
-          </p>
-          <p style="margin-top:4px; font-size:0.85rem; color:#6b7280;">
-            See the included client portal:
-            <a href="client-portal.html" style="color:#2563eb; text-decoration:none;">
-              view screenshots →
-            </a>
+            <a href="client-portal.html">See the portal →</a>
           </p>
         </div>
 
         <div class="card">
-          <h3>AI Chatbots &amp; Automation</h3>
+          <h3>Optional add-ons</h3>
+
           <p>
-            Chatbots that answer questions, collect leads and automate boring tasks using your own content and FAQs.
+            Add AI lead capture, branding, media/content or care plans only when they make the website launch stronger.
           </p>
+
           <p class="u-mt-10">
-            <a href="ai-chatbots.html">View AI Services →</a>
+            <a href="pricing.html">View pricing →</a>
           </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- BRANDING, MEDIA, CARE PLANS -->
+  <!-- SECONDARY SERVICES -->
   <section class="section" style="padding-top:0;">
     <div class="container">
+      <div class="section-heading">
+        <h2>Secondary services</h2>
+        <p>Kept separate from the core sprint so the main website offer stays clear.</p>
+      </div>
+
       <div class="grid grid-3">
-        <div class="card">
+        <div class="card card-secondary">
+          <h3>AI Chatbots &amp; Automation</h3>
+
+          <p>
+            Lead capture and FAQ helpers trained on your own content. Best added after the core site is clear.
+          </p>
+
+          <p class="u-mt-10">
+            <a href="ai-chatbots.html">View AI services →</a>
+          </p>
+        </div>
+
+        <div class="card card-secondary">
           <h3>Branding &amp; Visual Identity</h3>
+
           <p>
             Logos, colour palettes, typography and basic brand kits so everything feels
             consistent across web and social.
           </p>
+
           <p class="u-mt-10">
-            <a href="branding.html">View Branding →</a>
+            <a href="branding.html">View branding →</a>
           </p>
         </div>
 
-        <div class="card">
+        <div class="card card-secondary">
           <h3>Media &amp; Content</h3>
+
           <p>
             Graphics, banners and short-form video edits to support your website launches
             and ongoing campaigns.
           </p>
+
           <p class="u-mt-10">
-            <a href="media.html">View Media &amp; Content →</a>
+            <a href="media.html">View media &amp; content →</a>
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-3" style="margin-top:18px;">
+        <div class="card card-secondary">
+          <h3>Web Apps &amp; Custom Portals</h3>
+
+          <p>
+            Dashboards, booking systems, internal tools and deeper portal builds quoted separately
+            after the website need is clear.
+          </p>
+
+          <p class="u-mt-10">
+            <a href="web-apps.html">View web apps &amp; portals →</a>
           </p>
         </div>
 
-        <div class="card">
+        <div class="card card-secondary">
           <h3>Care Plans &amp; Support</h3>
+
           <p>
             Hosting, backups, updates and ongoing tweaks so your site stays secure,
             fast and up to date.
           </p>
+
           <p class="u-mt-10">
-            <a href="care-plans.html">View Care Plans →</a>
+            <a href="care-plans.html">View care plans →</a>
           </p>
         </div>
       </div>
@@ -183,10 +240,13 @@
     <div class="container">
       <div class="card">
         <h2 style="margin-bottom:8px;">Not sure which service you need?</h2>
+
         <p style="margin-bottom:16px;">
-          Tell me what you’re trying to achieve and I’ll recommend a simple, honest plan — no pressure, no hard sell.
+          Start with the Launch Sprint unless there is a clear reason not to. Tell me what you are trying to achieve
+          and I will recommend the smallest sensible plan.
         </p>
-        <a href="contact.html" class="btn">Talk about a project</a>
+
+        <a href="website-design.html" class="btn">View the Launch Sprint</a>
       </div>
     </div>
   </section>
@@ -194,7 +254,7 @@
   <!-- FOOTER -->
   <footer>
     <div class="container">
-      <p>© 2025 BrightFoundry. All rights reserved.</p>
+      <p>© 2026 BrightFoundry. All rights reserved.</p>
 
       <p style="margin-top:6px; font-size:0.85rem; color:#6b7280;">
         Privacy-first studio. No spam, no pressure — reach out only if and when it suits you.
@@ -209,41 +269,7 @@
     </div>
   </footer>
 
-  <!-- Mobile menu script -->
-  <script>
-    (function () {
-      const toggle = document.getElementById("navToggle");
-      const menu = document.getElementById("navMobile");
-      const overlay = document.getElementById("navOverlay");
-      if (!toggle || !menu || !overlay) return;
-
-      function openMenu() {
-        menu.classList.add("is-open");
-        overlay.classList.add("is-open");
-        toggle.setAttribute("aria-expanded", "true");
-      }
-
-      function closeMenu() {
-        menu.classList.remove("is-open");
-        overlay.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-      }
-
-      toggle.addEventListener("click", () => {
-        const isOpen = menu.classList.contains("is-open");
-        if (isOpen) closeMenu();
-        else openMenu();
-      });
-
-      overlay.addEventListener("click", closeMenu);
-
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeMenu();
-      });
-
-      menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeMenu));
-    })();
-  </script>
+  <script src="js/site-nav.js" defer></script>
 
 </body>
 </html>

@@ -7,6 +7,7 @@
 
   <!-- demo-creator is one level down, so go up to /css -->
   <link rel="stylesheet" href="../css/styles.css" />
+  <script src="../theme.js" defer></script>
 </head>
 <body>
 
@@ -30,6 +31,7 @@
 
         <!-- NAVIGATION (DESKTOP) -->
         <nav class="nav-links" aria-label="Primary">
+          <button class="site-theme-toggle" type="button" aria-label="Toggle dark mode" aria-pressed="false"></button>
           <a href="../services.html">Services</a>
           <a href="../portfolio.html">Portfolio</a>
           <a href="../pricing.html">Pricing</a>
@@ -261,7 +263,7 @@
   =========================== -->
   <footer>
     <div class="container">
-      <p>© 2025 BrightFoundry. All rights reserved.</p>
+      <p>© 2026 BrightFoundry. All rights reserved.</p>
       <div style="margin-top:6px;">
         <a href="../privacy.html">Privacy Policy</a> •
         <a href="../terms.html">Terms</a> •
@@ -271,42 +273,7 @@
     </div>
   </footer>
 
-  <!-- Mobile menu script -->
-  <script>
-    (function () {
-      const toggle = document.getElementById("navToggle");
-      const menu = document.getElementById("navMobile");
-      const overlay = document.getElementById("navOverlay");
-      if (!toggle || !menu || !overlay) return;
-
-      function openMenu() {
-        menu.classList.add("is-open");
-        overlay.classList.add("is-open");
-        toggle.setAttribute("aria-expanded", "true");
-      }
-
-      function closeMenu() {
-        menu.classList.remove("is-open");
-        overlay.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-      }
-
-      toggle.addEventListener("click", () => {
-        const isOpen = menu.classList.contains("is-open");
-        if (isOpen) closeMenu();
-        else openMenu();
-      });
-
-      overlay.addEventListener("click", closeMenu);
-
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeMenu();
-      });
-
-      // Close after tapping a link
-      menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeMenu));
-    })();
-  </script>
+  <script src="../js/site-nav.js" defer></script>
 
 </body>
 </html>

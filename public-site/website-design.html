@@ -3,9 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Website Design – BrightFoundry</title>
+
+  <title>Website Launch Sprint for Small Businesses – BrightFoundry</title>
+  <meta
+    name="description"
+    content="A focused Website Launch Sprint for small businesses, solo founders and local service providers that need a professional website, clearer enquiry flow and calm project delivery."
+  />
+
   <link rel="stylesheet" href="css/styles.css" />
+  <script src="theme.js" defer></script>
 </head>
+
 <body>
 
   <!-- HEADER -->
@@ -23,14 +31,48 @@
           </a>
         </div>
 
-        <nav class="nav-links">
+        <nav class="nav-links" aria-label="Primary">
+          <button
+            class="site-theme-toggle"
+            type="button"
+            aria-label="Toggle dark mode"
+            aria-pressed="false"
+          ></button>
+
           <a href="services.html">Services</a>
           <a href="portfolio.html">Portfolio</a>
           <a href="pricing.html">Pricing</a>
+          <a href="client-portal.html">Client Portal</a>
           <a href="about.html">About</a>
           <a href="faqs.html">FAQs</a>
           <a href="contact.html" class="btn">Contact</a>
           <a href="portal/login.html" class="nav-link-muted">Client Login</a>
+        </nav>
+
+        <button
+          class="nav-toggle"
+          type="button"
+          id="navToggle"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="navMobile"
+        >
+          <span class="bars" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+        </button>
+
+        <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+        <nav class="nav-mobile" id="navMobile" aria-label="Mobile">
+          <a href="services.html">Services</a>
+          <a href="portfolio.html">Portfolio</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="client-portal.html">Client Portal</a>
+          <a href="about.html">About</a>
+          <a href="faqs.html">FAQs</a>
+          <a href="portal/login.html" class="nav-link-muted">Client Login</a>
+          <a href="contact.html" class="btn">Contact</a>
         </nav>
 
       </div>
@@ -41,19 +83,22 @@
   <section class="hero">
     <div class="container">
       <div class="hero-inner">
-        <span class="badge">Website Design</span>
         <div>
-          <h1>Clean, modern websites for small businesses &amp; founders.</h1>
+          <span class="badge" style="display:block; margin-bottom:14px;">
+            Local Business Website Launch Sprint
+          </span>
+
+          <h1>A clear, professional website for small businesses that need more enquiries, calls and bookings.</h1>
+
           <p>
-            Fast, mobile-friendly, SEO-ready websites built with a personal, one-to-one approach.
-            No templates, no fluff — just practical, professional design that works for real-world businesses.
+            Built for small businesses, solo founders and local service providers that rely on trust.
+            Your site is planned, built and launched through a private client portal so you always know
+            what is happening, what is needed from you and what comes next.
           </p>
         </div>
+
         <div class="hero-actions">
-          <a href="pricing.html" class="btn">See Website Packages</a>
-          <a href="contact.html" style="font-size:0.95rem; color:#4b5563; text-decoration:none;">
-            Start a project →
-          </a>
+          <a href="contact.html" class="btn">Ask about a launch slot</a>
         </div>
       </div>
     </div>
@@ -63,22 +108,36 @@
   <section class="section">
     <div class="container">
       <div class="section-heading">
-        <h2>Why choose BrightFoundry for your website?</h2>
-        <p>A friendly, reliable approach designed for small businesses, creators and local services.</p>
+        <h2>Built for how local customers actually choose.</h2>
+        <p>
+          This is not a giant agency build. It is a tight launch sprint for businesses that need
+          a credible site and a better enquiry flow.
+        </p>
       </div>
 
       <div class="grid grid-3">
         <div class="card">
-          <h3>Modern &amp; minimal design</h3>
-          <p>Your site will feel clean, professional and up-to-date — not like something from 2010.</p>
+          <h3>Trust first</h3>
+          <p>
+            Show your services, reviews, location, photos, guarantees and contact options clearly
+            so visitors feel confident enough to enquire.
+          </p>
         </div>
+
         <div class="card">
-          <h3>Fast &amp; mobile-first</h3>
-          <p>Every website is optimised for speed and designed to look great on phones and tablets.</p>
+          <h3>Mobile-first</h3>
+          <p>
+            Most local customers check you from a phone, so the layout is built for fast scanning
+            and easy contact.
+          </p>
         </div>
+
         <div class="card">
-          <h3>Built for real goals</h3>
-          <p>Your site is designed to generate enquiries, bookings and trust — not just look pretty.</p>
+          <h3>Calm delivery</h3>
+          <p>
+            Updates, files, invoices and support live in your private client portal instead of
+            getting lost in email.
+          </p>
         </div>
       </div>
     </div>
@@ -88,41 +147,52 @@
   <section class="section" style="padding-top:0;">
     <div class="container">
       <div class="section-heading">
-        <h2>What’s included?</h2>
-        <p>Everything you need — nothing you don’t.</p>
+        <h2>What is included?</h2>
+        <p>The essentials for a structured website launch, with optional add-ons kept separate.</p>
       </div>
 
       <div class="grid grid-3">
         <div class="card">
-          <h3>Homepage + core pages</h3>
-          <p>Home, About, Services, Contact and any other essentials you need to get started.</p>
-        </div>
-
-        <div class="card">
-          <h3>Contact forms &amp; messaging</h3>
-          <p>Simple forms that send to your email, or direct messaging via your client portal (optional).</p>
-        </div>
-
-        <div class="card">
-          <h3>Secure hosting &amp; domain help</h3>
-          <p>We can set up your domain, connect hosting and manage everything for you.</p>
-        </div>
-
-        <div class="card">
-          <h3>SEO essentials</h3>
-          <p>Meta tags, headings, alt text and fast load times to support Google ranking.</p>
-        </div>
-
-        <div class="card">
-          <h3>Built-in analytics</h3>
-          <p>Track visitors, clicks and behaviour with simple, privacy-friendly analytics.</p>
-        </div>
-
-        <div class="card">
-          <h3>Easy to update</h3>
+          <h3>Up to 5 focused pages</h3>
           <p>
-            You’ll get a login to your client portal where you can request updates or manage basic content.
+            Usually Home, About, Services, Reviews/Proof and Contact, adjusted around your business.
           </p>
+        </div>
+
+        <div class="card">
+          <h3>Enquiry flow</h3>
+          <p>
+            Clear calls to action, simple forms and contact details placed where local customers expect them.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Domain and hosting help</h3>
+          <p>
+            Guidance connecting your domain, hosting and email basics without burying you in jargon.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Local SEO basics</h3>
+          <p>
+            Clean headings, metadata, service/location language, image alt text and fast-loading pages.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Launch checklist</h3>
+          <p>
+            Pre-launch checks for mobile layout, forms, speed, broken links, core content and handover.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Private project portal</h3>
+          <p>
+            You get a login for project updates, files, messages, invoices and support requests.
+          </p>
+
           <p style="margin-top:8px; font-size:0.9rem; color:#6b7280;">
             Want to see what that looks like?
             <a href="client-portal.html" style="color:#2563eb; text-decoration:none;">
@@ -134,39 +204,53 @@
     </div>
   </section>
 
-  <!-- PACKAGES SECTION -->
+  <!-- OFFER SECTION -->
   <section class="section">
     <div class="container">
       <div class="section-heading">
-        <h2>Website design packages</h2>
-        <p>Simple, transparent pricing — no hidden fees.</p>
+        <h2>The core offer</h2>
+        <p>One primary package keeps the project clear. Add-ons are only suggested when they genuinely help.</p>
       </div>
 
       <div class="grid grid-3">
         <div class="card">
-          <h3>Starter Website</h3>
-          <p>A clean, simple site for new businesses or personal brands.</p>
-          <p><strong>£249 – £399</strong></p>
+          <h3>Founder launch slots</h3>
+          <p>
+            Reduced early-client pricing for focused case-study builds. Best for businesses that can give
+            quick feedback and are happy for the finished site to be used in the BrightFoundry portfolio.
+          </p>
+
+          <p><strong>Typical range: £950 – £1,250</strong></p>
+
           <p class="u-mt-10">
-            <a href="pricing.html">See package →</a>
+            <a href="contact.html">Ask about a launch slot →</a>
           </p>
         </div>
 
         <div class="card">
-          <h3>Business Website</h3>
-          <p>Full website with multiple pages, forms, and custom content sections.</p>
-          <p><strong>£499 – £999</strong></p>
+          <h3>Standard launch sprint</h3>
+          <p>
+            The regular launch package for a polished small business website with clearer copy,
+            stronger proof sections, launch QA and 30 days of post-launch support.
+          </p>
+
+          <p><strong>Typical range: £1,800 – £2,400</strong></p>
+
           <p class="u-mt-10">
-            <a href="pricing.html">See package →</a>
+            <a href="pricing.html">See pricing →</a>
           </p>
         </div>
 
         <div class="card">
-          <h3>E-Commerce Website</h3>
-          <p>Sell products with a clean storefront, checkout system and admin tools.</p>
-          <p><strong>£999 – £2,499</strong></p>
+          <h3>Optional add-ons</h3>
+          <p>
+            AI lead capture, branding, media/content, care plans and custom app work can be quoted separately.
+          </p>
+
+          <p><strong>Priced by scope</strong></p>
+
           <p class="u-mt-10">
-            <a href="pricing.html">See package →</a>
+            <a href="services.html">View add-ons →</a>
           </p>
         </div>
       </div>
@@ -177,11 +261,16 @@
   <section class="section">
     <div class="container">
       <div class="card">
-        <h2 style="margin-bottom:8px;">Ready to start your new website?</h2>
+        <h2 style="margin-bottom:8px;">
+          Ready to launch a website that makes your business easier to trust and easier to contact?
+        </h2>
+
         <p style="margin-bottom:16px;">
           Let’s have a friendly chat and see what you need — completely free and no pressure.
         </p>
-        <a href="contact.html" class="btn">Start a project</a>
+
+        <a href="contact.html" class="btn">Ask about a launch slot</a>
+
         <p style="margin-top:10px; font-size:0.9rem; color:#6b7280;">
           Want to see examples first?
           <a href="portfolio.html" style="color:#2563eb; text-decoration:none;">
@@ -193,23 +282,24 @@
   </section>
 
   <!-- FOOTER -->
- <footer>
-  <div class="container">
-    <p>© 2025 BrightFoundry. All rights reserved.</p>
+  <footer>
+    <div class="container">
+      <p>© 2026 BrightFoundry. All rights reserved.</p>
 
-    <p style="margin-top:6px; font-size:0.85rem; color:#6b7280;">
-      Privacy-first studio. No spam, no pressure — reach out only if and when it suits you.
-    </p>
+      <p style="margin-top:6px; font-size:0.85rem; color:#6b7280;">
+        Privacy-first studio. No spam, no pressure — reach out only if and when it suits you.
+      </p>
 
-    <div style="margin-top:6px;">
-      <a href="privacy.html">Privacy Policy</a> •
-      <a href="terms.html">Terms</a> •
-      <a href="cookies.html">Cookies</a> •
-      <a href="portal/login.html">Client Login</a>
+      <div style="margin-top:6px;">
+        <a href="privacy.html">Privacy Policy</a> •
+        <a href="terms.html">Terms</a> •
+        <a href="cookies.html">Cookies</a> •
+        <a href="portal/login.html">Client Login</a>
+      </div>
     </div>
-  </div>
-</footer>
+  </footer>
 
+  <script src="js/site-nav.js" defer></script>
 
 </body>
 </html>

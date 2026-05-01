@@ -25,6 +25,29 @@
   });
 
   // --------------------
+  // PAGE DETECTION (PREVENT AUTH REDIRECT LOOPS)
+  // --------------------
+  function currentFileName() {
+    try {
+      const path = window.location.pathname || "";
+      return path.split("/").pop() || "";
+    } catch {
+      return "";
+    }
+  }
+
+  function isLoginOrRegisterPage() {
+    const file = currentFileName().toLowerCase();
+    // supports both login.html and /portal/login (some servers rewrite)
+    return (
+      file === "login.html" ||
+      file === "register.html" ||
+      file === "login" ||
+      file === "register"
+    );
+  }
+
+  // --------------------
   // UI HELPERS (LOGIN/REGISTER)
   // --------------------
   function setAuthError(mode, message) {
@@ -136,21 +159,31 @@
     const base = v.split("?")[0].split("#")[0];
     if (!/^[a-z0-9-]+\.html$/i.test(base)) return fallback;
 
+    // Never allow returning to auth pages (prevents loops)
+    const lowerBase = base.toLowerCase();
+    if (lowerBase === "login.html" || lowerBase === "register.html") return fallback;
+
     return v;
   }
 
   // --- Auth guard (use on any protected portal page) ---
   function requireAuth() {
+    // ✅ Critical: never redirect while on login/register pages
+    if (isLoginOrRegisterPage()) return true;
+
     const token = typeof getAuthToken === "function" ? getAuthToken() : null;
 
     if (!token) {
-      const current = window.location.pathname.split("/").pop() || "dashboard.html";
+      const current = currentFileName() || "dashboard.html";
       const returnTo = safeReturnTo(current);
+
+      // Use replace() to avoid back-button redirect loops
+      const dest = `login.html?returnTo=${encodeURIComponent(returnTo)}`;
 
       if (typeof redirectToLoginWithReturn === "function") {
         redirectToLoginWithReturn(returnTo);
       } else {
-        window.location.href = `login.html?returnTo=${encodeURIComponent(returnTo)}`;
+        window.location.replace(dest);
       }
       return false;
     }
@@ -176,7 +209,7 @@
           logout();
         } else {
           if (typeof clearAuth === "function") clearAuth();
-          window.location.href = "login.html";
+          window.location.replace("login.html");
         }
         return null;
       }
@@ -252,7 +285,8 @@
       const params = new URLSearchParams(window.location.search);
       const returnToRaw = params.get("returnTo") || "dashboard.html";
       const returnTo = safeReturnTo(returnToRaw);
-      window.location.href = returnTo;
+
+      window.location.replace(returnTo);
     } catch (err) {
       if (isNetworkOfflineError(err)) {
         setAuthError(
@@ -288,7 +322,7 @@
       logout();
     } else {
       if (typeof clearAuth === "function") clearAuth();
-      window.location.href = "login.html";
+      window.location.replace("login.html");
     }
   }
 

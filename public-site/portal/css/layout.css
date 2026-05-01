@@ -1,0 +1,61 @@
+/* ==============================
+   PORTAL LAYOUT
+   ============================== */
+
+.portal-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  background: #f3f4f6;
+}
+
+.portal-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Page padding inside main area */
+.portal-main-inner {
+  padding: 24px;
+  padding-top: 90px;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+/* Simple page title */
+.portal-page-heading {
+  margin-bottom: 20px;
+}
+.portal-page-heading h1 {
+  font-size: 1.6rem;
+  margin-bottom: 4px;
+}
+.portal-page-heading p {
+  color: #6b7280;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .portal-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .portal-sidebar {
+    display: none;
+  }
+
+  .portal-topbar {
+    left: 0;
+  }
+
+  .portal-main-inner {
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 80px; /* space for bottom bar */
+  }
+
+  .portal-bottom-nav {
+    display: block;
+  }
+}

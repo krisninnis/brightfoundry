@@ -1,0 +1,149 @@
+/* ==============================
+   TOPBAR
+   ============================== */
+
+.portal-topbar {
+  position: fixed;
+  left: 260px;
+  right: 0;
+  top: 0;
+  z-index: 30;
+  background: var(--topbar-bg);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--topbar-border);
+}
+
+.portal-topbar-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.portal-topbar-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  color: var(--portal-text);
+}
+
+.topbar-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.topbar-subtitle {
+  font-size: 0.8rem;
+  color: color-mix(in oklab, var(--portal-text) 65%, transparent);
+}
+
+.topbar-subtitle span {
+  font-weight: 500;
+}
+
+.portal-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.portal-avatar {
+  height: 30px;
+  width: 30px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #38bdf8, #f97316);
+}
+
+/* Avatar images inside circular containers */
+.portal-avatar,
+.portal-account-avatar {
+  position: relative;
+  overflow: hidden;
+}
+
+.portal-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  display: none;
+}
+.portal-avatar.has-photo .portal-avatar-img,
+.portal-account-avatar.has-photo .portal-avatar-img {
+  display: block;
+}
+
+/* Account chip dropdown */
+.portal-account {
+  position: relative;
+}
+
+.portal-account-chip {
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 999px;
+  padding: 7px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.portal-account-name {
+  font-size: 0.9rem;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.portal-account-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  min-width: 240px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 40;
+}
+
+.portal-account-menu.is-open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.portal-account-menu a,
+.portal-account-menu button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  padding: 10px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #0f172a;
+  font-size: 0.92rem;
+}
+
+.portal-account-menu a:hover,
+.portal-account-menu button:hover {
+  background: #f3f4f6;
+}
+
+@media (max-width: 900px) {
+  .portal-topbar-inner {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
