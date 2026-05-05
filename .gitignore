@@ -63,3 +63,28 @@ public-site/demo-cafe/
 # Local notes / docs at repo root
 ########################################
 *.txt
+# Env files (never commit)
+.env
+.env.*
+server/.env
+server/.env.*
+
+# Local browser/Codex review artifacts
+.edge-cdp-profile*/
+.codex-visual-review*/
+
+
+# Local browser / visual review artifacts
+.edge-cdp-profile*/
+.codex-visual-review*/
+
+
+# Local browser / visual review artifacts
+.edge-cdp-profile*/
+.codex-visual-review*/
+
+
+# Local/generated files
+brightfoundry-safe-upload.zip
+tools/prospecting/real-prospects.csv
+
