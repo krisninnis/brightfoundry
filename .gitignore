@@ -101,3 +101,9 @@ tools/prospecting/real-prospects.csv
 !tools/prospecting/.env.example
 !server/.env.example
 
+
+# Launch-critical public files
+!public-site/robots.txt
+!public-site/demo-cafe/
+!public-site/demo-cafe/**
+
