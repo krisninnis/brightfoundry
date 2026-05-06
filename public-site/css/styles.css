@@ -817,3 +817,195 @@ body > header {
 .portal-slideshow-meta h3 { font-size: 16px; margin-bottom: 4px; }
 .portal-slideshow-meta p { color: var(--bf-muted); font-size: 14px; }
 .portal-slideshow-hint { margin-top: 10px; color: var(--bf-muted); font-size: 13px; }
+
+/* =========================================
+   SIDEBAR NAV — desktop fixed left column
+   ========================================= */
+
+.site-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 100;
+  display: none; /* toggled by media queries below */
+  flex-direction: column;
+  background: var(--bf-surface);
+  border-right: 1px solid var(--bf-border);
+  padding: 0;
+  overflow-y: auto;
+}
+
+/* ── Brand block ──────────────────────────────────────── */
+
+.sidebar-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 20px 22px;
+  border-bottom: 1px solid var(--bf-border);
+}
+
+.sidebar-logo {
+  width: 72px;
+  height: 72px;
+  display: block;
+  border-radius: 18px;
+  border: 1px solid var(--bf-border);
+  background: var(--bf-surface-2);
+  object-fit: contain;
+}
+
+.sidebar-brand-name {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--bf-muted);
+  text-align: center;
+}
+
+/* ── Primary nav ──────────────────────────────────────── */
+
+.sidebar-nav {
+  list-style: none;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 16px 14px;
+}
+
+.sidebar-nav li a {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bf-muted);
+  text-align: center;
+  transition: background 0.15s ease, color 0.15s ease;
+  text-decoration: none;
+}
+
+.sidebar-nav li a:hover {
+  background: var(--bf-surface-2);
+  color: var(--bf-text);
+}
+
+.sidebar-nav li a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--bf-focus);
+}
+
+.sidebar-nav li a[aria-current="page"] {
+  background: var(--bf-surface-2);
+  color: var(--bf-text);
+  font-weight: 700;
+}
+
+/* Contact — soft blue CTA pill; never shows as "active" from aria-current */
+.sidebar-contact {
+  margin-top: 6px;
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+}
+
+.sidebar-contact:hover {
+  background: rgba(37, 99, 235, 0.14);
+  color: #2563eb;
+}
+
+html[data-theme="dark"] .sidebar-contact {
+  color: #93c5fd;
+  background: rgba(147, 197, 253, 0.08);
+  border-color: rgba(147, 197, 253, 0.18);
+}
+
+/* ── Bottom utility (theme toggle + login) ───────────── */
+
+.sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 14px 24px;
+  border-top: 1px solid var(--bf-border);
+}
+
+.sidebar-login {
+  display: block;
+  width: 100%;
+  padding: 9px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bf-muted);
+  text-align: center;
+  transition: background 0.15s ease, color 0.15s ease;
+  text-decoration: none;
+  border: 1px solid var(--bf-border);
+}
+
+.sidebar-login:hover {
+  background: var(--bf-surface-2);
+  color: var(--bf-text);
+}
+
+.sidebar-login:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--bf-focus);
+}
+
+/* =========================================
+   MOBILE HEADER — shown only below 921px
+   ========================================= */
+
+.mobile-header {
+  /* sticky + z-index come from the existing body > header rule */
+  display: none;
+}
+
+.mobile-header-inner {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+}
+
+.mobile-brand {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mobile-logo {
+  width: 52px;
+  height: 52px;
+  display: block;
+  border-radius: 14px;
+  border: 1px solid var(--bf-border);
+  object-fit: contain;
+}
+
+/* =========================================
+   RESPONSIVE: SIDEBAR VS MOBILE HEADER
+   ========================================= */
+
+@media (min-width: 921px) {
+  .site-sidebar  { display: flex; }
+  .mobile-header { display: none !important; }
+
+  /* Shift page content clear of the fixed sidebar */
+  body { padding-left: 240px; }
+}
+
+@media (max-width: 920px) {
+  .site-sidebar  { display: none !important; }
+  .mobile-header { display: block; }
+}

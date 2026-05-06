@@ -19,71 +19,86 @@
   <!-- ==========================
        HEADER
   =========================== -->
-  <header>
-    <div class="container">
-      <div class="nav-inner">
-
-        <!-- LOGO -->
-        <div class="logo">
-          <a href="index.html" aria-label="BrightFoundry home">
-            <img
-              src="img/brightfoundry-logo-light.png"
-              alt="BrightFoundry logo"
-              class="logo-only"
-            />
-          </a>
-        </div>
-
-        <!-- NAVIGATION (DESKTOP) -->
-        <nav class="nav-links" aria-label="Primary">
-          <button
-            class="site-theme-toggle"
-            type="button"
-            aria-label="Toggle dark mode"
-            aria-pressed="false"
-          ></button>
-
-          <a href="services.html">Services</a>
-          <a href="portfolio.html">Portfolio</a>
-          <a href="pricing.html">Pricing</a>
-          <a href="client-portal.html">Client Portal</a>
-          <a href="about.html">About</a>
-          <a href="faqs.html" aria-current="page">FAQs</a>
-          <a href="contact.html" class="btn">Contact</a>
-          <a href="portal/login.html" class="nav-link-muted">Client Login</a>
-        </nav>
-
-        <!-- MOBILE BURGER -->
-        <button
-          class="nav-toggle"
-          type="button"
-          id="navToggle"
-          aria-label="Open menu"
-          aria-expanded="false"
-          aria-controls="navMobile"
-        >
-          <span class="bars" aria-hidden="true">
-            <span></span><span></span><span></span>
-          </span>
-        </button>
-
-        <!-- MOBILE OVERLAY -->
-        <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
-
-        <!-- MOBILE MENU PANEL -->
-        <nav class="nav-mobile" id="navMobile" aria-label="Mobile">
-          <a href="services.html">Services</a>
-          <a href="portfolio.html">Portfolio</a>
-          <a href="pricing.html">Pricing</a>
-          <a href="client-portal.html">Client Portal</a>
-          <a href="about.html">About</a>
-          <a href="faqs.html" aria-current="page">FAQs</a>
-          <a href="portal/login.html" class="nav-link-muted">Client Login</a>
-          <a href="contact.html" class="btn">Contact</a>
-        </nav>
-
-      </div>
+  <!-- SIDEBAR NAV (desktop) -->
+  <nav class="site-sidebar" aria-label="Primary navigation">
+    <div class="sidebar-brand">
+      <a href="index.html" aria-label="BrightFoundry home">
+        <img
+          src="img/brightfoundry-logo-light.png"
+          alt="BrightFoundry"
+          class="sidebar-logo"
+        />
+      </a>
+      <span class="sidebar-brand-name" aria-hidden="true">BrightFoundry</span>
     </div>
+
+    <ul class="sidebar-nav" role="list">
+      <li><a href="services.html">Services</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="client-portal.html">Client Portal</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="faqs.html">FAQs</a></li>
+      <li><a href="contact.html" class="sidebar-contact">Contact</a></li>
+    </ul>
+
+    <div class="sidebar-bottom">
+      <button
+        class="site-theme-toggle"
+        type="button"
+        aria-label="Toggle dark mode"
+        aria-pressed="false"
+      ></button>
+      <a href="portal/login.html" class="sidebar-login">Client Login</a>
+    </div>
+  </nav>
+
+  <!-- MOBILE HEADER (mobile only) -->
+  <header class="mobile-header">
+    <div class="mobile-header-inner">
+      <button
+        class="site-theme-toggle"
+        type="button"
+        aria-label="Toggle dark mode"
+        aria-pressed="false"
+      ></button>
+
+      <a href="index.html" class="mobile-brand" aria-label="BrightFoundry home">
+        <img
+          src="img/brightfoundry-logo-light.png"
+          alt="BrightFoundry"
+          class="mobile-logo"
+        />
+      </a>
+
+      <button
+        class="nav-toggle"
+        type="button"
+        id="navToggle"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="navMobile"
+      >
+        <span class="bars" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+      </button>
+    </div>
+
+    <!-- MOBILE OVERLAY -->
+    <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+    <!-- MOBILE MENU PANEL -->
+    <nav class="nav-mobile" id="navMobile" aria-label="Mobile navigation">
+      <a href="services.html">Services</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="client-portal.html">Client Portal</a>
+      <a href="about.html">About</a>
+      <a href="faqs.html">FAQs</a>
+      <a href="portal/login.html" class="nav-link-muted">Client Login</a>
+      <a href="contact.html" class="btn">Contact</a>
+    </nav>
   </header>
 
   <!-- HERO -->
