@@ -1,0 +1,30 @@
+{
+  "name": "brightfoundry-prospecting",
+  "version": "1.0.0",
+  "description": "Internal BrightFoundry prospect research tool. Manual review only — no automatic email sending.",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "init":    "node scripts/init-db.js",
+    "scrape":  "node scripts/scrape.js",
+    "import":  "node scripts/import-csv.js",
+    "score":   "node scripts/score-all.js",
+    "audit":   "node scripts/audit.js",
+    "drafts":  "node scripts/generate-drafts.js",
+    "queue":   "node scripts/build-send-queue.js",
+    "send-daily": "node scripts/send-daily.js",
+    "report":  "node scripts/report.js",
+    "export":  "node scripts/export-review.js",
+    "suppress":"node scripts/suppress.js"
+  },
+  "dependencies": {
+    "axios":          "^1.7.0",
+    "better-sqlite3": "^9.6.0",
+    "csv-parse":      "^5.5.6",
+    "csv-stringify":  "^6.4.6",
+    "dotenv":         "^16.4.5",
+    "uuid":           "^9.0.1"
+  }
+}

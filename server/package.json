@@ -2,44 +2,38 @@
   "name": "brightfoundry-server",
   "version": "1.0.0",
   "main": "server.js",
-  "description": "",
-  "author": "",
   "license": "ISC",
-
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-
     "test": "node -e \"console.log('smoke test ok')\"",
     "lint": "node -e \"console.log('lint placeholder ok')\"",
-
-    "prisma:migrate": "npx prisma migrate dev",
-    "prisma:studio": "npx prisma studio",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:studio": "prisma studio",
     "prisma:seed": "node prisma/seed.js",
-    "db:setup": "npx prisma migrate dev && node prisma/seed.js",
-
+    "db:setup": "prisma migrate dev && node prisma/seed.js",
     "postinstall": "prisma generate"
   },
-
   "prisma": {
     "seed": "node prisma/seed.js"
   },
-
   "dependencies": {
-    "@prisma/adapter-better-sqlite3": "^7.1.0",
-    "@prisma/client": "^7.0.0",
-    "bcrypt": "^6.0.0",
-    "better-sqlite3": "^12.5.0",
+    "@prisma/client": "6.19.2",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^4.22.1",
     "express-rate-limit": "^8.2.1",
     "helmet": "^8.1.0",
-    "jsonwebtoken": "^9.0.3"
+    "jsonwebtoken": "^9.0.3",
+    "prisma": "6.19.2"
   },
-
   "devDependencies": {
-    "prisma": "^7.3.0",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.11"
   }
 }
