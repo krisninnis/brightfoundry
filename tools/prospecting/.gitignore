@@ -1,0 +1,23 @@
+# Secrets
+.env
+.env.*
+
+# Database (local data — not for version control)
+data/
+
+# CSV exports (review files for Kristian — local only)
+exports/
+
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+
+# Keep safe template env file
+!.env.example
+
+
+# Keep safe template env file
+!.env.example
+

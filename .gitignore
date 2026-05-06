@@ -88,3 +88,16 @@ server/.env.*
 brightfoundry-safe-upload.zip
 tools/prospecting/real-prospects.csv
 
+
+# Prospecting local artifacts
+tools/prospecting/node_modules/
+tools/prospecting/.env
+tools/prospecting/data/
+tools/prospecting/exports/
+tools/prospecting/real-prospects.csv
+
+
+# Keep safe env templates trackable
+!tools/prospecting/.env.example
+!server/.env.example
+
