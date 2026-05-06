@@ -1,43 +1,49 @@
-// authMiddleware.js
+// server/authMiddleware.js
 const jwt = require("jsonwebtoken");
+
 const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  throw new Error("JWT_SECRET is required");
-}
+const JWT_ISSUER = process.env.JWT_ISSUER || "brightfoundry";
+const JWT_AUDIENCE = process.env.JWT_AUDIENCE || "brightfoundry-portal";
 
+// Only allow HMAC SHA-256 tokens
+const ALLOWED_ALGS = ["HS256"];
 
-// Read + verify JWT, attach user info to req.user
 function authenticateToken(req, res, next) {
-  const authHeader = req.headers.authorization || "";
-  const [scheme, token] = authHeader.split(" ");
-
-  if (!token || scheme !== "Bearer") {
-    return res.status(401).json({ message: "Not authenticated" });
-  }
-
   try {
-    const payload = jwt.verify(token, JWT_SECRET);
+    const authHeader = req.headers["authorization"] || "";
+    const parts = authHeader.split(" ");
+    const scheme = parts[0];
+    const token = parts[1];
 
-    const id = Number(payload?.id);
-    if (!Number.isInteger(id) || id <= 0) {
-      return res.status(401).json({ message: "Invalid or expired token" });
+    if (scheme !== "Bearer" || !token) {
+      return res.status(401).json({ message: "Missing or invalid authorization" });
     }
 
-    req.user = {
-      id,
-      email: typeof payload?.email === "string" ? payload.email : null,
-      role: typeof payload?.role === "string" ? payload.role : "client",
-    };
+    if (!JWT_SECRET) {
+      // Misconfiguration: don’t proceed (avoid accepting unsigned/invalid tokens)
+      return res.status(500).json({ message: "Server auth misconfigured" });
+    }
 
-    // Back-compat with older handlers
-    req.userId = id;
-    req.userRole = req.user.role;
+    const decoded = jwt.verify(token, JWT_SECRET, {
+      algorithms: ALLOWED_ALGS,
+      issuer: JWT_ISSUER,
+      audience: JWT_AUDIENCE,
+      clockTolerance: 5, // seconds of leeway for clock skew
+    });
 
-    next();
+    // We store the user id in sub
+    const userId = Number(decoded.sub);
+    if (!Number.isInteger(userId) || userId <= 0) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    req.userId = userId;
+    req.userRole = decoded.role || null;
+
+    return next();
   } catch (err) {
-    // Do not log the token; keep logs minimal by default
-    console.warn("JWT verify failed:", err?.message || err);
-    return res.status(401).json({ message: "Invalid or expired token" });
+    // Don’t leak details (expired vs invalid)
+    return res.status(401).json({ message: "Unauthorized" });
   }
 }
 

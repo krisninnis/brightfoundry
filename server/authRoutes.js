@@ -1,192 +1,149 @@
+// server/authRoutes.js
 const express = require("express");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const prisma = require("./prismaClient"); // 👈 use shared client
+const prisma = require("./prismaClient");
 
 const router = express.Router();
-// Back-compat: accept either env var name
+
+const IS_PROD = process.env.NODE_ENV === "production";
+
+// ✅ Registration is OFF by default in ALL environments.
+// Enable only when you explicitly set: ALLOW_PUBLIC_REGISTER=true
 const ALLOW_PUBLIC_REGISTER =
-  process.env.ALLOW_PUBLIC_REGISTER === "true" ||
-  process.env.ALLOW_REGISTRATION === "true";
+  String(process.env.ALLOW_PUBLIC_REGISTER || process.env.ALLOW_REGISTRATION || "")
+    .toLowerCase() === "true";
 
+// JWT config
 const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  throw new Error("JWT_SECRET is required");
-}
+const JWT_ISSUER = process.env.JWT_ISSUER || "brightfoundry";
+const JWT_AUDIENCE = process.env.JWT_AUDIENCE || "brightfoundry-portal";
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "1h";
 
-function normalizeEmail(email) {
-  return String(email || "").trim().toLowerCase();
+// Only allow HMAC SHA-256 tokens
+const ALLOWED_ALGS = ["HS256"];
+
+function clampString(v, maxLen) {
+  const s = String(v ?? "").trim();
+  return s.length > maxLen ? s.slice(0, maxLen) : s;
 }
 
 function isValidEmail(email) {
-  // Pragmatic (not perfect) email validation: good enough for auth.
-  // Refuse obvious garbage; avoid heavy regexes.
   if (!email || typeof email !== "string") return false;
   if (email.length > 254) return false;
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function clampString(v, maxLen) {
-  const s = String(v || "").trim();
-  return s.length > maxLen ? s.slice(0, maxLen) : s;
+function assertStrongPassword(pw) {
+  const p = String(pw || "");
+  if (p.length < 12) return "Password must be at least 12 characters";
+  if (!/[a-z]/.test(p)) return "Password must include a lowercase letter";
+  if (!/[A-Z]/.test(p)) return "Password must include an uppercase letter";
+  if (!/[0-9]/.test(p)) return "Password must include a number";
+  return null;
 }
 
-// Helper to create JWT
-function createToken(user) {
+function signAccessToken(user) {
+  if (!JWT_SECRET) {
+    throw new Error("JWT_SECRET missing");
+  }
+
+  // Keep payload minimal. Put user id in `sub`.
   return jwt.sign(
-    {
-      id: user.id,
-      email: user.email,
-      role: user.role,
-    },
+    { role: user.role },
     JWT_SECRET,
-    { expiresIn: "12h" }
+    {
+      algorithm: "HS256",
+      expiresIn: JWT_EXPIRES_IN,
+      issuer: JWT_ISSUER,
+      audience: JWT_AUDIENCE,
+      subject: String(user.id),
+    }
   );
 }
 
-// POST /api/auth/register
+// Register route (for creating users)
 router.post("/register", async (req, res) => {
   try {
+    // ✅ HARD RULE: registration disabled unless explicitly enabled.
     if (!ALLOW_PUBLIC_REGISTER) {
-      return res.status(403).json({ message: "Registration is invite-only." });
+      // In production this should almost always be disabled.
+      return res.status(403).json({ message: "Registration disabled" });
     }
 
-    const { name, email, password } = req.body || {};
+    const name = clampString(req.body?.name, 100);
+    const email = clampString(req.body?.email, 254).toLowerCase();
+    const password = String(req.body?.password || "");
 
-    const safeName = clampString(name, 100);
-    const safeEmail = normalizeEmail(email);
-    const pw = typeof password === "string" ? password : "";
+    if (!name) return res.status(400).json({ message: "Name is required" });
+    if (!isValidEmail(email)) return res.status(400).json({ message: "Valid email is required" });
 
-    if (!safeName || !safeEmail || !pw) {
-      return res.status(400).json({ message: "Name, email and password are required" });
+    const pwErr = assertStrongPassword(password);
+    if (pwErr) return res.status(400).json({ message: pwErr });
+
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
     }
 
-    if (!isValidEmail(safeEmail)) {
-      return res.status(400).json({ message: "Invalid email" });
-    }
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Minimal password policy (production-friendly, still lightweight)
-    if (pw.length < 12 || pw.length > 200) {
-      return res
-        .status(400)
-        .json({ message: "Password must be at least 12 characters" });
-    }
-
-    const existing = await prisma.user.findUnique({ where: { email: safeEmail } });
-    if (existing) {
-      return res.status(409).json({ message: "Email already in use" });
-    }
-
-    const hashed = await bcrypt.hash(password, 10);
-
-    const user = await prisma.user.create({
+    // Create user
+    const newUser = await prisma.user.create({
       data: {
-        name: safeName,
-        email: safeEmail,
-        password: hashed,
+        name,
+        email,
+        password: hashedPassword,
         role: "client",
       },
+      select: { id: true, name: true, email: true, role: true, createdAt: true },
     });
 
-    const token = createToken(user);
+    const token = signAccessToken(newUser);
 
-    res.json({
+    return res.status(201).json({
       token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
+      user: newUser,
     });
   } catch (err) {
-    console.error("Register error:", err);
-    res.status(500).json({ message: "Server error" });
+    console.error("Register error:", err?.message || err);
+    return res.status(500).json({ message: "Server error" });
   }
 });
 
-// POST /api/auth/login
+// Login route
 router.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body || {};
+    const email = clampString(req.body?.email, 254).toLowerCase();
+    const password = String(req.body?.password || "");
 
-    const safeEmail = normalizeEmail(email);
-    const pw = typeof password === "string" ? password : "";
+    if (!isValidEmail(email)) return res.status(400).json({ message: "Valid email is required" });
+    if (!password) return res.status(400).json({ message: "Password is required" });
 
-    if (!safeEmail || !pw) {
-      return res.status(400).json({ message: "Email and password are required" });
-    }
-
-    if (!isValidEmail(safeEmail)) {
-      return res.status(400).json({ message: "Invalid email or password" });
-    }
-
-    // Prefer normalized email. (Fallback kept for older rows that may not be normalized.)
-    let user = await prisma.user.findUnique({ where: { email: safeEmail } });
-    if (!user && typeof email === "string" && email.trim() !== safeEmail) {
-      user = await prisma.user.findUnique({ where: { email: email.trim() } });
-    }
+    // Find user
+    const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const valid = await bcrypt.compare(pw, user.password);
-    if (!valid) {
-      return res.status(401).json({ message: "Invalid email or password" });
+    // Compare password
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = createToken(user);
+    // Sign token (minimal claims)
+    const token = signAccessToken(user);
 
-    res.json({
+    return res.json({
       token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
+      user: { id: user.id, name: user.name, email: user.email, role: user.role },
     });
   } catch (err) {
-    console.error("Login error:", err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-// GET /api/auth/me
-router.get("/me", async (req, res) => {
-  try {
-    const authHeader = req.headers.authorization || "";
-    const [scheme, token] = authHeader.split(" ");
-
-    if (!token || scheme !== "Bearer") {
-      return res.status(401).json({ message: "Not authenticated" });
-    }
-
-    const payload = jwt.verify(token, JWT_SECRET);
-
-    const id = Number(payload?.id);
-    if (!Number.isInteger(id) || id <= 0) {
-      return res.status(401).json({ message: "Invalid or expired token" });
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-      },
-    });
-
-    if (!user) {
-      return res.status(401).json({ message: "User not found" });
-    }
-
-    res.json({ user });
-  } catch (err) {
-    console.error("Me error:", err);
-    res.status(401).json({ message: "Invalid or expired token" });
+    console.error("Login error:", err?.message || err);
+    return res.status(500).json({ message: "Server error" });
   }
 });
 

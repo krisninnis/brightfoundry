@@ -1,36 +1,180 @@
 // server/server.js
 require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
+const crypto = require("crypto");
 
 const prisma = require("./prismaClient");
 const authRoutes = require("./authRoutes");
 const { authenticateToken } = require("./authMiddleware");
 
 const app = express();
-const PORT = process.env.PORT || 4000;
 
-// --- Security baseline ---
-app.disable("x-powered-by");
+const PORT = Number(process.env.PORT) || 4000;
+const NODE_ENV = process.env.NODE_ENV || "development";
+const IS_PROD = NODE_ENV === "production";
 
-const IS_PROD = process.env.NODE_ENV === "production";
-
-// If you are behind a reverse proxy in staging/production, set TRUST_PROXY=true.
-if (IS_PROD || process.env.TRUST_PROXY === "true") {
-  app.set("trust proxy", 1);
-}
+/* ------------------------------------------------------------------ */
+/* 🔐 Startup security checks                                          */
+/* ------------------------------------------------------------------ */
 
 function isStrongJwtSecret(secret) {
   const s = String(secret || "");
   if (s.length < 32) return false;
   const lowered = s.toLowerCase();
-  if (lowered.includes("dev-secret")) return false;
-  if (lowered.includes("change-me")) return false;
+  if (lowered.includes("dev")) return false;
+  if (lowered.includes("change")) return false;
   if (lowered.includes("password")) return false;
+  if (/^([a-f0-9]{32}|[a-f0-9]{40}|[a-f0-9]{48})$/i.test(s)) return false; // too short hex
   return true;
 }
+
+// Fail fast in prod if JWT_SECRET is missing/weak
+if (IS_PROD && !isStrongJwtSecret(process.env.JWT_SECRET)) {
+  throw new Error(
+    "Security error: JWT_SECRET must be a strong random value (>=32 chars) in production."
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* 🔧 Express baseline                                                 */
+/* ------------------------------------------------------------------ */
+
+app.disable("x-powered-by");
+
+// If behind reverse proxy (Render/Fly/NGINX/Cloudflare), enable this in prod.
+// Locally keep it off unless you explicitly set TRUST_PROXY=true.
+if (IS_PROD || process.env.TRUST_PROXY === "true") {
+  app.set("trust proxy", 1);
+}
+
+// Basic request id (helps debugging without leaking details to users)
+app.use((req, res, next) => {
+  const rid = req.headers["x-request-id"] || crypto.randomUUID();
+  req.requestId = String(rid);
+  res.setHeader("x-request-id", req.requestId);
+  next();
+});
+
+// IMPORTANT: parse JSON BEFORE registering routes that read req.body
+app.use(
+  express.json({
+    limit: "100kb",
+    strict: true,
+    type: ["application/json", "application/*+json"],
+  })
+);
+
+/* ------------------------------------------------------------------ */
+/* 🛡️ Security headers                                                 */
+/* ------------------------------------------------------------------ */
+
+app.use(
+  helmet({
+    // ✅ API returns JSON; CSP should be enforced by the static site / portal HTML, not the API.
+    // This also removes Helmet's default CSP which currently includes 'unsafe-inline' for styles.
+    contentSecurityPolicy: false,
+
+    // ✅ Don't emit HSTS in dev (it can cause confusing local caching behavior)
+    hsts: IS_PROD,
+  })
+);
+
+/* ------------------------------------------------------------------ */
+/* 🌍 CORS (fail-closed in production; explicit allowlist in dev)      */
+/* ------------------------------------------------------------------ */
+
+const rawOrigins = String(
+  process.env.ALLOWED_ORIGINS || process.env.CORS_ORIGINS || ""
+).trim();
+
+const configuredOrigins = rawOrigins
+  ? rawOrigins
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+  : [];
+
+// Explicit dev allowlist when env is not set (prevents "allow all" footgun)
+const DEV_DEFAULT_ORIGINS = [
+  "http://127.0.0.1:5055",
+  "http://localhost:5055",
+  "http://127.0.0.1:5500",
+  "http://localhost:5500",
+];
+
+const allowedOrigins = IS_PROD
+  ? configuredOrigins
+  : configuredOrigins.length
+  ? configuredOrigins
+  : DEV_DEFAULT_ORIGINS;
+
+if (IS_PROD && allowedOrigins.length === 0) {
+  throw new Error(
+    "Security error: ALLOWED_ORIGINS / CORS_ORIGINS must be set in production."
+  );
+}
+
+const corsOptions = {
+  origin(origin, cb) {
+    // No Origin header: same-origin navigation, server-to-server, curl
+    if (!origin) return cb(null, true);
+
+    // IMPORTANT: echo the origin string back when allowed
+    if (allowedOrigins.includes(origin)) return cb(null, origin);
+
+    // Explicitly disallow others (no throw, no spam)
+    return cb(null, false);
+  },
+  credentials: false,
+  methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  maxAge: 600,
+  optionsSuccessStatus: 204,
+};
+
+// Apply CORS to all requests
+app.use(cors(corsOptions));
+
+// Explicitly handle ALL preflights (prevents “No Access-Control-Allow-Origin” on OPTIONS)
+app.options("*", cors(corsOptions));
+
+/* ------------------------------------------------------------------ */
+/* 🚦 Rate limiting                                                    */
+/* ------------------------------------------------------------------ */
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many requests" },
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 50,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many auth attempts" },
+});
+
+app.use("/api", apiLimiter);
+app.use("/api/auth", authLimiter);
+
+/* ------------------------------------------------------------------ */
+/* 🩺 Health checks                                                    */
+/* ------------------------------------------------------------------ */
+
+app.get("/health", (_, res) => res.json({ ok: true }));
+app.get("/api/health", (_, res) => res.json({ ok: true }));
+
+/* ------------------------------------------------------------------ */
+/* 🧰 Helpers                                                          */
+/* ------------------------------------------------------------------ */
 
 function clampString(v, maxLen) {
   const s = String(v ?? "").trim();
@@ -43,100 +187,19 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function logError(context, err) {
-  const safe = {
+function safeLogError(context, err, req) {
+  const payload = {
+    context,
+    requestId: req?.requestId,
     message: err?.message || String(err),
     code: err?.code,
-    meta: err?.meta,
   };
-  if (!IS_PROD) {
-    // Helpful in dev
-    safe.stack = err?.stack;
-  }
-  console.error(context, safe);
+  if (!IS_PROD) payload.stack = err?.stack;
+  console.error(payload);
 }
 
-const rawOrigins = String(process.env.CORS_ORIGINS || "").trim();
-const allowedOrigins = rawOrigins
-  ? rawOrigins
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-  : null;
-
-// In production you should set CORS_ORIGINS to your real domains.
-// In dev we allow all for convenience.
-app.use(
-  cors({
-    origin: (origin, cb) => {
-      if (!IS_PROD) return cb(null, true);
-      if (!origin) return cb(null, true); // allow same-origin / server-to-server
-      if (allowedOrigins && allowedOrigins.includes(origin)) return cb(null, true);
-      return cb(new Error("CORS blocked"), false);
-    },
-    credentials: false,
-  })
-);
-
-app.use(
-  helmet({
-    // keep defaults; minimal / safe baseline
-  })
-);
-
-// Rate limit: general API
-app.use(
-  "/api",
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 300, // generous for dev; adjust later
-    standardHeaders: true,
-    legacyHeaders: false,
-  })
-);
-
-// Rate limit: auth endpoints (brute-force protection)
-app.use(
-  "/api/auth",
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 50,
-    standardHeaders: true,
-    legacyHeaders: false,
-  })
-);
-
-// Enforce a real JWT secret in production
-if (IS_PROD && !isStrongJwtSecret(process.env.JWT_SECRET)) {
-  throw new Error(
-    "JWT_SECRET must be set to a strong random value (>= 32 chars) in production."
-  );
-}
-
-// Middleware
-app.use(
-  express.json({
-    limit: "100kb",
-    strict: true,
-  })
-);
-
-// Health
-app.get("/health", (req, res) => {
-  res.json({ ok: true });
-});
-app.get("/api/health", (req, res) => {
-  res.json({ ok: true });
-});
-
-// Timeline helper (best-effort; never breaks main flow)
-// IMPORTANT: only write fields that exist in Prisma (no projectName here)
-async function createTimelineEvent({
-  userId,
-  type,
-  label,
-  projectId = null,
-}) {
+// Best-effort timeline helper (never breaks main flow)
+async function createTimelineEvent({ userId, type, label, projectId = null }) {
   try {
     await prisma.timelineEvent.create({
       data: {
@@ -146,16 +209,21 @@ async function createTimelineEvent({
         projectId: projectId ? Number(projectId) : null,
       },
     });
-  } catch (err) {
-    // Do not break main flow if timeline insert fails
-    console.warn("Timeline insert failed:", err?.message || err);
+  } catch {
+    // ignore (best-effort)
   }
 }
 
-// Auth routes
+/* ------------------------------------------------------------------ */
+/* 🔐 Auth routes                                                      */
+/* ------------------------------------------------------------------ */
+
 app.use("/api/auth", authRoutes);
 
-// ✅ Portal: current user
+/* ------------------------------------------------------------------ */
+/* 👤 Current user                                                     */
+/* ------------------------------------------------------------------ */
+
 app.get("/api/me", authenticateToken, async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
@@ -166,12 +234,11 @@ app.get("/api/me", authenticateToken, async (req, res) => {
     if (!user) return res.status(401).json({ message: "User not found" });
     res.json({ user });
   } catch (err) {
-    console.error("GET /api/me error:", err);
-    return res.status(500).json({ message: "Failed to fetch user" });
+    safeLogError("GET /api/me", err, req);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
-// ✅ Portal: update profile (used by settings page)
 app.patch("/api/me", authenticateToken, async (req, res) => {
   try {
     const name = clampString(req.body?.name, 100);
@@ -179,14 +246,16 @@ app.patch("/api/me", authenticateToken, async (req, res) => {
 
     const data = {};
     if (name) data.name = name;
-    if (email) data.email = email;
+
+    if (email) {
+      if (!isValidEmail(email)) {
+        return res.status(400).json({ message: "Invalid email" });
+      }
+      data.email = email;
+    }
 
     if (!Object.keys(data).length) {
       return res.status(400).json({ message: "Nothing to update" });
-    }
-
-    if (data.email && !isValidEmail(data.email)) {
-      return res.status(400).json({ message: "Invalid email" });
     }
 
     const updated = await prisma.user.update({
@@ -197,27 +266,14 @@ app.patch("/api/me", authenticateToken, async (req, res) => {
 
     res.json({ user: updated });
   } catch (err) {
-    console.error("PATCH /api/me error:", err);
-    return res.status(500).json({ message: "Failed to update profile" });
+    safeLogError("PATCH /api/me", err, req);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
-// ---- API: PROJECTS ----
-function projectPhaseFromStatus(status) {
-  const s = String(status || "").toLowerCase();
-  if (["planning"].includes(s)) return "Planning";
-  if (["design"].includes(s)) return "Design";
-  if (["build", "development", "dev"].includes(s)) return "Build";
-  if (["testing", "qa"].includes(s)) return "Testing";
-  if (["complete", "completed", "done"].includes(s)) return "Delivery";
-  return "In progress";
-}
-
-function projectStatusLabel(status) {
-  const s = String(status || "").toLowerCase();
-  if (["complete", "completed", "done"].includes(s)) return "Completed";
-  return "Active";
-}
+/* ------------------------------------------------------------------ */
+/* 📦 Projects                                                         */
+/* ------------------------------------------------------------------ */
 
 app.get("/api/projects", authenticateToken, async (req, res) => {
   try {
@@ -227,317 +283,110 @@ app.get("/api/projects", authenticateToken, async (req, res) => {
       select: { id: true, name: true, status: true, updatedAt: true },
     });
 
-    const shaped = projects.map((p) => ({
-      id: p.id,
-      name: p.name,
-      phase: projectPhaseFromStatus(p.status),
-      status: projectStatusLabel(p.status),
-      updated: p.updatedAt
-        ? new Date(p.updatedAt).toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          })
-        : "",
-    }));
-
-    res.json({ projects: shaped });
+    res.json({
+      projects: projects.map((p) => ({
+        id: p.id,
+        name: p.name,
+        status: p.status,
+        updated: p.updatedAt
+          ? new Date(p.updatedAt).toLocaleDateString("en-GB")
+          : "",
+      })),
+    });
   } catch (err) {
-    console.error("GET /api/projects FULL error:", err);
-    console.error("GET /api/projects message:", err?.message);
-    console.error("GET /api/projects meta:", err?.meta);
-    res.status(500).json({ message: "Failed to fetch projects" });
+    safeLogError("GET /api/projects", err, req);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
-// ---- API: MESSAGES ----
-// Prisma says Message has createdAt (not updatedAt), and requires fromRole.
+/* ------------------------------------------------------------------ */
+/* 📨 Messages                                                         */
+/* ------------------------------------------------------------------ */
+
 app.get("/api/messages", authenticateToken, async (req, res) => {
   try {
     const messages = await prisma.message.findMany({
       where: { userId: req.userId },
       orderBy: { createdAt: "desc" },
-      include: {
-        project: { select: { name: true } },
-      },
+      include: { project: { select: { name: true } } },
     });
 
-    const shaped = messages.map((m) => {
-      const body = m.body || "";
-      // If you previously had "subject" in UI, we can derive a lightweight one:
-      // first line up to 60 chars.
-      const derivedSubject = body.split("\n")[0].slice(0, 60) || "Message";
-
-      return {
+    res.json({
+      messages: messages.map((m) => ({
         id: m.id,
-        subject: derivedSubject,
-        preview: body.slice(0, 90) + (body.length > 90 ? "…" : ""),
-        body,
-        projectId: m.projectId || null,
+        body: m.body,
         project: m.project?.name || "General",
-        updated: m.createdAt
-          ? new Date(m.createdAt).toLocaleDateString("en-GB", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            })
-          : "",
-        fromRole: m.fromRole || "",
-      };
+        fromRole: m.fromRole,
+        createdAt: m.createdAt,
+      })),
     });
-
-    res.json({ messages: shaped });
   } catch (err) {
-    console.error("GET /api/messages error:", err);
-    res.status(500).json({ message: "Failed to fetch messages" });
+    safeLogError("GET /api/messages", err, req);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 app.post("/api/messages", authenticateToken, async (req, res) => {
   try {
-    const { subject, body, projectId } = req.body || {};
+    const subject = clampString(req.body?.subject, 120);
+    const body = clampString(req.body?.body, 5000);
 
-    // Keep your API contract (subject + body), but store as a single Message.body
-    const subj = clampString(subject, 120);
-    const msg = clampString(body, 5000);
-
-    if (!subj) return res.status(400).json({ message: "Subject is required" });
-    if (!msg) return res.status(400).json({ message: "Message body is required" });
-
-    // Validate projectId belongs to this user if provided
-    let projectIdValue = null;
-    if (projectId !== undefined && projectId !== null && String(projectId).trim() !== "") {
-      const pid = Number(projectId);
-      if (!Number.isInteger(pid) || pid <= 0) {
-        return res.status(400).json({ message: "Invalid project id" });
-      }
-      const p = await prisma.project.findFirst({
-        where: { id: pid, ownerId: req.userId },
-        select: { id: true },
-      });
-      projectIdValue = p ? p.id : null;
+    if (!subject || !body) {
+      return res.status(400).json({ message: "Subject and body required" });
     }
 
-    const storedBody = `${subj}\n\n${msg}`;
+    // Optional: accept projectId, but verify it belongs to this user
+    let projectIdValue = null;
+    if (req.body?.projectId !== undefined && req.body?.projectId !== null) {
+      const raw = String(req.body.projectId).trim();
+      if (raw) {
+        const pid = Number(raw);
+        if (!Number.isInteger(pid) || pid <= 0) {
+          return res.status(400).json({ message: "Invalid project id" });
+        }
+        const p = await prisma.project.findFirst({
+          where: { id: pid, ownerId: req.userId },
+          select: { id: true },
+        });
+        projectIdValue = p ? p.id : null;
+      }
+    }
 
     const created = await prisma.message.create({
       data: {
         userId: req.userId,
         projectId: projectIdValue,
-        body: storedBody,
-        // Never trust client-side role claims for write attribution.
+        body: `${subject}\n\n${body}`,
+        // Never trust client role claims
         fromRole: "client",
       },
-      include: {
-        project: { select: { name: true } },
-      },
     });
 
     await createTimelineEvent({
       userId: req.userId,
       type: "support",
-      label: `Support message sent: ${subj}`,
-      projectId: created.projectId,
+      label: `Message sent: ${subject}`,
+      projectId: projectIdValue,
     });
 
-    res.json({
-      message: {
-        id: created.id,
-        subject: subj,
-        preview:
-          created.body.slice(0, 90) + (created.body.length > 90 ? "…" : ""),
-        body: created.body,
-        projectId: created.projectId,
-        project: created.project?.name || "General",
-        updated: new Date(created.createdAt).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }),
-        fromRole: created.fromRole,
-      },
-    });
+    res.json({ message: created });
   } catch (err) {
-    console.error("POST /api/messages error:", err);
-    res.status(500).json({ message: "Failed to send message" });
+    safeLogError("POST /api/messages", err, req);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
-// ---- API: FILES ----
-app.get("/api/files", authenticateToken, async (req, res) => {
-  try {
-    const files = await prisma.file.findMany({
-      where: { userId: req.userId },
-      orderBy: { uploadedAt: "desc" },
-      include: {
-        project: { select: { name: true } },
-      },
-    });
+/* ------------------------------------------------------------------ */
+/* 📄 Invoices (admin-verified update)                                 */
+/* ------------------------------------------------------------------ */
 
-    const shaped = files.map((f) => ({
-      id: f.id,
-      name: f.filename,
-      type: f.type || "",
-      project: f.project?.name || "General",
-      uploaded: f.uploadedAt
-        ? new Date(f.uploadedAt).toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          })
-        : "",
-    }));
-
-    res.json({ files: shaped });
-  } catch (err) {
-    console.error("GET /api/files error:", err);
-    res.status(500).json({ message: "Failed to fetch files" });
-  }
-});
-
-// ---- API: SUPPORT TICKETS ----
-// Prisma says SupportTicket does NOT have projectName. Derive project display from relation.
-app.get("/api/support-tickets", authenticateToken, async (req, res) => {
-  try {
-    const tickets = await prisma.supportTicket.findMany({
-      where: { userId: req.userId },
-      orderBy: { createdAt: "desc" },
-      include: {
-        project: { select: { name: true } },
-      },
-    });
-
-    const shaped = tickets.map((t) => {
-      const raw = String(t.status || "open").toLowerCase();
-      const status = raw === "closed" ? "Closed" : "Open";
-      return {
-      id: `TCK-${t.id}`,
-      subject: t.subject,
-      project: t.project?.name || "General",
-      status,
-      updated: new Date(t.createdAt).toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }),
-      };
-    });
-
-    res.json({ tickets: shaped });
-  } catch (err) {
-    console.error("GET /api/support-tickets error:", err);
-    res.status(500).json({ message: "Failed to fetch tickets" });
-  }
-});
-
-app.post("/api/support-tickets", authenticateToken, async (req, res) => {
-  try {
-    const { subject, projectId } = req.body || {};
-
-    const safeSubject = clampString(subject, 200);
-    if (!safeSubject) return res.status(400).json({ message: "Subject is required" });
-
-    // Validate projectId belongs to user if provided
-    let projectIdValue = null;
-    if (projectId !== undefined && projectId !== null && String(projectId).trim() !== "") {
-      const pid = Number(projectId);
-      if (!Number.isInteger(pid) || pid <= 0) {
-        return res.status(400).json({ message: "Invalid project id" });
-      }
-      const p = await prisma.project.findFirst({
-        where: { id: pid, ownerId: req.userId },
-        select: { id: true },
-      });
-      projectIdValue = p ? p.id : null;
-    }
-
-    const created = await prisma.supportTicket.create({
-      data: {
-        userId: req.userId,
-        subject: safeSubject,
-        status: "open",
-        projectId: projectIdValue,
-      },
-      include: {
-        project: { select: { name: true } },
-      },
-    });
-
-    await createTimelineEvent({
-      userId: req.userId,
-      type: "support",
-      label: `Support ticket created: ${created.subject}`,
-      projectId: created.projectId,
-    });
-
-    res.json({
-      ticket: {
-        id: `TCK-${created.id}`,
-        subject: created.subject,
-        project: created.project?.name || "General",
-        status: created.status === "closed" ? "Closed" : "Open",
-        updated: new Date(created.createdAt).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }),
-      },
-    });
-  } catch (err) {
-    console.error("POST /api/support-tickets error:", err);
-    res.status(500).json({ message: "Failed to create support ticket" });
-  }
-});
-
-// ---- API: INVOICES ----
-function labelInvoiceStatus(dbStatus) {
-  const s = String(dbStatus || "").toLowerCase();
-  if (s === "paid") return "Paid";
-  if (s === "overdue") return "Overdue";
-  if (s === "pending" || s === "unpaid") return "Outstanding";
-  return "Outstanding";
-}
-
-app.get("/api/invoices", authenticateToken, async (req, res) => {
-  try {
-    const invoices = await prisma.invoice.findMany({
-      where: { userId: req.userId },
-      orderBy: { createdAt: "desc" },
-      include: { project: { select: { name: true } } },
-    });
-
-    const shaped = invoices.map((inv) => ({
-      id: `INV-${inv.id}`,
-      project: inv.project?.name || "General",
-      amount: `£${Number(inv.amount || 0).toFixed(2)}`,
-      when: inv.dueDate
-        ? new Date(inv.dueDate).toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          })
-        : "",
-      status: labelInvoiceStatus(inv.status),
-    }));
-
-    res.json({ invoices: shaped });
-  } catch (err) {
-    console.error("GET /api/invoices error:", err);
-    res.status(500).json({ message: "Failed to fetch invoices" });
-  }
-});
 app.patch("/api/invoices/:id/status", authenticateToken, async (req, res) => {
   try {
-    // --- normalize invoice id ---
-    const rawId = req.params.id;
-    const id = Number(String(rawId).replace(/^INV-/i, ""));
-
+    const id = Number(String(req.params.id).replace(/^INV-/i, ""));
     if (!Number.isInteger(id) || id <= 0) {
       return res.status(400).json({ message: "Invalid invoice id" });
     }
 
-
-    // --- admin role must come from DB ---
     const me = await prisma.user.findUnique({
       where: { id: req.userId },
       select: { role: true },
@@ -547,62 +396,254 @@ app.patch("/api/invoices/:id/status", authenticateToken, async (req, res) => {
       return res.status(403).json({ message: "Forbidden" });
     }
 
-    // --- validate status ---
-    const allowed = new Set(["pending", "unpaid", "paid", "overdue"]);
     const next = String(req.body?.status || "").toLowerCase();
+    const allowed = new Set(["pending", "unpaid", "paid", "overdue"]);
     if (!allowed.has(next)) {
       return res.status(400).json({ message: "Invalid status" });
     }
-    const status = next;
 
     const updated = await prisma.invoice.update({
       where: { id },
-      data: { status },
+      data: { status: next },
     });
 
     res.json({ success: true, invoice: updated });
   } catch (err) {
-    if (err.code === "P2025") {
-      return res.status(404).json({ message: "Invoice not found" });
-    }
-    console.error("PATCH /api/invoices/:id/status error:", err);
-    res.status(500).json({ message: "Failed to update invoice" });
+    safeLogError("PATCH /api/invoices/:id/status", err, req);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
+/* ------------------------------------------------------------------ */
+/* 🧾 Invoices (user list)                                             */
+/* ------------------------------------------------------------------ */
 
-// ---- API: TIMELINE ----
-// Prisma says TimelineEvent does NOT have projectName. Derive from relation.
+app.get("/api/invoices", authenticateToken, async (req, res) => {
+  try {
+    const invoices = await prisma.invoice.findMany({
+      where: { userId: req.userId },
+      orderBy: { createdAt: "desc" },
+      include: { project: { select: { name: true } } },
+    });
+
+    res.json({
+      invoices: invoices.map((inv) => ({
+        id: `INV-${inv.id}`,
+        project: inv.project?.name || "General",
+        amountValue: inv.amount,
+        amount: `£${Number(inv.amount || 0).toFixed(2)}`,
+        when: inv.dueDate
+          ? new Date(inv.dueDate).toLocaleDateString("en-GB")
+          : new Date(inv.createdAt).toLocaleDateString("en-GB"),
+        status: inv.status, // unpaid/paid/overdue/pending
+      })),
+    });
+  } catch (err) {
+    safeLogError("GET /api/invoices", err, req);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+/* ------------------------------------------------------------------ */
+/* 📁 Files                                                            */
+/* ------------------------------------------------------------------ */
+
+app.get("/api/files", authenticateToken, async (req, res) => {
+  try {
+    const files = await prisma.file.findMany({
+      where: { userId: req.userId },
+      orderBy: { uploadedAt: "desc" },
+      include: { project: { select: { name: true } } },
+    });
+
+    res.json({
+      files: files.map((f) => ({
+        id: f.id,
+        filename: f.filename,
+        name: f.filename,
+        type: f.type || "",
+        project: f.project?.name || "General",
+        uploaded: f.uploadedAt
+          ? new Date(f.uploadedAt).toLocaleDateString("en-GB")
+          : "",
+        url: f.url,
+      })),
+    });
+  } catch (err) {
+    safeLogError("GET /api/files", err, req);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+/* ------------------------------------------------------------------ */
+/* 🎫 Support tickets                                                  */
+/* ------------------------------------------------------------------ */
+
+app.get("/api/support-tickets", authenticateToken, async (req, res) => {
+  try {
+    const tickets = await prisma.supportTicket.findMany({
+      where: { userId: req.userId },
+      orderBy: { createdAt: "desc" },
+      include: { project: { select: { name: true } } },
+    });
+
+    res.json({
+      tickets: tickets.map((t) => ({
+        id: `TKT-${t.id}`,
+        subject: t.subject,
+        status: t.status, // open/closed
+        project: t.project?.name || "General",
+        updated: t.createdAt
+          ? new Date(t.createdAt).toLocaleDateString("en-GB")
+          : "",
+      })),
+    });
+  } catch (err) {
+    safeLogError("GET /api/support-tickets", err, req);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.post("/api/support-tickets", authenticateToken, async (req, res) => {
+  try {
+    // Robust subject read (no helper ambiguity)
+    const rawSubject =
+      req.body && Object.prototype.hasOwnProperty.call(req.body, "subject")
+        ? req.body.subject
+        : "";
+
+    const subject = String(rawSubject ?? "").trim().slice(0, 200);
+    if (!subject) return res.status(400).json({ message: "Subject is required" });
+
+    // Optional projectId — must belong to the user
+    let projectIdValue = null;
+    if (req.body?.projectId !== undefined && req.body?.projectId !== null) {
+      const raw = String(req.body.projectId).trim();
+      if (raw) {
+        const pid = Number(raw);
+        if (!Number.isInteger(pid) || pid <= 0) {
+          return res.status(400).json({ message: "Invalid project id" });
+        }
+        const p = await prisma.project.findFirst({
+          where: { id: pid, ownerId: req.userId },
+          select: { id: true },
+        });
+        projectIdValue = p ? p.id : null;
+      }
+    }
+
+    const created = await prisma.supportTicket.create({
+      data: {
+        userId: req.userId,
+        subject,
+        status: "open",
+        projectId: projectIdValue,
+      },
+    });
+
+    await createTimelineEvent({
+      userId: req.userId,
+      type: "support",
+      label: `Ticket created: ${subject}`,
+      projectId: projectIdValue,
+    });
+
+    res.json({
+      ticket: {
+        id: `TKT-${created.id}`,
+        subject: created.subject,
+        status: created.status,
+        project: projectIdValue ? "Project" : "General",
+        updated: new Date(created.createdAt).toLocaleDateString("en-GB"),
+      },
+    });
+  } catch (err) {
+    safeLogError("POST /api/support-tickets", err, req);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+/* ------------------------------------------------------------------ */
+/* 🗓️ Timeline                                                         */
+/* ------------------------------------------------------------------ */
+
 app.get("/api/timeline", authenticateToken, async (req, res) => {
   try {
     const events = await prisma.timelineEvent.findMany({
       where: { userId: req.userId },
       orderBy: { createdAt: "desc" },
-      include: {
-        project: { select: { name: true } },
-      },
+      include: { project: { select: { name: true } } },
     });
 
-    const shaped = events.map((e) => ({
-      type: e.type || "project",
-      label: e.label || "Update",
-      project: e.project?.name || "General",
-      date: e.createdAt
-        ? new Date(e.createdAt).toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          })
-        : "",
-    }));
-
-    res.json({ events: shaped });
+    res.json({
+      events: events.map((e) => ({
+        id: e.id,
+        type: ["project", "billing", "support"].includes(String(e.type))
+          ? String(e.type)
+          : "project",
+        label: e.label,
+        project: e.project?.name || "General",
+        date: e.createdAt
+          ? new Date(e.createdAt).toLocaleDateString("en-GB")
+          : "",
+      })),
+    });
   } catch (err) {
-    console.error("GET /api/timeline error:", err);
-    res.status(500).json({ message: "Failed to fetch timeline" });
+    safeLogError("GET /api/timeline", err, req);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`API server running on http://localhost:${PORT}`);
+/* ------------------------------------------------------------------ */
+/* 🧯 404 + error handler                                               */
+/* ------------------------------------------------------------------ */
+
+app.use((req, res) => {
+  res.status(404).json({ message: "Not found" });
+});
+
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  safeLogError("Unhandled error", err, req);
+  res.status(500).json({ message: "Server error" });
+});
+
+/* ------------------------------------------------------------------ */
+/* 🚀 Start server + graceful shutdown                                  */
+/* ------------------------------------------------------------------ */
+
+const server = app.listen(PORT, () => {
+  console.log(`API server running on http://localhost:${PORT} (${NODE_ENV})`);
+});
+
+async function shutdown(signal) {
+  try {
+    console.log(`${signal} received, shutting down...`);
+    server.close(() => {
+      // stop accepting new connections
+    });
+    await prisma.$disconnect();
+  } catch (e) {
+    // ignore
+  } finally {
+    process.exit(0);
+  }
+}
+
+process.on("SIGINT", () => shutdown("SIGINT"));
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("unhandledRejection", (err) => {
+  console.error({
+    context: "unhandledRejection",
+    message: err?.message,
+    stack: err?.stack,
+  });
+});
+process.on("uncaughtException", (err) => {
+  console.error({
+    context: "uncaughtException",
+    message: err?.message,
+    stack: err?.stack,
+  });
+  process.exit(1);
 });
