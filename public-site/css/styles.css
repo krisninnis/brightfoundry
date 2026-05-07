@@ -1009,3 +1009,186 @@ html[data-theme="dark"] .sidebar-contact {
   .site-sidebar  { display: none !important; }
   .mobile-header { display: block; }
 }
+
+/* =========================================
+   HERO SPLIT LAYOUT — shared support column
+   ========================================= */
+
+/* Left column: badge → h1 → p → actions, spaced cleanly */
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-self: center;
+}
+
+.hero-copy .badge {
+  align-self: flex-start;
+}
+
+.hero-copy h1 { margin: 0; }
+.hero-copy p  { margin: 0; }
+
+/* Right column: wraps the support card */
+.hero-support {
+  display: flex;
+  align-self: center;
+}
+
+.hero-support .card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Section label inside support card */
+.hero-support-kicker {
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--bf-muted);
+  margin-bottom: 12px;
+}
+
+/* Checkmark bullet list */
+.hero-check-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.hero-check-list li {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--bf-text);
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.4;
+}
+
+.hero-check-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 1px;
+  color: #2563eb;
+  font-weight: 900;
+  font-size: 12px;
+}
+
+html[data-theme="dark"] .hero-check-list li::before {
+  color: #93c5fd;
+}
+
+/* Clickable link list (portfolio demos etc.) */
+.hero-link-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+}
+
+.hero-link-list li a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 12px;
+  border-radius: 9px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--bf-text);
+  background: var(--bf-surface-2);
+  transition: background 0.15s ease;
+  text-decoration: none;
+}
+
+.hero-link-list li a:hover     { background: var(--bf-border); }
+.hero-link-list li a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--bf-focus);
+}
+
+/* Label / value pricing rows */
+.hero-price-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.hero-price-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--bf-border);
+  font-size: 13px;
+}
+
+.hero-price-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.hero-price-list .price-label {
+  font-weight: 600;
+  color: var(--bf-text);
+}
+
+.hero-price-list .price-value {
+  font-weight: 700;
+  color: var(--bf-muted);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+/* Numbered steps */
+.hero-step-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  flex: 1;
+}
+
+.hero-step-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--bf-text);
+  line-height: 1.4;
+}
+
+.hero-step-num {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--bf-surface-2);
+  border: 1px solid var(--bf-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--bf-muted);
+}
+
+/* Small muted note at the foot of a support card */
+.hero-support-note {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--bf-border);
+  font-size: 12px;
+  color: var(--bf-muted);
+  line-height: 1.5;
+}
+
+/* Mobile: both columns stack naturally via hero-inner display:block */
