@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -7,10 +7,10 @@
   <meta name="robots" content="noindex, nofollow" />
   <meta
     http-equiv="Content-Security-Policy"
-    content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.brightfoundry.co.uk; form-action 'self';"
+    content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.brightfoundry.co.uk https://brightfoundry.onrender.com; form-action 'self';"
   />
 
-  <title>Client Portal â€“ Invoices</title>
+  <title>Client Portal – Invoices</title>
 
   <link rel="stylesheet" href="/css/styles.css" />
   <link rel="stylesheet" href="/portal/css/main.css" />
@@ -97,7 +97,7 @@
             <div class="portal-account-sub">Client account</div>
           </div>
 
-          <div class="portal-account-chevron" aria-hidden="true">â–¾</div>
+          <div class="portal-account-chevron" aria-hidden="true">?</div>
         </button>
 
         <div class="portal-account-menu" id="portal-account-menu" role="menu" aria-label="Account menu">
@@ -166,7 +166,7 @@
       <main class="portal-main-inner">
         <div class="portal-page-heading">
           <h1>Invoices</h1>
-          <p>See whatâ€™s due, whatâ€™s paid and whatâ€™s coming up.</p>
+          <p>See what’s due, what’s paid and what’s coming up.</p>
         </div>
 
         <div class="portal-layout-grid portal-layout-grid-wide">
@@ -180,7 +180,7 @@
                   id="invoices-search"
                   type="search"
                   class="portal-search-input"
-                  placeholder="Search invoicesâ€¦"
+                  placeholder="Search invoices…"
                   autocomplete="off"
                 />
               </div>
@@ -262,7 +262,7 @@
               </button>
 
               <p class="settings-help u-mt-12">
-                If you need help with an invoice, send a message from the Messages page and weâ€™ll sort it quickly.
+                If you need help with an invoice, send a message from the Messages page and we’ll sort it quickly.
               </p>
             </div>
 
@@ -276,17 +276,17 @@
               <ul class="portal-metric-list">
                 <li>
                   <span>Total invoices</span>
-                  <span id="invoice-metric-total">â€“</span>
+                  <span id="invoice-metric-total">–</span>
                 </li>
 
                 <li>
                   <span>Outstanding</span>
-                  <span id="invoice-metric-outstanding">â€“</span>
+                  <span id="invoice-metric-outstanding">–</span>
                 </li>
 
                 <li>
                   <span>Overdue</span>
-                  <span id="invoice-metric-overdue">â€“</span>
+                  <span id="invoice-metric-overdue">–</span>
                 </li>
               </ul>
 
