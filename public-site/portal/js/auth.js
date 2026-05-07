@@ -12,6 +12,7 @@
     if (loginForm) {
       loginForm.addEventListener("submit", handleLogin);
       initAuthOfflineUX("login");
+      initPasswordToggle();
     }
 
     if (registerForm) {
@@ -115,6 +116,22 @@
         }
       });
     }
+  }
+
+  function initPasswordToggle() {
+    const input = document.querySelector("#login-password");
+    const toggle = document.querySelector("#login-password-toggle");
+    if (!input || !toggle) return;
+
+    toggle.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      const shouldShow = input.type === "password";
+      input.type = shouldShow ? "text" : "password";
+      toggle.setAttribute("aria-pressed", shouldShow ? "true" : "false");
+      toggle.setAttribute("aria-label", shouldShow ? "Hide password" : "Show password");
+      toggle.textContent = shouldShow ? "Hide" : "Show";
+    });
   }
 
   async function pingApi() {

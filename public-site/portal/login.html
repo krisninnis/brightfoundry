@@ -103,56 +103,10 @@
       <div class="portal-auth-card">
         <form id="login-form" class="portal-auth-form" novalidate>
 
-          <div class="auth-providers" aria-label="Additional sign in options">
-            <button
-              type="button"
-              class="auth-provider-btn auth-provider-google"
-              data-provider="google"
-              disabled
-              aria-disabled="true"
-              title="Single sign-on is not available yet"
-            >
-              <span class="auth-provider-icon auth-provider-icon-google" aria-hidden="true">G</span>
-              <span>Continue with Google</span>
-              <span class="auth-provider-badge" aria-hidden="true">Soon</span>
-            </button>
-
-            <button
-              type="button"
-              class="auth-provider-btn auth-provider-apple"
-              data-provider="apple"
-              disabled
-              aria-disabled="true"
-              title="Single sign-on is not available yet"
-            >
-              <span class="auth-provider-icon auth-provider-icon-apple" aria-hidden="true">&#63743;</span>
-              <span>Continue with Apple</span>
-              <span class="auth-provider-badge" aria-hidden="true">Soon</span>
-            </button>
-
-            <button
-              type="button"
-              class="auth-provider-btn auth-provider-phone"
-              data-provider="phone"
-              disabled
-              aria-disabled="true"
-              title="Mobile sign-in is not available yet"
-            >
-              <span class="auth-provider-icon auth-provider-icon-phone" aria-hidden="true">&#128241;</span>
-              <span>Sign in with mobile</span>
-              <span class="auth-provider-badge" aria-hidden="true">Soon</span>
-            </button>
-          </div>
-
           <p class="portal-auth-intro portal-auth-intro-center" style="font-size:0.88rem; margin-top:10px;">
-            Email sign-in is available for active BrightFoundry clients.
+            Client portal access is currently by email and password. Need help?
+            <a href="../contact.html" class="auth-link">Contact BrightFoundry.</a>
           </p>
-
-          <div class="auth-divider" role="separator" aria-label="Or sign in with email">
-            <span></span>
-            <span>or sign in with email</span>
-            <span></span>
-          </div>
 
           <div class="auth-field">
             <label for="login-email">Email</label>
@@ -168,7 +122,20 @@
           </div>
 
           <div class="auth-field">
-            <label for="login-password">Password</label>
+            <div class="auth-row">
+              <label for="login-password">Password</label>
+              <button
+                id="login-password-toggle"
+                type="button"
+                class="auth-link"
+                aria-label="Show password"
+                aria-pressed="false"
+                aria-controls="login-password"
+                style="background:none; border:0; padding:0; cursor:pointer;"
+              >
+                Show
+              </button>
+            </div>
             <input
               id="login-password"
               name="password"

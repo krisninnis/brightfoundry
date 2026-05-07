@@ -614,11 +614,24 @@ const url = `${base}${p.startsWith("/") ? "" : "/"}${p}`;
   // --------------------
   // FILTER HELPERS
   // --------------------
+  function normaliseStatus(value) {
+    return String(value || "")
+      .trim()
+      .toLowerCase()
+      .replace(/[_-]+/g, " ")
+      .replace(/\s+/g, " ");
+  }
+
+  function isCompletedStatus(value) {
+    const status = normaliseStatus(value);
+    return status === "complete" || status === "completed" || status === "done";
+  }
+
   function getVisibleProjects() {
     let projects = demoProjects.slice();
 
-    if (projectsFilter === "active") projects = projects.filter((p) => p.status !== "Completed");
-    else if (projectsFilter === "completed") projects = projects.filter((p) => p.status === "Completed");
+    if (projectsFilter === "active") projects = projects.filter((p) => !isCompletedStatus(p.status));
+    else if (projectsFilter === "completed") projects = projects.filter((p) => isCompletedStatus(p.status));
 
     if (projectsSearchTerm) {
       const term = projectsSearchTerm.toLowerCase();
@@ -657,9 +670,18 @@ const url = `${base}${p.startsWith("/") ? "" : "/"}${p}`;
   function getVisibleTickets() {
     let tickets = demoTickets.slice();
 
-    if (ticketsFilter === "open") tickets = tickets.filter((t) => t.status === "Open" || t.status === "open");
-    else if (ticketsFilter === "in-progress") tickets = tickets.filter((t) => t.status === "In progress" || t.status === "in_progress");
-    else if (ticketsFilter === "resolved") tickets = tickets.filter((t) => t.status === "Resolved" || t.status === "resolved");
+    if (ticketsFilter === "open") tickets = tickets.filter((t) => normaliseStatus(t.status) === "open");
+    else if (ticketsFilter === "in-progress") {
+      tickets = tickets.filter((t) => {
+        const status = normaliseStatus(t.status);
+        return status === "in progress" || status === "progress";
+      });
+    } else if (ticketsFilter === "resolved") {
+      tickets = tickets.filter((t) => {
+        const status = normaliseStatus(t.status);
+        return status === "resolved" || status === "closed";
+      });
+    }
 
     if (ticketsSearchTerm) {
       const term = ticketsSearchTerm.toLowerCase();
@@ -678,9 +700,13 @@ const url = `${base}${p.startsWith("/") ? "" : "/"}${p}`;
   function getVisibleInvoices() {
     let invoices = demoInvoices.slice();
 
-    if (invoicesFilter === "outstanding") invoices = invoices.filter((i) => i.status === "Outstanding" || i.status === "unpaid");
-    else if (invoicesFilter === "paid") invoices = invoices.filter((i) => i.status === "Paid" || i.status === "paid");
-    else if (invoicesFilter === "overdue") invoices = invoices.filter((i) => i.status === "Overdue" || i.status === "overdue");
+    if (invoicesFilter === "outstanding") {
+      invoices = invoices.filter((i) => {
+        const status = normaliseStatus(i.status);
+        return status === "outstanding" || status === "unpaid" || status === "pending";
+      });
+    } else if (invoicesFilter === "paid") invoices = invoices.filter((i) => normaliseStatus(i.status) === "paid");
+    else if (invoicesFilter === "overdue") invoices = invoices.filter((i) => normaliseStatus(i.status) === "overdue");
 
     if (invoicesSearchTerm) {
       const term = invoicesSearchTerm.toLowerCase();
