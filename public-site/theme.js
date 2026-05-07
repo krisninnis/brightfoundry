@@ -86,11 +86,6 @@
     document.documentElement.classList.toggle("theme-dark", isDark);
     if (document.body) document.body.classList.toggle("theme-dark", isDark);
 
-    // Browser UI hint
-    try {
-      document.documentElement.style.colorScheme = theme;
-    } catch (e) {}
-
     updateToggles(theme);
   }
 

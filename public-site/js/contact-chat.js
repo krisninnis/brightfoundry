@@ -159,8 +159,8 @@
   function setInputEnabled(isEnabled) {
     chatInput.disabled = !isEnabled;
     sendBtn.disabled = !isEnabled;
-    chatInput.style.opacity = isEnabled ? "1" : "0.7";
-    sendBtn.style.opacity = isEnabled ? "1" : "0.7";
+    chatInput.classList.toggle("is-disabled", !isEnabled);
+    sendBtn.classList.toggle("is-disabled", !isEnabled);
   }
 
   function setInputPlaceholder(text) {
@@ -201,18 +201,16 @@
     quickOptions.replaceChildren();
 
     if (!opts || !opts.length) {
-      quickOptions.style.display = "none";
+      quickOptions.classList.add("is-hidden");
       return;
     }
 
-    quickOptions.style.display = "flex";
+    quickOptions.classList.remove("is-hidden");
 
     opts.forEach((opt) => {
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "btn btn-small";
-      btn.style.border = "none";
-      btn.style.cursor = "pointer";
+      btn.className = "btn btn-small bf-chat-option";
       btn.textContent = opt;
       btn.addEventListener("click", () => submitAnswer(opt));
       quickOptions.appendChild(btn);
@@ -290,9 +288,9 @@
     emailLink.setAttribute("href", mailto);
 
     const controls = document.getElementById("bfChatControls");
-    if (controls) controls.style.display = "none";
+    if (controls) controls.classList.add("is-hidden");
 
-    summaryActions.style.display = "block";
+    summaryActions.classList.remove("is-hidden");
   }
 
   function submitAnswer(raw) {
@@ -329,10 +327,10 @@
     if (copyStatus) copyStatus.textContent = "";
 
     summaryText.value = "";
-    summaryActions.style.display = "none";
+    summaryActions.classList.add("is-hidden");
 
     const controls = document.getElementById("bfChatControls");
-    if (controls) controls.style.display = "block";
+    if (controls) controls.classList.remove("is-hidden");
 
     setInputEnabled(true);
 

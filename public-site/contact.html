@@ -119,9 +119,9 @@
             of help figuring things out — send a quick message and we'll take it from there.
           </p>
 
-          <p style="font-size:0.9rem; color:var(--bf-muted);">
+          <p class="bf-csp-fs-09rem-color-bf-muted">
             Already a client?
-            <a href="portal/login.html" style="color:#2563eb; text-decoration:none;">Use the portal to message or raise a support request →</a>
+            <a class="bf-csp-color-2563eb-text-none" href="portal/login.html">Use the portal to message or raise a support request →</a>
           </p>
         </div>
 
@@ -157,100 +157,100 @@
   <!-- CONTACT LAYOUT -->
   <section class="section">
     <div class="container">
-      <div class="grid" style="grid-template-columns: 2fr 1fr; gap:24px;">
+      <div class="grid bf-csp-grid-cols-2fr-1fr-gap-24px">
 
         <!-- CHAT-STYLE INTAKE -->
         <div class="card">
-          <h2 style="margin-bottom:10px;">Quick project questions</h2>
+          <h2 class="bf-csp-mb-10px">Quick project questions</h2>
 
-          <p style="margin-bottom:10px; font-size:0.95rem; color:#4b5563;">
+          <p class="bf-csp-mb-10px-fs-095rem-color-4b5563">
             Share a few details at your own pace. No sales script, no pressure.
             If you’d rather keep it private and simple, choose <strong>email-only</strong> when asked.
           </p>
 
-          <p style="margin-bottom:18px; font-size:0.95rem; color:#4b5563;">
+          <p class="bf-csp-mb-18px-fs-095rem-color-4b5563">
             Answer a few quick prompts and you’ll get a tidy summary you can copy or email.
             This is a simple intake assistant — not an AI bot.
           </p>
 
           <!-- Honeypot (basic spam trap) -->
-          <div style="position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;">
+          <div class="bf-csp-position-absolute-left-9999px-top-auto">
             <label for="bf_company">Company</label>
             <input id="bf_company" name="bf_company" type="text" autocomplete="off" tabindex="-1" />
           </div>
 
           <!-- Chat UI -->
-          <div id="bfChat" style="border:1px solid #e5e7eb; border-radius:14px; overflow:hidden;">
-            <div id="bfChatLog" style="padding:14px; max-height:420px; overflow:auto; background:#ffffff;">
+          <div class="bf-csp-border-1px-solid-e5e7eb-radius-14px-overflow-hidden" id="bfChat">
+            <div class="bf-csp-padding-14px-max-height-420px-overflow-auto" id="bfChatLog">
               <!-- Messages injected by JS -->
             </div>
 
-            <div style="border-top:1px solid #e5e7eb; padding:12px; background:#f9fafb;">
+            <div class="bf-csp-border-top-1px-solid-e5e7eb-padding-12px-bg-f9fafb">
               <div id="bfChatControls">
 
                 <!-- Step input -->
-                <div style="display:flex; gap:10px; align-items:center;">
-                  <label
+                <div class="bf-csp-display-flex-gap-10px-align-items-center">
+                  <label class="bf-csp-position-absolute-left-9999px-width-1px"
                     for="bfChatInput"
-                    style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;"
+                   
                   >
                     Type your answer
                   </label>
 
-                  <input
+                  <input class="bf-csp-flex-1-padding-10px-12px-radius-10px"
                     id="bfChatInput"
                     type="text"
                     placeholder="Type your answer…"
-                    style="flex:1; padding:10px 12px; border-radius:10px; border:1px solid #d1d5db; font-size:0.95rem;"
+                   
                   />
 
-                  <button id="bfChatSend" class="btn" style="border:none; cursor:pointer; white-space:nowrap;">
+                  <button id="bfChatSend" class="btn bf-csp-border-none-cursor-pointer-white-space-nowrap">
                     Send
                   </button>
                 </div>
 
                 <!-- Quick options -->
-                <div id="bfQuickOptions" style="margin-top:10px; display:none; gap:8px; flex-wrap:wrap;"></div>
+                <div class="bf-chat-options is-hidden" id="bfQuickOptions"></div>
 
                 <!-- Hint -->
-                <p id="bfChatHint" style="margin-top:10px; font-size:0.85rem; color:#6b7280;">
+                <p class="bf-csp-mt-10px-fs-085rem-color-6b7280" id="bfChatHint">
                   Tip: keep it rough — you don’t need perfect wording.
                 </p>
               </div>
 
               <!-- Summary actions -->
-              <div id="bfSummaryActions" style="display:none;">
-                <label
+              <div class="bf-summary-actions is-hidden" id="bfSummaryActions">
+                <label class="bf-csp-position-absolute-left-9999px-width-1px"
                   for="bfSummaryText"
-                  style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;"
+                 
                 >
                   Project enquiry summary
                 </label>
 
-                <textarea
+                <textarea class="bf-csp-width-100pct-padding-10px-12px-radius-10px"
                   id="bfSummaryText"
                   rows="10"
                   readonly
-                  style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid #d1d5db; font-size:0.95rem; resize:vertical; background:#ffffff;"
+                 
                 ></textarea>
 
-                <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:12px;">
-                  <button id="bfCopySummary" class="btn" style="border:none; cursor:pointer;">
+                <div class="bf-csp-display-flex-flex-wrap-wrap-gap-10px">
+                  <button id="bfCopySummary" class="btn bf-csp-border-none-cursor-pointer">
                     Copy summary
                   </button>
 
-                  <a id="bfEmailSummary" href="#" class="btn" style="text-decoration:none;">
+                  <a id="bfEmailSummary" href="#" class="btn bf-csp-text-none">
                     Compose email
                   </a>
 
-                  <button id="bfRestart" class="btn btn-small" style="border:none; cursor:pointer;">
+                  <button id="bfRestart" class="btn btn-small bf-csp-border-none-cursor-pointer">
                     Start over
                   </button>
                 </div>
 
-                <p id="bfCopyStatus" style="margin-top:10px; font-size:0.9rem; color:#6b7280;"></p>
+                <p class="bf-csp-mt-10px-fs-09rem-color-6b7280" id="bfCopyStatus"></p>
 
-                <p style="margin-top:10px; font-size:0.85rem; color:#6b7280;">
+                <p class="bf-csp-mt-10px-fs-085rem-color-6b7280">
                   I’ll reply by email first. If a quick call would help, we can decide together — no pressure.
                 </p>
               </div>
@@ -259,42 +259,42 @@
 
           <!-- Fallback form for no-JS -->
           <noscript>
-            <div style="margin-top:18px; padding:14px; border:1px solid #e5e7eb; border-radius:12px; background:#f9fafb;">
-              <h3 style="margin-bottom:10px;">No-JS fallback form</h3>
+            <div class="bf-csp-mt-18px-padding-14px-border-1px-solid-e5e7eb">
+              <h3 class="bf-csp-mb-10px">No-JS fallback form</h3>
 
-              <p style="margin-bottom:14px; font-size:0.95rem; color:#4b5563;">
+              <p class="bf-csp-mb-14px-fs-095rem-color-4b5563">
                 JavaScript is disabled, so please email these details directly and I’ll reply from there.
               </p>
 
               <form>
-                <div style="margin-bottom:12px;">
-                  <label for="name" style="display:block; font-size:0.9rem; margin-bottom:4px;">Name</label>
-                  <input
+                <div class="bf-csp-mb-12px">
+                  <label class="bf-csp-display-block-fs-09rem-mb-4px" for="name">Name</label>
+                  <input class="bf-csp-width-100pct-padding-8px-10px-radius-8px"
                     id="name"
                     type="text"
-                    style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:0.95rem;"
+                   
                   />
                 </div>
 
-                <div style="margin-bottom:12px;">
-                  <label for="email" style="display:block; font-size:0.9rem; margin-bottom:4px;">Email</label>
-                  <input
+                <div class="bf-csp-mb-12px">
+                  <label class="bf-csp-display-block-fs-09rem-mb-4px" for="email">Email</label>
+                  <input class="bf-csp-width-100pct-padding-8px-10px-radius-8px"
                     id="email"
                     type="email"
-                    style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:0.95rem;"
+                   
                   />
                 </div>
 
-                <div style="margin-bottom:12px;">
-                  <label for="message" style="display:block; font-size:0.9rem; margin-bottom:4px;">Message</label>
-                  <textarea
+                <div class="bf-csp-mb-12px">
+                  <label class="bf-csp-display-block-fs-09rem-mb-4px" for="message">Message</label>
+                  <textarea class="bf-csp-width-100pct-padding-8px-10px-radius-8px-2"
                     id="message"
                     rows="5"
-                    style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; font-size:0.95rem; resize:vertical;"
+                   
                   ></textarea>
                 </div>
 
-                <p style="font-size:0.9rem; color:#6b7280;">
+                <p class="bf-csp-fs-09rem-color-6b7280">
                   Email: <a href="mailto:brightfoundry.contact@gmail.com">brightfoundry.contact@gmail.com</a>
                 </p>
               </form>
@@ -305,37 +305,37 @@
 
         <!-- CONTACT INFO / SIDE PANEL -->
         <div class="card">
-          <h3 style="margin-bottom:10px;">Other ways to reach out</h3>
+          <h3 class="bf-csp-mb-10px">Other ways to reach out</h3>
 
-          <p style="font-size:0.95rem; color:#4b5563; margin-bottom:10px;">
+          <p class="bf-csp-fs-095rem-color-4b5563-mb-10px">
             If you prefer, you can also get in touch directly:
           </p>
 
-          <p style="font-size:0.9rem; color:#4b5563; margin-bottom:6px;">
+          <p class="bf-csp-fs-09rem-color-4b5563-mb-6px">
             <strong>Email:</strong>
             <a href="mailto:brightfoundry.contact@gmail.com">brightfoundry.contact@gmail.com</a>
           </p>
 
-          <p style="font-size:0.9rem; color:#4b5563; margin-bottom:6px;">
+          <p class="bf-csp-fs-09rem-color-4b5563-mb-6px">
             <strong>Location:</strong> South Wales, UK — working with clients UK-wide
           </p>
 
-          <p style="font-size:0.9rem; color:#4b5563; margin-top:16px;">
+          <p class="bf-csp-fs-09rem-color-4b5563-mt-16px">
             Typical response time: within 1–2 working days. If it’s something quick, I’ll usually reply sooner.
           </p>
 
-          <hr style="margin:18px 0; border:none; border-top:1px solid #e5e7eb;" />
+          <hr class="bf-csp-margin-18px-0-border-none-border-top-1px-solid-e5e7eb" />
 
-          <h3 style="margin-bottom:8px;">What to include if you can</h3>
+          <h3 class="bf-csp-mb-8px">What to include if you can</h3>
 
-          <ul style="font-size:0.9rem; color:#4b5563; padding-left:18px;">
+          <ul class="bf-csp-fs-09rem-color-4b5563-pl-18px">
             <li>Your current website, if you have one</li>
             <li>What you’d like to improve or build</li>
             <li>Any deadlines or important dates</li>
             <li>Anything you’ve seen online that you like</li>
           </ul>
 
-          <p style="font-size:0.9rem; color:#6b7280; margin-top:12px;">
+          <p class="bf-csp-fs-09rem-color-6b7280-mt-12px">
             Don’t worry if you’re not sure about any of this — even a rough idea is enough to start.
           </p>
         </div>
@@ -351,11 +351,11 @@
     <div class="container">
       <p>© 2026 BrightFoundry. All rights reserved.</p>
 
-      <p style="margin-top:6px; font-size:0.85rem; color:#6b7280;">
+      <p class="bf-csp-mt-6px-fs-085rem-color-6b7280">
         Privacy-first studio. No spam, no pressure — reach out only if and when it suits you.
       </p>
 
-      <div style="margin-top:6px;">
+      <div class="bf-csp-mt-6px">
         <a href="privacy.html">Privacy Policy</a> •
         <a href="terms.html">Terms</a> •
         <a href="cookies.html">Cookies</a> •
