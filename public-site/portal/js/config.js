@@ -31,7 +31,7 @@
   // PROD: fixed API domain.
   const API_BASE_URL_RAW =
     ENV === "production"
-      ? "https://api.brightfoundry.co.uk"
+      ? "https://brightfoundry.onrender.com"
       : `${window.location.protocol}//${window.location.hostname}:4000`;
 
   // Normalize: remove any trailing slashes to avoid // in URLs
