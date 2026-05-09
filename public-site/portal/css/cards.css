@@ -1,29 +1,47 @@
 /* ==============================
-   DASHBOARD / GRID CARDS
+   CARDS / PANELS / GRIDS
+   X/Twitter-inspired: borders over shadows, generous padding
    ============================== */
 
 .portal-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  gap: 12px;
 }
 
 .portal-card {
-  background: #ffffff;
-  border-radius: 18px;
-  padding: 16px 16px 18px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+  background: var(--bf-surface);
+  border-radius: var(--bf-radius-lg);
+  padding: 18px 18px 20px;
+  border: 1px solid var(--bf-border);
+  box-shadow: none;
+  transition: border-color 0.15s ease;
 }
 
-.portal-card h3 {
-  font-size: 0.98rem;
+.portal-card + .portal-card,
+.portal-card + section,
+section + .portal-card {
+  margin-top: 14px;
+}
+
+.portal-card h3,
+.portal-card h2 {
+  font-size: 1rem;
   margin-bottom: 6px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--bf-text-strong);
+}
+
+.portal-card h2 {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
 }
 
 .portal-card p {
-  font-size: 0.88rem;
-  color: #6b7280;
+  font-size: 0.92rem;
+  color: var(--bf-text-muted);
+  line-height: 1.5;
 }
 
 .portal-card ul {
@@ -33,12 +51,81 @@
 }
 
 .portal-card ul li {
-  font-size: 0.9rem;
-  color: #4b5563;
+  font-size: 0.92rem;
+  color: var(--bf-text);
 }
 
-body.theme-dark .portal-card ul li {
-  color: #e5e7eb;
+/* Stat-style cards (light hover for clickable cards) */
+.portal-card[role="button"],
+a.portal-card,
+button.portal-card {
+  cursor: pointer;
+}
+.portal-card[role="button"]:hover,
+a.portal-card:hover,
+button.portal-card:hover {
+  border-color: var(--bf-border-strong);
+}
+
+/* Empty state inside any panel */
+.empty-state-text {
+  margin: 16px 4px;
+  color: var(--bf-text-muted);
+  font-size: 0.92rem;
+}
+
+/* Generic alert / notice */
+.portal-info-banner {
+  background: var(--bf-info-soft);
+  color: var(--bf-text);
+  padding: 10px 14px;
+  border-radius: var(--bf-radius);
+  border: 1px solid var(--bf-border);
+  font-size: 0.9rem;
+}
+
+/* Offline banner */
+.portal-offline-banner {
+  position: fixed;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 80;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+.portal-offline-banner-inner {
+  pointer-events: auto;
+  background: var(--bf-surface);
+  border: 1px solid var(--bf-border);
+  border-radius: var(--bf-radius);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--bf-shadow-pop);
+  font-size: 0.9rem;
+  max-width: 560px;
+}
+.portal-offline-banner-inner strong {
+  font-weight: 800;
+}
+.portal-offline-banner-close {
+  margin-left: auto;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--bf-text-muted);
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: var(--bf-radius-sm);
+  font-family: inherit;
+}
+.portal-offline-banner-close:hover {
+  background: var(--bf-bg-elev);
+  color: var(--bf-text);
 }
 
 @media (max-width: 900px) {

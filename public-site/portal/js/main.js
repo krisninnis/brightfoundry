@@ -1191,6 +1191,173 @@ return;
     });
   }
 
+  // --------------------
+  // MOBILE ACCOUNT SHEET
+  // Tapping the topbar avatar on mobile opens a polished bottom-sheet
+  // account menu. Built fully via DOM APIs (CSP-safe).
+  // --------------------
+  function initMobileAccountSheet(currentUser) {
+    const trigger = document.querySelector(".portal-topbar .portal-avatar");
+    if (!trigger) return;
+
+    // Make the avatar accessible as a button (no inline scripts/styles)
+    trigger.setAttribute("role", "button");
+    trigger.setAttribute("tabindex", "0");
+    trigger.setAttribute("aria-haspopup", "menu");
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.setAttribute("aria-label", "Open account menu");
+
+    // Build overlay + sheet once
+    let overlay = document.querySelector(".portal-account-sheet-overlay");
+    let sheet = document.querySelector(".portal-account-sheet");
+
+    if (!overlay) {
+      overlay = document.createElement("div");
+      overlay.className = "portal-account-sheet-overlay";
+      document.body.appendChild(overlay);
+    }
+
+    if (!sheet) {
+      sheet = document.createElement("div");
+      sheet.className = "portal-account-sheet";
+      sheet.setAttribute("role", "menu");
+      sheet.setAttribute("aria-label", "Account menu");
+
+      const handle = document.createElement("div");
+      handle.className = "portal-account-sheet-handle";
+
+      const header = document.createElement("div");
+      header.className = "portal-account-sheet-header";
+
+      const avatarWrap = document.createElement("div");
+      avatarWrap.className = "portal-account-sheet-avatar";
+      const avatarImg = document.createElement("img");
+      avatarImg.className = "portal-avatar-img";
+      avatarImg.setAttribute("data-avatar", "");
+      avatarImg.alt = "Profile avatar";
+      avatarWrap.appendChild(avatarImg);
+
+      const meta = document.createElement("div");
+      meta.className = "portal-account-sheet-meta";
+
+      const nameEl = document.createElement("div");
+      nameEl.className = "portal-account-sheet-name";
+      nameEl.setAttribute("data-user-name", "");
+      nameEl.textContent = (currentUser && currentUser.name) || "Your account";
+
+      const subEl = document.createElement("div");
+      subEl.className = "portal-account-sheet-sub";
+      subEl.textContent =
+        (currentUser && currentUser.email) || "Client account";
+
+      meta.appendChild(nameEl);
+      meta.appendChild(subEl);
+      header.appendChild(avatarWrap);
+      header.appendChild(meta);
+
+      const settingsLink = document.createElement("a");
+      settingsLink.href = "settings.html";
+      settingsLink.setAttribute("role", "menuitem");
+      const settingsIcon = document.createElement("img");
+      settingsIcon.className = "portal-menu-icon";
+      settingsIcon.src = "./assets/icons/settings.png";
+      settingsIcon.alt = "";
+      settingsIcon.setAttribute("aria-hidden", "true");
+      const settingsText = document.createElement("span");
+      settingsText.textContent = "Account settings";
+      settingsLink.appendChild(settingsIcon);
+      settingsLink.appendChild(settingsText);
+
+      const logoutBtn = document.createElement("button");
+      logoutBtn.type = "button";
+      logoutBtn.className = "portal-account-sheet-danger";
+      logoutBtn.setAttribute("role", "menuitem");
+      logoutBtn.setAttribute("data-logout", "");
+      const logoutIcon = document.createElement("img");
+      logoutIcon.className = "portal-menu-icon";
+      logoutIcon.src = "./assets/icons/logout.png";
+      logoutIcon.alt = "";
+      logoutIcon.setAttribute("aria-hidden", "true");
+      const logoutText = document.createElement("span");
+      logoutText.textContent = "Log out";
+      logoutBtn.appendChild(logoutIcon);
+      logoutBtn.appendChild(logoutText);
+
+      sheet.appendChild(handle);
+      sheet.appendChild(header);
+      sheet.appendChild(settingsLink);
+      sheet.appendChild(logoutBtn);
+
+      document.body.appendChild(sheet);
+
+      // Refresh avatar image (uses existing helper)
+      try { applyAvatarToEls(); } catch (e) {}
+    }
+
+    function isMobile() {
+      return window.matchMedia("(max-width: 900px)").matches;
+    }
+
+    function openSheet() {
+      overlay.classList.add("is-open");
+      sheet.classList.add("is-open");
+      trigger.setAttribute("aria-expanded", "true");
+    }
+
+    function closeSheet() {
+      overlay.classList.remove("is-open");
+      sheet.classList.remove("is-open");
+      trigger.setAttribute("aria-expanded", "false");
+    }
+
+    trigger.addEventListener("click", function (e) {
+      if (!isMobile()) return; // desktop uses the sidebar account chip
+      e.preventDefault();
+      const isOpen = sheet.classList.contains("is-open");
+      if (isOpen) closeSheet();
+      else openSheet();
+    });
+
+    trigger.addEventListener("keydown", function (e) {
+      if (!isMobile()) return;
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        const isOpen = sheet.classList.contains("is-open");
+        if (isOpen) closeSheet();
+        else openSheet();
+      }
+    });
+
+    overlay.addEventListener("click", closeSheet);
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeSheet();
+    });
+
+    // Close after navigation
+    sheet.querySelectorAll("a").forEach(function (a) {
+      a.addEventListener("click", closeSheet);
+    });
+
+    // Logout inside the sheet (delegate to existing [data-logout] handler chain)
+    const sheetLogout = sheet.querySelector("[data-logout]");
+    if (sheetLogout) {
+      sheetLogout.addEventListener("click", function (e) {
+        e.preventDefault();
+        try { clearAuthState(); } catch (err) {}
+        closeSheet();
+        try { redirectToLogin(); } catch (err) {
+          window.location.href = "login.html";
+        }
+      });
+    }
+
+    // If viewport grows past mobile, close the sheet
+    window.addEventListener("resize", function () {
+      if (!isMobile()) closeSheet();
+    });
+  }
+
   function addTimelineEvent({ type, label, project, date, _optimisticId }) {
     const safeType = type || "project";
     const safeLabel = (label || "").trim() || "Update";
@@ -1243,6 +1410,7 @@ return;
 
     initAvatar();
     initAccountMenu();
+    initMobileAccountSheet(user);
 
     // Theme select (Settings page)
     initThemeSelect();

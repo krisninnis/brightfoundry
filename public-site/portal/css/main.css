@@ -1,6 +1,6 @@
-﻿/* main.css (loader)
-   Keeps the old monolith safe as main.legacy.css
-   Loads the split CSS files in a predictable order
+/* main.css (loader)
+   Loads the portal CSS files in order.
+   overrides.css comes last and owns the design tokens.
 */
 
 @import url("./base.css");
@@ -14,17 +14,3 @@
 @import url("./bottom-nav.css");
 @import url("./theme.css");
 @import url("./overrides.css");
-
-.portal-auth-access-note {
-  font-size: 0.88rem;
-  margin-top: 10px;
-}
-
-.auth-password-toggle {
-  appearance: none;
-  background: none;
-  border: 0;
-  cursor: pointer;
-  font: inherit;
-  padding: 0;
-}

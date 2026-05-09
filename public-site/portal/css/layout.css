@@ -1,39 +1,82 @@
 /* ==============================
-   PORTAL LAYOUT
+   PORTAL APP-SHELL LAYOUT
+   X/Twitter-inspired three-section feel:
+   nav rail | content column | (top toolbar floats over content)
    ============================== */
 
 .portal-shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
-  background: #f3f4f6;
+  grid-template-columns: var(--bf-sidebar-width, 275px) minmax(0, 1fr);
+  background: var(--bf-bg);
 }
 
 .portal-main {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  border-left: 1px solid var(--bf-border);
 }
 
 /* Page padding inside main area */
 .portal-main-inner {
-  padding: 24px;
-  padding-top: 90px;
-  max-width: 1120px;
+  padding: 20px 24px 48px;
+  padding-top: calc(var(--bf-topbar-height, 56px) + 16px);
+  max-width: var(--bf-content-max, 1100px);
   margin: 0 auto;
+  width: 100%;
 }
 
-/* Simple page title */
+/* Page heading */
 .portal-page-heading {
   margin-bottom: 20px;
 }
 .portal-page-heading h1 {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   margin-bottom: 4px;
+  letter-spacing: -0.01em;
 }
 .portal-page-heading p {
-  color: #6b7280;
+  color: var(--bf-text-muted);
   margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Section rhythm */
+.dashboard-section {
+  margin-bottom: 20px;
+}
+
+.dashboard-section h1 {
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.dashboard-section h2 {
+  font-size: 1.05rem;
+  margin-bottom: 10px;
+  color: var(--bf-text-strong);
+}
+
+.dashboard-section > p {
+  color: var(--bf-text-muted);
+  margin: 0 0 12px;
+  font-size: 0.95rem;
+}
+
+.dashboard-section-title {
+  font-size: 1.05rem;
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+
+/* Quick actions — pill row */
+.dashboard-quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px;
 }
 
 @media (max-width: 900px) {
@@ -45,17 +88,27 @@
     display: none;
   }
 
+  .portal-main {
+    border-left: none;
+  }
+
   .portal-topbar {
-    left: 0;
+    left: 0 !important;
   }
 
   .portal-main-inner {
     padding-left: 16px;
     padding-right: 16px;
-    padding-bottom: 80px; /* space for bottom bar */
+    padding-bottom: 96px; /* space for bottom nav */
   }
 
   .portal-bottom-nav {
     display: block;
+  }
+}
+
+@media (max-width: 640px) {
+  .portal-page-heading h1 {
+    font-size: 1.35rem;
   }
 }

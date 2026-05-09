@@ -1,326 +1,333 @@
 /* ==============================
-   SIDEBAR + BRAND
+   SIDEBAR + BRAND + ACCOUNT CHIP
+   X/Twitter-inspired left rail:
+   - Quiet surface, no boxed groups
+   - Pill nav rows with bold-on-active type
+   - Restrained accent use; active row uses bg-elev, not brand color
    ============================== */
 
-/* Light theme (default) */
 .portal-sidebar {
-  background: #ffffff;
-  border-right: 1px solid #e5e7eb;
-  color: #0f172a;
+  background: var(--bf-bg);
+  border-right: 1px solid var(--bf-border);
+  color: var(--bf-text);
   display: flex;
   flex-direction: column;
-  padding: 18px 16px;
+  padding: 8px 12px 14px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 
-/* Old sidebar logo */
-.portal-sidebar-logo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 32px;
+.portal-sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+.portal-sidebar::-webkit-scrollbar-thumb {
+  background: var(--bf-border);
+  border-radius: 8px;
 }
 
-.portal-sidebar-logo img {
-  height: 80px;
-  width: auto;
-  border-radius: 16px;
-}
-
-.portal-sidebar-logo span {
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  color: #64748b;
-}
-
-/* New brand block */
+/* ---- Brand ---- */
+.portal-sidebar-logo,
 .portal-brand {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 32px;
+  gap: 6px;
+  padding: 10px 4px 4px;
+  margin-bottom: 6px;
 }
 
+.portal-sidebar-logo img,
 .portal-brand-logo {
-  height: 80px;
-  width: auto;
-  border-radius: 16px;
+  height: 56px;
+  width: 56px;
+  border-radius: var(--bf-radius-pill);
+  object-fit: cover;
 }
 
+.portal-sidebar-logo span,
 .portal-brand-text {
   text-align: center;
-  width: 100%;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #334155;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bf-text-muted);
 }
 
-/* Nav containers */
-.portal-sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-bottom: auto;
-}
-
+/* ---- Nav containers ---- */
+.portal-sidebar-nav,
 .portal-nav {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+  margin-bottom: auto;
 }
 
-/* Nav link */
+/* The legacy 'group box' look is dropped in favour of a quiet rail */
+.portal-nav-group {
+  background: transparent;
+  border: 0;
+  padding: 4px 0 12px;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: stretch;
+  margin-bottom: 4px;
+}
+
+/* ---- Nav link (X-style pill row) ---- */
 .portal-nav-link {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-  padding: 9px 15px;
-  border-radius: 999px;
-  font-size: 0.9rem;
-  color: #475569;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: var(--bf-radius-pill);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--bf-text);
   cursor: pointer;
-  transition:
-    background 0.16s ease,
-    color 0.16s ease,
-    transform 0.08s ease,
-    box-shadow 0.16s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .portal-nav-link:hover {
-  background: rgba(15, 23, 42, 0.06);
-  color: #0f172a;
-  transform: translateY(-1px);
+  background: var(--bf-bg-elev);
+  color: var(--bf-text-strong);
 }
 
 .portal-nav-link.is-active {
-  background: #f59e0b;
-  color: #111827;
-  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.35);
+  background: var(--bf-bg-elev);
+  color: var(--bf-text-strong);
+  font-weight: 800;
+}
+
+.portal-nav-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bf-accent-ring);
 }
 
 .portal-nav-label {
   flex: 1 1 auto;
   white-space: nowrap;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
-/* Sidebar boxed groups */
-.portal-nav-group {
-  background: rgba(148, 163, 184, 0.10);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  padding: 14px 10px;
-  border-radius: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 28px;
-  align-items: stretch;
+/* Nav icons */
+.portal-nav-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  object-fit: contain;
+  display: block;
+  opacity: 0.95;
 }
 
+/* ---- Sidebar bottom (account area) ---- */
 .portal-sidebar-bottom {
-  background: rgba(148, 163, 184, 0.10);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  padding: 14px 10px;
-  border-radius: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: auto;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 10px 0 4px;
+  margin-top: 8px;
   position: relative;
+  border-top: 1px solid var(--bf-border);
 }
 
-/* ==============================
-   ACCOUNT CHIP & DROPDOWN
-   ============================== */
-
+/* ---- Account chip ---- */
 .portal-account-chip {
   width: 100%;
-  border: none;
+  border: 0;
   outline: none;
-  padding: 8px 10px;
-  border-radius: 14px;
+  padding: 10px 12px;
+  border-radius: var(--bf-radius-pill);
   background: transparent;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.08s ease;
+  text-align: left;
+  color: var(--bf-text);
+  transition: background 0.15s ease;
 }
 
 .portal-account-chip:hover {
-  background: rgba(15, 23, 42, 0.06);
-  transform: translateY(-1px);
+  background: var(--bf-bg-elev);
+}
+
+.portal-account-chip:focus-visible {
+  background: var(--bf-bg-elev);
+  box-shadow: 0 0 0 2px var(--bf-accent-ring);
 }
 
 .portal-account-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #38bdf8, #f97316);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--bf-radius-pill);
+  background: linear-gradient(135deg, #38bdf8, #f59e0b);
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
 }
 
 .portal-account-meta {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  line-height: 1.2;
+  gap: 1px;
 }
 
 .portal-account-name {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--bf-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .portal-account-sub {
-  font-size: 0.8rem;
-  color: #64748b;
+  font-size: 0.85rem;
+  color: var(--bf-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .portal-account-chevron {
-  width: 16px;
-  height: 16px;
-  opacity: 0.7;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--bf-text-muted);
+  font-weight: 700;
+  flex-shrink: 0;
 }
 
+/* Use a glyph instead of the legacy "?" character */
+.portal-account-chevron::before {
+  content: "\22EF"; /* horizontal ellipsis */
+}
+.portal-account-chip .portal-account-chevron {
+  font-size: 0;
+}
+.portal-account-chip .portal-account-chevron::before {
+  font-size: 18px;
+}
+
+/* ---- Account dropdown menu (desktop sidebar) ---- */
 .portal-account-menu {
   position: absolute;
-  bottom: calc(100% + 10px);
+  bottom: calc(100% + 8px);
   left: 0;
   right: 0;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
-  padding: 8px;
+  background: var(--bf-surface);
+  border: 1px solid var(--bf-border);
+  border-radius: var(--bf-radius-lg);
+  box-shadow: var(--bf-shadow-pop);
+  padding: 6px;
   display: none;
-  z-index: 10;
+  z-index: 30;
+  animation: bf-menu-pop 0.12s ease-out;
 }
 
 .portal-account-menu.is-open {
   display: block;
 }
 
+@keyframes bf-menu-pop {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .portal-account-menu a,
-.portal-account-menu button {
+.portal-account-menu button,
+.portal-account-menu-item {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: none;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--bf-radius);
+  border: 0;
   background: transparent;
   cursor: pointer;
-  font-weight: 650;
+  font-weight: 600;
+  font-size: 0.95rem;
   text-decoration: none;
-  color: #0f172a;
+  color: var(--bf-text);
+  text-align: left;
+  font-family: inherit;
+  line-height: 1.3;
 }
 
 .portal-account-menu a:hover,
-.portal-account-menu button:hover {
-  background: rgba(15, 23, 42, 0.06);
+.portal-account-menu button:hover,
+.portal-account-menu-item:hover {
+  background: var(--bf-bg-elev);
 }
 
-.portal-account-menu .portal-account-menu-meta {
-  padding: 10px 12px;
-  color: #64748b;
-  font-size: 0.85rem;
+.portal-account-menu .portal-account-menu-item-muted {
+  color: var(--bf-text-muted);
+}
+
+.portal-account-menu .portal-account-menu-danger {
+  color: var(--bf-danger);
+}
+.portal-account-menu .portal-account-menu-danger:hover {
+  background: var(--bf-danger-soft);
+}
+
+.portal-menu-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  flex-shrink: 0;
+  opacity: 0.9;
 }
 
 .portal-account-menu hr {
-  border: none;
-  border-top: 1px solid #e5e7eb;
-  margin: 8px 0;
+  border: 0;
+  border-top: 1px solid var(--bf-border);
+  margin: 6px 0;
 }
 
-/* Responsive sidebar tweaks (only applies on wider layouts; sidebar is hidden <900px by layout.css) */
-@media (max-width: 900px) {
-  .portal-sidebar-logo span {
+.portal-account-menu .portal-account-menu-meta {
+  padding: 10px 14px;
+  color: var(--bf-text-muted);
+  font-size: 0.85rem;
+}
+
+/* ---- Tablet edge: still show sidebar, narrower icon-only mode ---- */
+@media (max-width: 1100px) and (min-width: 901px) {
+  :root {
+    --bf-sidebar-width: 88px;
+  }
+  .portal-sidebar {
+    padding: 10px 8px;
+  }
+  .portal-nav-label,
+  .portal-account-meta,
+  .portal-account-chevron,
+  .portal-brand-text {
     display: none;
   }
-
-  .portal-nav-label {
-    display: none;
-  }
-
   .portal-nav-link {
     justify-content: center;
-    border-radius: 14px;
+    padding: 12px;
   }
-}
-
-/* ==============================
-   DARK THEME OVERRIDES
-   (theme.js toggles body.theme-dark)
-   ============================== */
-
-body.theme-dark .portal-sidebar {
-  background: #020617;
-  border-right: 1px solid #111827;
-  color: #e5e7eb;
-}
-
-body.theme-dark .portal-sidebar-logo span {
-  color: #9ca3af;
-}
-
-body.theme-dark .portal-brand-text {
-  color: #cbd5e1;
-}
-
-body.theme-dark .portal-nav-link {
-  color: #9ca3af;
-}
-
-body.theme-dark .portal-nav-link:hover {
-  background: rgba(148, 163, 184, 0.18);
-  color: #e5e7eb;
-}
-
-body.theme-dark .portal-nav-group,
-body.theme-dark .portal-sidebar-bottom {
-  background: rgba(148, 163, 184, 0.10);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-}
-
-body.theme-dark .portal-account-chip:hover {
-  background: rgba(148, 163, 184, 0.18);
-}
-
-body.theme-dark .portal-account-name {
-  color: #e5e7eb;
-}
-
-body.theme-dark .portal-account-sub {
-  color: #94a3b8;
-}
-
-body.theme-dark .portal-account-menu {
-  background: #0b1220;
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  box-shadow: 0 20px 60px rgba(2, 6, 23, 0.55);
-}
-
-body.theme-dark .portal-account-menu a,
-body.theme-dark .portal-account-menu button {
-  color: #e5e7eb;
-}
-
-body.theme-dark .portal-account-menu a:hover,
-body.theme-dark .portal-account-menu button:hover {
-  background: rgba(148, 163, 184, 0.18);
-}
-
-body.theme-dark .portal-account-menu .portal-account-menu-meta {
-  color: #94a3b8;
-}
-
-body.theme-dark .portal-account-menu hr {
-  border-top: 1px solid rgba(148, 163, 184, 0.22);
+  .portal-account-chip {
+    justify-content: center;
+    padding: 10px;
+  }
 }

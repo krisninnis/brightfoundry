@@ -1,5 +1,6 @@
 /* ==============================
    BASE / RESET
+   X/Twitter-inspired typography rhythm
    ============================== */
 
 *,
@@ -14,11 +15,20 @@ body {
   padding: 0;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
-  background: #f3f4f6;
-  color: #0f172a;
-  line-height: 1.6;
+  font-family: var(--bf-font, system-ui, -apple-system, BlinkMacSystemFont,
+              "Inter", sans-serif);
+  background: var(--bf-bg, #ffffff);
+  color: var(--bf-text, #0f1419);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 15px;
 }
 
 a {
@@ -31,6 +41,27 @@ img {
   display: block;
 }
 
+button {
+  font-family: inherit;
+}
+
+/* Headings — restrained, high-contrast, X-style hierarchy */
+h1, h2, h3, h4 {
+  margin: 0;
+  color: var(--bf-text-strong, var(--bf-text));
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  font-weight: 800;
+}
+
+h1 { font-size: 1.5rem; }
+h2 { font-size: 1.2rem; font-weight: 800; }
+h3 { font-size: 1.05rem; font-weight: 700; }
+h4 { font-size: 0.95rem; font-weight: 700; }
+
+p { margin: 0; }
+
+/* Sidebar PNG icons keep their natural size */
 .portal-nav-link .portal-nav-icon {
   max-width: none;
 }

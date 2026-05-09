@@ -1,70 +1,93 @@
 /* ==============================
    TOPBAR
+   X/Twitter-inspired: thin, blurred, sticky, content-aligned
    ============================== */
 
 .portal-topbar {
   position: fixed;
-  left: 260px;
+  left: var(--bf-sidebar-width, 275px);
   right: 0;
   top: 0;
   z-index: 30;
   background: var(--topbar-bg);
-  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  backdrop-filter: blur(14px) saturate(180%);
   border-bottom: 1px solid var(--topbar-border);
+  height: var(--bf-topbar-height, 56px);
 }
 
 .portal-topbar-inner {
-  max-width: 1120px;
+  max-width: var(--bf-content-max, 1100px);
   margin: 0 auto;
-  padding: 10px 24px;
+  padding: 8px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  height: 100%;
 }
 
 .portal-topbar-left {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 2px;
-  color: var(--portal-text);
+  gap: 1px;
+  color: var(--bf-text);
+  min-width: 0;
 }
 
 .topbar-title {
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
 }
 
 .topbar-subtitle {
   font-size: 0.8rem;
-  color: color-mix(in oklab, var(--portal-text) 65%, transparent);
+  color: var(--bf-text-muted);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .topbar-subtitle span {
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--bf-text);
 }
 
 .portal-topbar-right {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
+/* Topbar avatar — circular, clickable on mobile */
 .portal-avatar {
-  height: 30px;
-  width: 30px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #38bdf8, #f97316);
+  height: 36px;
+  width: 36px;
+  border-radius: var(--bf-radius-pill);
+  background: linear-gradient(135deg, #38bdf8, #f59e0b);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--bf-border);
+  transition: transform 0.08s ease, box-shadow 0.15s ease;
+}
+
+.portal-avatar:hover {
+  box-shadow: 0 0 0 3px var(--bf-bg-elev);
+}
+
+.portal-avatar:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bf-accent-ring);
 }
 
 /* Avatar images inside circular containers */
-.portal-avatar,
-.portal-account-avatar {
-  position: relative;
-  overflow: hidden;
-}
-
 .portal-avatar-img {
   width: 100%;
   height: 100%;
@@ -77,73 +100,166 @@
   display: block;
 }
 
-/* Account chip dropdown */
+/* =========================================================
+   MOBILE ACCOUNT SHEET
+   Bottom-sheet account menu opened by tapping the topbar avatar.
+   Markup is created by main.js (CSP-safe).
+   ========================================================= */
+
+.portal-account-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bf-overlay);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 90;
+}
+
+.portal-account-sheet-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.portal-account-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bf-surface);
+  border-top-left-radius: var(--bf-radius-xl);
+  border-top-right-radius: var(--bf-radius-xl);
+  border-top: 1px solid var(--bf-border);
+  box-shadow: var(--bf-shadow-sheet);
+  padding: 6px 10px 18px;
+  transform: translateY(110%);
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 95;
+  max-width: 720px;
+  margin: 0 auto;
+  padding-bottom: calc(18px + env(safe-area-inset-bottom));
+}
+
+.portal-account-sheet.is-open {
+  transform: translateY(0);
+}
+
+.portal-account-sheet-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--bf-border-strong);
+  margin: 8px auto 10px;
+}
+
+.portal-account-sheet-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px 14px;
+  border-bottom: 1px solid var(--bf-border);
+  margin-bottom: 6px;
+}
+
+.portal-account-sheet-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--bf-radius-pill);
+  background: linear-gradient(135deg, #38bdf8, #f59e0b);
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.portal-account-sheet-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.portal-account-sheet-name {
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--bf-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+
+.portal-account-sheet-sub {
+  font-size: 0.85rem;
+  color: var(--bf-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+
+.portal-account-sheet a,
+.portal-account-sheet button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+  border-radius: var(--bf-radius);
+  border: 0;
+  background: transparent;
+  color: var(--bf-text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.98rem;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.portal-account-sheet a:hover,
+.portal-account-sheet button:hover,
+.portal-account-sheet a:active,
+.portal-account-sheet button:active {
+  background: var(--bf-bg-elev);
+}
+
+.portal-account-sheet .portal-account-sheet-danger {
+  color: var(--bf-danger);
+}
+
+.portal-account-sheet .portal-account-sheet-danger:hover {
+  background: var(--bf-danger-soft);
+}
+
+@media (min-width: 901px) {
+  .portal-account-sheet,
+  .portal-account-sheet-overlay {
+    display: none !important;
+  }
+}
+
+/* =========================================================
+   TOPBAR DESKTOP — keep account chip dropdown styles in case
+   any page renders an inline topbar account chip
+   ========================================================= */
+
 .portal-account {
   position: relative;
 }
 
-.portal-account-chip {
-  border: 1px solid rgba(148, 163, 184, 0.28);
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  border-radius: 999px;
-  padding: 7px 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-}
-
-.portal-account-name {
-  font-size: 0.9rem;
-  color: #0f172a;
-  font-weight: 600;
-}
-
-.portal-account-menu {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 10px);
-  min-width: 240px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  padding: 8px;
-  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
-  opacity: 0;
-  transform: translateY(-6px);
-  pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.15s ease;
-  z-index: 40;
-}
-
-.portal-account-menu.is-open {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-.portal-account-menu a,
-.portal-account-menu button {
-  width: 100%;
-  border: 0;
-  background: transparent;
-  text-align: left;
-  padding: 10px 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  color: #0f172a;
-  font-size: 0.92rem;
-}
-
-.portal-account-menu a:hover,
-.portal-account-menu button:hover {
-  background: #f3f4f6;
-}
-
 @media (max-width: 900px) {
+  .portal-topbar {
+    left: 0;
+  }
+
   .portal-topbar-inner {
     padding-left: 16px;
     padding-right: 16px;
+  }
+
+  /* Slightly smaller title on mobile */
+  .topbar-title {
+    font-size: 1rem;
   }
 }

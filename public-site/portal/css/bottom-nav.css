@@ -1,29 +1,30 @@
 /* ==============================
-   MOBILE / TABLET BOTTOM NAV
+   MOBILE BOTTOM NAV
+   X-style flush-bottom bar with subtle blur
    ============================== */
 
 .portal-bottom-nav {
   position: fixed;
-  bottom: 10px;
+  bottom: 0;
   left: 0;
   right: 0;
   z-index: 40;
   display: none;
-  padding: 0 12px;
+  background: var(--topbar-bg);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  backdrop-filter: blur(14px) saturate(180%);
+  border-top: 1px solid var(--bf-border);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .portal-bottom-nav-inner {
   pointer-events: auto;
-  background: rgba(248, 250, 252, 0.92);
-  backdrop-filter: blur(18px);
-  border: 1px solid #e5e7eb;
-  border-radius: 18px;
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
   display: flex;
-  justify-content: space-between;
-  gap: 6px;
-  padding: 8px 10px;
-  max-width: 620px;
+  justify-content: space-around;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
@@ -35,31 +36,34 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 8px 6px;
-  border-radius: 14px;
+  padding: 6px 4px;
+  border-radius: var(--bf-radius);
   text-decoration: none;
-  color: #475569;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.2px;
-  transition: background 0.15s ease, color 0.15s ease, transform 0.08s ease;
+  color: var(--bf-text-muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  transition: color 0.15s ease, background 0.15s ease;
 }
 
 .portal-bottom-link:hover {
-  background: rgba(148, 163, 184, 0.18);
-  color: #0f172a;
-  transform: translateY(-1px);
+  color: var(--bf-text);
 }
 
 .portal-bottom-link.is-active {
-  background: #f59e0b;
-  color: #111827;
+  color: var(--bf-text-strong);
+  font-weight: 700;
 }
 
 .portal-bottom-icon {
-  font-size: 1.25rem;
-  line-height: 1;
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  display: block;
+  opacity: 0.85;
+}
+
+.portal-bottom-link.is-active .portal-bottom-icon {
+  opacity: 1;
 }
 
 .portal-bottom-link span {
@@ -67,11 +71,14 @@
   white-space: nowrap;
 }
 
-/* More overlay + sheet */
+/* ==============================
+   MORE OVERLAY + SHEET
+   ============================== */
+
 .portal-more-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.55);
+  background: var(--bf-overlay);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.15s ease;
@@ -88,21 +95,32 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: #ffffff;
-  border-top-left-radius: 18px;
-  border-top-right-radius: 18px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 -20px 60px rgba(15, 23, 42, 0.25);
-  padding: 14px 14px 18px;
+  background: var(--bf-surface);
+  border-top-left-radius: var(--bf-radius-xl);
+  border-top-right-radius: var(--bf-radius-xl);
+  border-top: 1px solid var(--bf-border);
+  box-shadow: var(--bf-shadow-sheet);
+  padding: 6px 12px 18px;
   transform: translateY(110%);
-  transition: transform 0.18s ease;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
   z-index: 50;
   max-width: 720px;
   margin: 0 auto;
+  padding-bottom: calc(18px + env(safe-area-inset-bottom));
 }
 
 .portal-more-sheet.is-open {
   transform: translateY(0);
+}
+
+.portal-more-sheet::before {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--bf-border-strong);
+  margin: 8px auto 12px;
 }
 
 .portal-more-sheet a,
@@ -110,18 +128,43 @@
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 12px;
-  border-radius: 14px;
-  border: 1px solid transparent;
+  gap: 12px;
+  padding: 14px 12px;
+  border-radius: var(--bf-radius);
+  border: 0;
   background: transparent;
-  color: #0f172a;
+  color: var(--bf-text);
   text-decoration: none;
-  font-weight: 650;
+  font-weight: 600;
+  font-size: 0.98rem;
   cursor: pointer;
+  font-family: inherit;
+  text-align: left;
 }
 
 .portal-more-sheet a:hover,
-.portal-more-sheet button:hover {
-  background: rgba(148, 163, 184, 0.18);
+.portal-more-sheet button:hover,
+.portal-more-sheet a:active,
+.portal-more-sheet button:active {
+  background: var(--bf-bg-elev);
+}
+
+.portal-more-sheet .more-muted,
+.portal-more-sheet [data-logout] {
+  color: var(--bf-danger);
+}
+.portal-more-sheet .more-muted:hover,
+.portal-more-sheet [data-logout]:hover {
+  background: var(--bf-danger-soft);
+}
+
+.portal-more-sheet .portal-nav-icon {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
+               sans-serif;
 }
