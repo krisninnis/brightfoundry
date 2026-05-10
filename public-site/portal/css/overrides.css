@@ -70,6 +70,48 @@
   --bf-font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto,
              "Helvetica Neue", Arial, sans-serif;
 
+  /* Typography scale (rem relative to 16px root) */
+  --bf-text-xs:   0.75rem;    /* 12px */
+  --bf-text-sm:   0.8125rem;  /* 13px */
+  --bf-text-base: 0.9375rem;  /* 15px — X/Twitter body */
+  --bf-text-md:   1rem;       /* 16px */
+  --bf-text-lg:   1.0625rem;  /* 17px */
+  --bf-text-xl:   1.25rem;    /* 20px */
+  --bf-text-2xl:  1.5rem;     /* 24px */
+
+  /* Font weights */
+  --bf-weight-normal:    400;
+  --bf-weight-medium:    500;
+  --bf-weight-semibold:  600;
+  --bf-weight-bold:      700;
+  --bf-weight-extrabold: 800;
+
+  /* Line heights */
+  --bf-leading-tight: 1.2;
+  --bf-leading-snug:  1.35;
+  --bf-leading-base:  1.5;
+
+  /* Transitions */
+  --bf-transition-fast: 0.10s ease;
+  --bf-transition-base: 0.15s ease;
+  --bf-transition-slow: 0.25s ease;
+
+  /* Z-index stack */
+  --bf-z-sidebar: 20;
+  --bf-z-topbar:  30;
+  --bf-z-overlay: 90;
+  --bf-z-sheet:   100;
+  --bf-z-toast:   110;
+
+  /* Extended spacing */
+  --bf-space-10: 40px;
+  --bf-space-12: 48px;
+
+  /* Form / input tokens */
+  --bf-input-bg:     var(--bf-bg);
+  --bf-input-border: var(--bf-border-strong);
+  --bf-input-radius: var(--bf-radius);
+
   /* Compatibility tokens (legacy CSS still references these) */
   --portal-bg: var(--bf-bg);
   --portal-text: var(--bf-text);
@@ -122,6 +164,10 @@ body.theme-dark {
   --card-border: var(--bf-border);
   --muted-text: var(--bf-text-muted);
 
+  /* Form token overrides — dark surfaces need elevated input bg */
+  --bf-input-bg:     var(--bf-bg-elev);
+  --bf-input-border: var(--bf-border);
+
   color-scheme: dark;
 }
 
@@ -137,6 +183,7 @@ body {
   background: var(--bf-bg);
   color: var(--bf-text);
   font-family: var(--bf-font);
+  line-height: var(--bf-leading-base);
 }
 
 .portal-shell,
@@ -267,3 +314,20 @@ body {
   white-space: nowrap;
   border: 0;
 }
+
+/* =========================================================
+   SCROLLBAR — app-wide thin track, token-driven
+   Low-specificity baseline; component rules (e.g. sidebar.css)
+   retain higher specificity and override as needed.
+   ========================================================= */
+
+/* Firefox — inherited by scroll containers */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--bf-border-strong) transparent;
+}
+
+/* WebKit / Blink */
+::-webkit-scrollbar              { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb        { background: var(--bf-border-strong); border-radius: var(--bf-radius-pill); }
+::-webkit-scrollbar-track        { background: transparent; }
