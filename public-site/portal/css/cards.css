@@ -6,16 +6,16 @@
 .portal-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: var(--bf-space-3);
 }
 
 .portal-card {
   background: var(--bf-surface);
   border-radius: var(--bf-radius-lg);
-  padding: 18px 18px 20px;
+  padding: var(--bf-space-5);
   border: 1px solid var(--bf-border);
   box-shadow: none;
-  transition: border-color 0.15s ease;
+  transition: border-color var(--bf-transition-base), background var(--bf-transition-base);
 }
 
 .portal-card + .portal-card,
@@ -26,22 +26,22 @@ section + .portal-card {
 
 .portal-card h3,
 .portal-card h2 {
-  font-size: 1rem;
+  font-size: var(--bf-text-md);
   margin-bottom: 6px;
-  font-weight: 700;
+  font-weight: var(--bf-weight-bold);
   letter-spacing: -0.01em;
   color: var(--bf-text-strong);
 }
 
 .portal-card h2 {
-  font-size: 1.1rem;
+  font-size: var(--bf-text-lg);
   margin-bottom: 10px;
 }
 
 .portal-card p {
-  font-size: 0.92rem;
+  font-size: var(--bf-text-base);
   color: var(--bf-text-muted);
-  line-height: 1.5;
+  line-height: var(--bf-leading-base);
 }
 
 .portal-card ul {
@@ -51,7 +51,7 @@ section + .portal-card {
 }
 
 .portal-card ul li {
-  font-size: 0.92rem;
+  font-size: var(--bf-text-base);
   color: var(--bf-text);
 }
 
@@ -71,7 +71,7 @@ button.portal-card:hover {
 .empty-state-text {
   margin: 16px 4px;
   color: var(--bf-text-muted);
-  font-size: 0.92rem;
+  font-size: var(--bf-text-base);
 }
 
 /* Generic alert / notice */
@@ -81,7 +81,7 @@ button.portal-card:hover {
   padding: 10px 14px;
   border-radius: var(--bf-radius);
   border: 1px solid var(--bf-border);
-  font-size: 0.9rem;
+  font-size: var(--bf-text-base);
 }
 
 /* Offline banner */
@@ -105,11 +105,11 @@ button.portal-card:hover {
   align-items: center;
   gap: 12px;
   box-shadow: var(--bf-shadow-pop);
-  font-size: 0.9rem;
+  font-size: var(--bf-text-base);
   max-width: 560px;
 }
 .portal-offline-banner-inner strong {
-  font-weight: 800;
+  font-weight: var(--bf-weight-extrabold);
 }
 .portal-offline-banner-close {
   margin-left: auto;
