@@ -12,7 +12,7 @@
 
 const { getDb } = require("../lib/db");
 
-console.log("BrightFoundry Prospecting — Database Init");
+console.log("Claw Labs Prospecting — Database Init");
 console.log("─".repeat(48));
 
 try {

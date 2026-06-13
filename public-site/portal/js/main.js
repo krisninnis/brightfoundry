@@ -1,4 +1,4 @@
-// BrightFoundry Client Portal JS
+// Claw Labs Client Portal JS
 // - Theme toggle (light/dark)
 // - Real auth gate using JWT from config.js (sessionStorage via bf-portal-auth)
 // - Real API rendering for projects, messages, files, support tickets, invoices & timeline

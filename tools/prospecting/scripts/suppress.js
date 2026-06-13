@@ -49,7 +49,7 @@ const reasonArg = reasonIdx !== -1 ? args[reasonIdx + 1] : "manual";
 // ─────────────────────────────────────────────────────────────────────────────
 
 if (listFlag) {
-  console.log("BrightFoundry Prospecting — Suppression List");
+  console.log("Claw Labs Prospecting — Suppression List");
   console.log("─".repeat(48));
   const rows = listSuppressed();
   if (rows.length === 0) {
@@ -101,7 +101,7 @@ if (emailArg) {
 }
 
 // No valid command
-console.log("BrightFoundry Prospecting — Suppression List Manager");
+console.log("Claw Labs Prospecting — Suppression List Manager");
 console.log("─".repeat(48));
 console.log("Usage:");
 console.log("  --email <address>              Add email to suppression list");

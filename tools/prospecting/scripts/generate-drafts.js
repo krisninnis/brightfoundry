@@ -35,7 +35,7 @@ const regen = args.includes("--regen");
 function main() {
   const db = getDb();
 
-  console.log("BrightFoundry Prospecting — Generate Drafts");
+  console.log("Claw Labs Prospecting — Generate Drafts");
   console.log("─".repeat(48));
   console.log("No emails will be sent. This writes drafts to the database only.\n");
 

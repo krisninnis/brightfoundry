@@ -77,7 +77,7 @@ if (!fs.existsSync(resolvedPath)) {
 function main() {
   const db = getDb();
 
-  console.log("BrightFoundry Prospecting — CSV Import");
+  console.log("Claw Labs Prospecting — CSV Import");
   console.log("─".repeat(48));
   console.log(`File: ${resolvedPath}\n`);
 

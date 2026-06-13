@@ -1,6 +1,6 @@
 /**
  * lib/score.js
- * Scoring and BrightFoundry-specific prospect classification.
+ * Scoring and Claw Labs-specific prospect classification.
  *
  * Classification categories:
  *   Website Launch Sprint  — no website, or Facebook/Linktree only
@@ -96,11 +96,11 @@ function scanWebsite(html, url) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Lead scoring  (0–100)
-// Higher = better fit for BrightFoundry outreach.
+// Higher = better fit for Claw Labs outreach.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Score a prospect for BrightFoundry fit.
+ * Score a prospect for Claw Labs fit.
  *
  * @param {object} p  Prospect data (from DB or scrape result)
  * @returns {number}  Score 0–100
@@ -142,7 +142,7 @@ function scoreLead(p) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// BrightFoundry classification
+// Claw Labs classification
 // ─────────────────────────────────────────────────────────────────────────────
 
 const CLASSIFICATIONS = {
@@ -154,7 +154,7 @@ const CLASSIFICATIONS = {
 };
 
 /**
- * Classify a prospect into a BrightFoundry service category.
+ * Classify a prospect into a Claw Labs service category.
  *
  * @param {object} p  Prospect data
  * @returns {{ classification: string, reason: string }}

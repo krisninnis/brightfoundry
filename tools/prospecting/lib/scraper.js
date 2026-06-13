@@ -1,6 +1,6 @@
 /**
  * lib/scraper.js
- * Google Places API adapter for BrightFoundry prospect discovery.
+ * Google Places API adapter for Claw Labs prospect discovery.
  *
  * Uses the official Google Places API (Text Search + Place Details).
  * No CAPTCHA bypassing. No scraping of private data.
@@ -78,7 +78,7 @@ async function fetchHtml(url) {
       maxRedirects: 5,
       headers: {
         "User-Agent":
-          "Mozilla/5.0 (compatible; BrightFoundryBot/1.0; +https://brightfoundry.co.uk)",
+          "Mozilla/5.0 (compatible; ClawLabsBot/1.0; +https://brightfoundry.co.uk)",
         Accept: "text/html",
       },
       validateStatus: s => s < 400,

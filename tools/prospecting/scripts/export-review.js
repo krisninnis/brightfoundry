@@ -44,7 +44,7 @@ const statusFilter = statusIdx !== -1 ? args[statusIdx + 1] : null;
 function main() {
   const db = getDb();
 
-  console.log("BrightFoundry Prospecting — Export for Review");
+  console.log("Claw Labs Prospecting — Export for Review");
   console.log("─".repeat(48));
 
   // Build query

@@ -24,7 +24,7 @@ const reAll = args.includes("--all");
 function main() {
   const db = getDb();
 
-  console.log("BrightFoundry Prospecting — Score & Classify");
+  console.log("Claw Labs Prospecting — Score & Classify");
   console.log("─".repeat(48));
 
   const query = reAll

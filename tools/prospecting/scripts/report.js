@@ -37,7 +37,7 @@ function main() {
     ORDER BY count DESC
   `).all();
 
-  console.log("BrightFoundry Prospecting - Daily Report");
+  console.log("Claw Labs Prospecting - Daily Report");
   console.log("-".repeat(48));
   console.log(`Prospects found:      ${counts.prospectsFound}`);
   console.log(`Audited:              ${counts.audited}`);

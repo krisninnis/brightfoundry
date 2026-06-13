@@ -1,5 +1,5 @@
 // dev-static.js
-// Simple rewrite-capable static server for BrightFoundry (multi-page + portal pretty URLs)
+// Simple rewrite-capable static server for Claw Labs (multi-page + portal pretty URLs)
 
 const express = require("express");
 const path = require("path");

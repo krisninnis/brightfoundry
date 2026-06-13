@@ -3,7 +3,7 @@
 const { buildSendQueue } = require("../lib/queue");
 
 function main() {
-  console.log("BrightFoundry Prospecting - Build Send Queue");
+  console.log("Claw Labs Prospecting - Build Send Queue");
   console.log("-".repeat(48));
   console.log("Queueing only approved/safe, non-suppressed prospects with drafts.\n");
 

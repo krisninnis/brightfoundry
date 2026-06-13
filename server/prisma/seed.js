@@ -1,5 +1,5 @@
 // server/prisma/seed.js
-// Safe, schema-aligned seed for BrightFoundry
+// Safe, schema-aligned seed for Claw Labs
 // Usage:
 //   set SEED_ALLOW=true
 //   set SEED_ADMIN_EMAIL=you@domain.com
@@ -48,7 +48,7 @@ async function main() {
 
   var rawEmail = mustGetEnv("SEED_ADMIN_EMAIL");
   var password = mustGetEnv("SEED_ADMIN_PASSWORD");
-  var name = String(process.env.SEED_ADMIN_NAME || "BrightFoundry Admin").trim().slice(0, 100);
+  var name = String(process.env.SEED_ADMIN_NAME || "Claw Labs Admin").trim().slice(0, 100);
 
   var email = normalizeEmail(rawEmail);
   if (!email || !email.includes("@")) {

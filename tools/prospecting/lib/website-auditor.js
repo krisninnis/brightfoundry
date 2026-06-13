@@ -143,7 +143,7 @@ async function auditWebsite(website, options = {}) {
       timeout: options.timeoutMs ?? DEFAULT_TIMEOUT_MS,
       maxRedirects: 4,
       headers: {
-        "User-Agent": "BrightFoundryProspectingAudit/1.0 (+manual review; no aggressive scraping)",
+        "User-Agent": "ClawLabsProspectingAudit/1.0 (+manual review; no aggressive scraping)",
         "Accept": "text/html,application/xhtml+xml"
       },
       validateStatus: status => status >= 200 && status < 500

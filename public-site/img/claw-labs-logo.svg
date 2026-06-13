@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Claw Labs</title>
+  <desc id="desc">Claw Labs logo mark</desc>
+  <rect width="256" height="256" rx="56" fill="#0f172a"/>
+  <path d="M128 38 178 92 128 146 78 92Z" fill="#facc15"/>
+  <path d="M62 128 112 178 128 160 80 110Z" fill="#bae6fd"/>
+  <path d="M194 128 144 178 128 160 176 110Z" fill="#bae6fd"/>
+</svg>

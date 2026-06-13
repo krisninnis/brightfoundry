@@ -4,7 +4,7 @@
   // CONFIG
   // =========================
   const DEST_EMAIL = "brightfoundry.contact@gmail.com";
-  const EMAIL_SUBJECT = "BrightFoundry enquiry – project details";
+  const EMAIL_SUBJECT = "Claw Labs enquiry – project details";
   const MAX_TEXT = 600;
 
   // =========================
@@ -240,7 +240,7 @@
 
   function buildSummary() {
     const lines = [
-      "BrightFoundry enquiry — summary",
+      "Claw Labs enquiry — summary",
       "--------------------------------",
       `Name: ${answers.name || "-"}`,
       `Contact: ${answers.contact || "-"}`,
@@ -258,7 +258,7 @@
       `Preferred next step: ${answers.contactStyle || "-"}`,
       "",
       "Notes:",
-      "- If you are not sure about budget or scope, BrightFoundry can suggest the simplest sensible starting point.",
+      "- If you are not sure about budget or scope, Claw Labs can suggest the simplest sensible starting point.",
       "- If you have any files, such as logo, photos or text, you can reply to this email with attachments or links.",
       "- Response time: within 1–2 working days."
     ];

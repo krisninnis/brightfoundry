@@ -68,7 +68,7 @@
     // --- Shared: Add another account ---
     const addAccount = document.getElementById("portal-add-account");
     on(addAccount, "click", () => {
-      window.alert("To add or switch accounts, please contact BrightFoundry support.");
+      window.alert("To add or switch accounts, please contact Claw Labs support.");
     });
 
     // --- Shared: keep aria-expanded in sync with account menu open/close ---
@@ -182,7 +182,7 @@
     on(pwBtn, "click", () => {
       if (pwNote) {
         pwNote.textContent =
-          "For password changes or access help, please contact BrightFoundry support so we can handle it safely.";
+          "For password changes or access help, please contact Claw Labs support so we can handle it safely.";
       }
     });
 
@@ -192,7 +192,7 @@
     on(delBtn, "click", () => {
       if (dangerNote) {
         dangerNote.textContent =
-          "For account deletion, data export or privacy requests, please contact BrightFoundry support.";
+          "For account deletion, data export or privacy requests, please contact Claw Labs support.";
       }
     });
 

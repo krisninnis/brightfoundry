@@ -1,6 +1,6 @@
 /**
  * scripts/scrape.js
- * Google Places scraper for BrightFoundry prospect discovery.
+ * Google Places scraper for Claw Labs prospect discovery.
  *
  * ── IMPORTANT RULES ──────────────────────────────────────────────────────────
  *  - Uses only the official Google Places API (public business data)
@@ -68,7 +68,7 @@ async function main() {
   const RUN_CAP          = Number(process.env.SCRAPE_RUN_CAP) || 30;
   const SCORE_THRESHOLD  = Number(process.env.SCRAPE_SCORE_THRESHOLD) || 40;
 
-  console.log("BrightFoundry Prospecting — Scrape Run");
+  console.log("Claw Labs Prospecting — Scrape Run");
   console.log("─".repeat(48));
   console.log(`Cap:             ${RUN_CAP} prospects total`);
   console.log(`Score threshold: ${SCORE_THRESHOLD} minimum`);

@@ -1,7 +1,7 @@
 {
-  "name": "brightfoundry-prospecting",
+  "name": "claw-labs-prospecting",
   "version": "1.0.0",
-  "description": "Internal BrightFoundry prospect research tool. Manual review only — no automatic email sending.",
+  "description": "Internal Claw Labs prospect research tool. Manual review only — no automatic email sending.",
   "private": true,
   "engines": {
     "node": ">=18"

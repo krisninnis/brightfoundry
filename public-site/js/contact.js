@@ -6,7 +6,7 @@
   if (!form) return;
 
   const DEST_EMAIL = "brightfoundry.contact@gmail.com";
-  const EMAIL_SUBJECT = "BrightFoundry enquiry – project";
+  const EMAIL_SUBJECT = "Claw Labs enquiry – project";
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();

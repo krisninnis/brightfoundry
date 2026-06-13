@@ -1,12 +1,12 @@
 /**
  * lib/templates.js
- * BrightFoundry outreach draft templates.
+ * Claw Labs outreach draft templates.
  *
  * These are STARTING POINTS for manual review — not final copy.
  * Kristian should personalise before sending.
  *
  * All templates include:
- *  - BrightFoundry branding throughout
+ *  - Claw Labs branding throughout
  *  - An opt-out sentence
  *  - A clear, honest value proposition
  *  - No pressure or urgency tactics
@@ -38,7 +38,7 @@ const TEMPLATES = {
 
 I came across ${businessName} while looking at local businesses in ${city} and noticed you don't currently have a dedicated website.
 
-I'm Kristian from BrightFoundry — we build clean, professional websites for small businesses, usually launched within a couple of weeks.
+I'm Kristian from Claw Labs — we build clean, professional websites for small businesses, usually launched within a couple of weeks.
 
 Having your own site means customers can find you on Google, learn what you offer, and get in touch directly — all without relying on social platforms you don't control.
 
@@ -48,7 +48,7 @@ Happy to send over a few examples of recent work if that would help.
 
 Best,
 Kristian
-BrightFoundry
+Claw Labs
 brightfoundry.co.uk
 
 ---
@@ -67,7 +67,7 @@ If you'd prefer not to hear from me, just reply with "unsubscribe" and I won't c
 
 I was looking at local businesses in ${city} and had a look at your website. It's clear you're doing good work — I just wondered whether your site is currently doing justice to that.
 
-I'm Kristian from BrightFoundry. We help small businesses refresh their websites so they look the part, load fast on mobile, and make it easy for customers to get in touch.
+I'm Kristian from Claw Labs. We help small businesses refresh their websites so they look the part, load fast on mobile, and make it easy for customers to get in touch.
 
 A refresh doesn't have to mean a full rebuild — sometimes it's targeted improvements to layout, copy, and speed that make a real difference.
 
@@ -75,7 +75,7 @@ If you're open to it, I'm happy to take a look and share a few thoughts. No hard
 
 Best,
 Kristian
-BrightFoundry
+Claw Labs
 brightfoundry.co.uk
 
 ---
@@ -94,7 +94,7 @@ If you'd prefer not to hear from me, just reply with "unsubscribe" and I won't b
 
 I was looking at businesses in ${city} and took a quick look at your site. The business looks great — I just noticed it's not immediately obvious how a new customer would get in touch or enquire.
 
-I'm Kristian from BrightFoundry. We help small businesses make sure their websites are actually converting visitors into enquiries — whether that's adding a simple contact form, a clearer call-to-action, or a more intuitive layout.
+I'm Kristian from Claw Labs. We help small businesses make sure their websites are actually converting visitors into enquiries — whether that's adding a simple contact form, a clearer call-to-action, or a more intuitive layout.
 
 It's often a smaller change than people expect, and it can make a meaningful difference to how many new enquiries you receive.
 
@@ -102,7 +102,7 @@ If you'd find it useful, I'm happy to do a quick review and share a couple of sp
 
 Best,
 Kristian
-BrightFoundry
+Claw Labs
 brightfoundry.co.uk
 
 ---
@@ -121,7 +121,7 @@ If you'd prefer not to hear from me, just reply "unsubscribe" and I'll remove yo
 
 I came across ${businessName} and had a quick look at your website.
 
-I'm Kristian from BrightFoundry. One thing I've been helping local businesses with recently is adding a simple AI assistant to their site — something that can answer common questions from visitors 24/7, capture enquiries out of hours, and reduce the back-and-forth on basic queries.
+I'm Kristian from Claw Labs. One thing I've been helping local businesses with recently is adding a simple AI assistant to their site — something that can answer common questions from visitors 24/7, capture enquiries out of hours, and reduce the back-and-forth on basic queries.
 
 It's not a complex chatbot or a big project — more like a knowledgeable assistant that knows your business and is always available.
 
@@ -129,7 +129,7 @@ Might be worth a 15-minute chat to see if it's a good fit. Happy to show you a q
 
 Best,
 Kristian
-BrightFoundry
+Claw Labs
 brightfoundry.co.uk
 
 ---
@@ -148,7 +148,7 @@ If you'd prefer not to hear from me, just reply "unsubscribe" and I won't contac
 
 I was looking at businesses in ${city} and noticed that ${businessName} looks well established — which usually means there's a fair amount going on behind the scenes.
 
-I'm Kristian from BrightFoundry. We help small businesses automate the repetitive admin that eats into the working day — things like appointment reminders, follow-up emails, document generation, or connecting tools that don't currently talk to each other.
+I'm Kristian from Claw Labs. We help small businesses automate the repetitive admin that eats into the working day — things like appointment reminders, follow-up emails, document generation, or connecting tools that don't currently talk to each other.
 
 It's not about replacing people — it's about removing the tasks that shouldn't need a person at all.
 
@@ -156,7 +156,7 @@ If there's a particular process that always feels like a time drain, I'd be happ
 
 Best,
 Kristian
-BrightFoundry
+Claw Labs
 brightfoundry.co.uk
 
 ---

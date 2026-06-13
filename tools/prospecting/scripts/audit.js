@@ -79,7 +79,7 @@ function scoreWithAudit(prospect, audit, botFit) {
 async function main() {
   const db = getDb();
 
-  console.log("BrightFoundry Prospecting - Website Audit");
+  console.log("Claw Labs Prospecting - Website Audit");
   console.log("-".repeat(48));
   console.log("Polite checks only: one page request per prospect, timeout/delay enabled.\n");
 

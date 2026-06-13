@@ -1,4 +1,4 @@
-# BrightFoundry Prospecting Tool
+# Claw Labs Prospecting Tool
 
 Internal prospect research, website auditing, queueing, and safe outreach assistant.
 

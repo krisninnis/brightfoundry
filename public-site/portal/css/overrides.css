@@ -1,5 +1,5 @@
 /* =========================================================
-   BRIGHTFOUNDRY PORTAL — DESIGN TOKENS (X/Twitter-inspired)
+   CLAW LABS PORTAL — DESIGN TOKENS (X/Twitter-inspired)
    Loaded last by main.css so these tokens win without !important spam.
    Single theme authority: html[data-theme="light|dark"] (legacy
    body.theme-dark mirror is preserved for older entry points).
@@ -23,7 +23,7 @@
   --bf-text-muted: #536471;
   --bf-text-subtle: #71767b;
 
-  /* Accent — BrightFoundry orange, used sparingly for primary CTAs */
+  /* Accent — Claw Labs orange, used sparingly for primary CTAs */
   --bf-accent: #f59e0b;
   --bf-accent-hover: #d97706;
   --bf-accent-press: #b45309;

@@ -1,4 +1,4 @@
-// config.js — shared API + auth helpers for the BrightFoundry portal
+// config.js — shared API + auth helpers for the Claw Labs portal
 // CSP-safe (no inline), token stored in sessionStorage, safe redirect handling.
 
 (function () {

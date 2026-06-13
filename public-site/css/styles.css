@@ -772,6 +772,39 @@ body > header {
 .footer-links { margin-top: 6px; }
 .footer-note { margin-top: 10px; font-size: 0.9rem; color: var(--bf-muted); }
 
+.studio-footer {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--bf-border);
+}
+
+.studio-footer-title {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--bf-muted);
+}
+
+.studio-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.studio-footer-links a {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--bf-muted);
+}
+
+.studio-footer-links a:hover,
+.studio-footer-links a:focus-visible {
+  color: var(--bf-text);
+}
+
+
 /* Client portal marketing slideshow */
 .portal-slideshow {
   position: relative;

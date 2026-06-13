@@ -16,7 +16,7 @@ async function main() {
   const db = getDb();
   const config = getSendConfig();
 
-  console.log("BrightFoundry Prospecting - Daily Sender");
+  console.log("Claw Labs Prospecting - Daily Sender");
   console.log("-".repeat(48));
   console.log(`AUTO_SEND=${config.autoSend ? "true" : "false"}`);
   console.log(`REQUIRE_MANUAL_APPROVAL=${config.requireManualApproval ? "true" : "false"}`);

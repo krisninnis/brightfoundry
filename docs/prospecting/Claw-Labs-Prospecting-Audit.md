@@ -1,13 +1,13 @@
-# BrightFoundry Prospect Research & Outreach Assistant
+# Claw Labs Prospect Research & Outreach Assistant
 ## Codebase Audit: leadclaw-uk + leadclaw-lead-scraper
 
 ---
 
 ## Executive Summary
 
-Both LeadClaw repos form a complete B2B prospecting + outreach pipeline, purpose-built for UK beauty/aesthetic clinics. The core infrastructure — scraping, scoring, email sending, compliance, and outreach tracking — is almost entirely generic. Only the templates, retention behaviors, SaaS billing, and enquiry widget are clinic-specific. For an internal BrightFoundry assistant, the heavy lifting is already done.
+Both LeadClaw repos form a complete B2B prospecting + outreach pipeline, purpose-built for UK beauty/aesthetic clinics. The core infrastructure — scraping, scoring, email sending, compliance, and outreach tracking — is almost entirely generic. Only the templates, retention behaviors, SaaS billing, and enquiry widget are clinic-specific. For an internal Claw Labs assistant, the heavy lifting is already done.
 
-**Estimated adaptation effort:** 2–3 weeks to strip clinic-specific code, 1–2 weeks to add BrightFoundry-specific targeting and message angle logic.
+**Estimated adaptation effort:** 2–3 weeks to strip clinic-specific code, 1–2 weeks to add Claw Labs-specific targeting and message angle logic.
 
 ---
 
@@ -30,9 +30,9 @@ Calls Google Places Text Search + Details APIs to fetch business name, website, 
 - `extract_domain(url)` — Domain normalization
 - `detect_primary_cta(html)` — CTA type detection (form, phone, WhatsApp, booking)
 
-**What to change for BrightFoundry:**
-- Replace `DEFAULT_QUERIES` (currently: beauty salon, nail bar, lash studio, etc.) with BrightFoundry target verticals (e.g. independent consultants, SaaS founders, trades businesses, service firms)
-- Replace `DEFAULT_CITIES` with BrightFoundry's target geography
+**What to change for Claw Labs:**
+- Replace `DEFAULT_QUERIES` (currently: beauty salon, nail bar, lash studio, etc.) with Claw Labs target verticals (e.g. independent consultants, SaaS founders, trades businesses, service firms)
+- Replace `DEFAULT_CITIES` with Claw Labs' target geography
 - Replace beauty-specific `BOOKING_PATTERNS` (Fresha, Treatwell, Phorest, Booksy) with B2B equivalents relevant to your sectors
 - Scoring weights referencing `has_booking_cta` should be reconfigured or removed
 
@@ -52,11 +52,11 @@ Calls Google Places Text Search + Details APIs to fetch business name, website, 
 
 `website_quality_score()` — 0–100 score measuring site maturity (CTA presence, FAQ, live chat, content depth).
 
-`lead_fit_score()` — 0–100 score measuring how likely the lead is to need LeadClaw's product. Needs to be reconfigured for BrightFoundry's value proposition.
+`lead_fit_score()` — 0–100 score measuring how likely the lead is to need LeadClaw's product. Needs to be reconfigured for Claw Labs' value proposition.
 
 `should_keep_lead()` — Hard filter: rejects leads with no website, rating below 3.5, fewer than 5 reviews, or fit score below 40.
 
-**What to change:** Rewrite `lead_fit_score()` around BrightFoundry's ICP signals. The scoring structure (weighted sum → clamped 0–100 → hard thresholds) is solid and should be kept.
+**What to change:** Rewrite `lead_fit_score()` around Claw Labs' ICP signals. The scoring structure (weighted sum → clamped 0–100 → hard thresholds) is solid and should be kept.
 
 ---
 
@@ -79,13 +79,13 @@ Calls Google Places Text Search + Details APIs to fetch business name, website, 
 
 **Tables to adapt:**
 
-`subscriptions` — Keep the billing infrastructure if BrightFoundry needs per-seat access control; otherwise remove if this is a fully internal tool.
+`subscriptions` — Keep the billing infrastructure if Claw Labs needs per-seat access control; otherwise remove if this is a fully internal tool.
 
 **Tables to remove entirely:**
 
 `enquiries`, `onboarding_clients`, `onboarding_sites`, `clinics`, `retention_clients`, `retention_tasks`, `retention_events`, `widget_tokens`, `newsletter_subscribers`, `newsletter_issues` — All beauty-clinic SaaS-specific. Not relevant to an internal prospecting assistant.
 
-**New columns to consider adding for BrightFoundry:**
+**New columns to consider adding for Claw Labs:**
 - `company_size_estimate` (micro/small/medium)
 - `industry` (standardized vertical)
 - `linkedin_url`
@@ -118,7 +118,7 @@ Calls Google Places Text Search + Details APIs to fetch business name, website, 
 
 **What must be replaced:**
 - All message templates (currently LeadClaw product pitch for beauty clinics)
-- `choose_angle()` logic (currently: contact_form_only, weak_booking_flow, no_live_chat — these should become BrightFoundry-relevant angles)
+- `choose_angle()` logic (currently: contact_form_only, weak_booking_flow, no_live_chat — these should become Claw Labs-relevant angles)
 - Email footer company details (currently: Lead Claw Ltd, Companies House No. 13546017, Whitechapel Road address)
 
 **Opportunity:** The existing code calls OpenAI/Claude to enrich leads. The outreach generation pipeline can be upgraded to use AI for per-lead message personalization using the scraped website signals, rather than static templates.
@@ -162,7 +162,7 @@ Nothing here is clinic-specific. Copy it wholesale.
 - `sendFounderAlertEmail()` — Internal HTML email alerts for system events
 - Resend `tags` on every send: lead_id, source, follow_up_stage — enables webhook attribution
 
-**Only change required:** Update `RESEND_FROM_EMAIL`, `NEXT_PUBLIC_APP_URL`, and `FOUNDER_ALERT_EMAIL` env vars to BrightFoundry's domain and email address.
+**Only change required:** Update `RESEND_FROM_EMAIL`, `NEXT_PUBLIC_APP_URL`, and `FOUNDER_ALERT_EMAIL` env vars to Claw Labs' domain and email address.
 
 ---
 
@@ -185,7 +185,7 @@ Email validation blocklist — `is_bad_email()` rejects: noreply/postmaster pref
 
 Rate limiting — Upstash Redis sliding window (20 req/min admin, 10 req/min outreach runner, 60 req/min widget). Redis implementation is fully generic.
 
-**What to update:** Email footer must list BrightFoundry's company registration number, registered address, and privacy policy URL.
+**What to update:** Email footer must list Claw Labs' company registration number, registered address, and privacy policy URL.
 
 ---
 
@@ -199,9 +199,9 @@ The **clinic onboarding workflow** (`/api/onboarding/run`, `onboarding_clients`,
 
 The **retention automation system** (`/lib/retention.ts`, `/api/retention/run`) fires post-treatment follow-up emails to clinic clients (rebooking nudges, aftercare check-ins, treatment interval logic). Hardcoded for beauty treatments: Botox intervals at 90 days, lash fill at 21 days, spray tan at 14 days.
 
-**The newsletter system** (`newsletter_subscribers`, `newsletter_issues`, `/api/newsletter/send`) was built to email LeadClaw's own clinic client base. Not relevant unless BrightFoundry wants a newsletter feature.
+**The newsletter system** (`newsletter_subscribers`, `newsletter_issues`, `/api/newsletter/send`) was built to email LeadClaw's own clinic client base. Not relevant unless Claw Labs wants a newsletter feature.
 
-**Stripe subscription lifecycle** (`/lib/subscriptions.ts`, `/api/stripe/webhook`) handles clinic plan billing (Growth/Pro tiers). Remove if BrightFoundry is fully internal with no per-seat billing.
+**Stripe subscription lifecycle** (`/lib/subscriptions.ts`, `/api/stripe/webhook`) handles clinic plan billing (Growth/Pro tiers). Remove if Claw Labs is fully internal with no per-seat billing.
 
 **All message templates** in `generate_outreach_messages.py` and `outreach/run/route.ts` pitch LeadClaw's product to beauty clinics. Every template must be rewritten.
 
@@ -230,22 +230,22 @@ The **retention automation system** (`/lib/retention.ts`, `/api/retention/run`) 
 
 ---
 
-## Suggested Folder Structure: BrightFoundry Internal Tool
+## Suggested Folder Structure: Claw Labs Internal Tool
 
 ```
-brightfoundry-prospector/
+claw-labs-prospector/
 ├── scraper/
 │   ├── places_scraper.py          # Adapted from places_run.py
 │   ├── batch_runner.py            # Adapted from places_batch.py
 │   ├── email_enricher.py          # Adapted from enrich_emails.py
 │   └── targets/
-│       └── brightfoundry_targets.py  # BrightFoundry-specific queries + cities
+│       └── claw_labs_targets.py  # Claw Labs-specific queries + cities
 │
 ├── pipeline/
 │   ├── auto_pipeline.py           # Adapted from auto_pipeline.py
 │   ├── compliance_classifier.py   # Adapted PECR / Companies House logic
 │   ├── suppression_check.py       # Adapted from suppression logic
-│   └── outreach_generator.py      # NEW: BrightFoundry message templates + AI generation
+│   └── outreach_generator.py      # NEW: Claw Labs message templates + AI generation
 │
 ├── app/
 │   ├── src/
@@ -284,11 +284,11 @@ brightfoundry-prospector/
 
 **Phase 1 — Database (Days 1–2)**
 
-Create a new Supabase project. Run the trimmed `schema.sql` with: `leads`, `outreach_events`, `email_suppressions`, and `profiles` tables. Remove all beauty-clinic tables. Add BrightFoundry-specific columns to `leads`: `industry`, `company_size_estimate`, `linkedin_url`, `research_notes`.
+Create a new Supabase project. Run the trimmed `schema.sql` with: `leads`, `outreach_events`, `email_suppressions`, and `profiles` tables. Remove all beauty-clinic tables. Add Claw Labs-specific columns to `leads`: `industry`, `company_size_estimate`, `linkedin_url`, `research_notes`.
 
 **Phase 2 — Scraper Adaptation (Days 3–5)**
 
-Copy `places_run.py` to `brightfoundry-prospector/scraper/places_scraper.py`. Replace `DEFAULT_QUERIES` with BrightFoundry target verticals. Replace `BOOKING_PATTERNS` with relevant B2B signals. Rewrite `lead_fit_score()` around BrightFoundry's ideal prospect profile. Test against a single city and 2–3 query types.
+Copy `places_run.py` to `claw-labs-prospector/scraper/places_scraper.py`. Replace `DEFAULT_QUERIES` with Claw Labs target verticals. Replace `BOOKING_PATTERNS` with relevant B2B signals. Rewrite `lead_fit_score()` around Claw Labs' ideal prospect profile. Test against a single city and 2–3 query types.
 
 **Phase 3 — Compliance Pipeline (Days 6–7)**
 
@@ -296,15 +296,15 @@ Copy and adapt `auto_pipeline.py`: keep Companies House classification, suppress
 
 **Phase 4 — Email Infrastructure (Days 8–9)**
 
-Copy `src/lib/email.ts` and `src/lib/rate-limit.ts` verbatim. Update `RESEND_FROM_EMAIL` to BrightFoundry's sending domain. Verify domain in Resend dashboard. Test suppression check with a known suppressed address.
+Copy `src/lib/email.ts` and `src/lib/rate-limit.ts` verbatim. Update `RESEND_FROM_EMAIL` to Claw Labs' sending domain. Verify domain in Resend dashboard. Test suppression check with a known suppressed address.
 
 **Phase 5 — Outreach Message Generation (Days 10–12)**
 
-Write BrightFoundry-specific outreach angles (minimum 3: e.g. `no_digital_presence`, `weak_website`, `growth_signal_detected`). Write matching subject + body templates for each angle. Wire into `choose_angle()` logic. Update email footer with BrightFoundry's company details and privacy policy URL.
+Write Claw Labs-specific outreach angles (minimum 3: e.g. `no_digital_presence`, `weak_website`, `growth_signal_detected`). Write matching subject + body templates for each angle. Wire into `choose_angle()` logic. Update email footer with Claw Labs' company details and privacy policy URL.
 
 **Phase 6 — Outreach Runner (Days 13–14)**
 
-Adapt `outreach/run/route.ts`: keep all tracking, rate limiting, deduplication, and follow-up stage logic. Update lead query filters for BrightFoundry's scoring thresholds and target `niche` values. Test with `OUTREACH_DAILY_CAP=3` and verify events are written to `outreach_events`.
+Adapt `outreach/run/route.ts`: keep all tracking, rate limiting, deduplication, and follow-up stage logic. Update lead query filters for Claw Labs' scoring thresholds and target `niche` values. Test with `OUTREACH_DAILY_CAP=3` and verify events are written to `outreach_events`.
 
 **Phase 7 — Testing + Hardening (Days 15–17)**
 
@@ -316,7 +316,7 @@ End-to-end test: scrape → score → classify → generate message → send to 
 
 **Supabase RLS policies** — The existing schema has RLS configured for a multi-tenant SaaS. For an internal tool, simplify: grant service-role full access, restrict anon/authenticated as needed. Audit all policies before go-live.
 
-**Resend sender verification** — The outreach runner has a special error path that halts the batch if the sending domain is not verified. Verify BrightFoundry's domain in Resend before any live send.
+**Resend sender verification** — The outreach runner has a special error path that halts the batch if the sending domain is not verified. Verify Claw Labs' domain in Resend before any live send.
 
 **Companies House API rate limits** — The free tier allows ~600 requests/day. For large scrape batches, batch the classification step separately from the scrape step, or add a delay between requests.
 
@@ -324,7 +324,7 @@ End-to-end test: scrape → score → classify → generate message → send to 
 
 **Google Places API costs** — Text Search costs ~$32 per 1,000 queries; Details costs ~$17 per 1,000 calls. At typical scrape volumes (50 queries × 20 cities = 1,000 searches + details), expect $50–$80 per full scrape run. Budget accordingly.
 
-**Follow-up stage drift** — If leads are imported with a non-zero `follow_up_stage` or `last_contacted_at` value (e.g. migrated from LeadClaw), the gating logic will behave unexpectedly. Normalize these fields to `0` and `null` on import for any fresh BrightFoundry leads.
+**Follow-up stage drift** — If leads are imported with a non-zero `follow_up_stage` or `last_contacted_at` value (e.g. migrated from LeadClaw), the gating logic will behave unexpectedly. Normalize these fields to `0` and `null` on import for any fresh Claw Labs leads.
 
 ---
 
