@@ -3,6 +3,7 @@
   "scripts": {
     "test": "npm --prefix server test",
     "lint": "npm --prefix server run lint",
-    "check": "npm --prefix server test && npm --prefix server run lint"
+    "check": "npm --prefix server test && npm --prefix server run lint",
+    "build": "node -e \"require('fs').accessSync('public-site/index.html'); console.log('Static site ready: public-site')\""
   }
 }
