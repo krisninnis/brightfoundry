@@ -3,4 +3,4 @@ Allow: /
 
 Disallow: /portal/
 
-Sitemap: https://brightfoundry.co.uk/sitemap.xml
+Sitemap: https://clawlabslocal.com/sitemap.xml
