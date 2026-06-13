@@ -38,10 +38,15 @@
   // Mark current page in sidebar nav
   (function () {
     var filename = window.location.pathname.split("/").pop() || "index.html";
+    var sectionPageMap = {
+      "leadclaw.html": "products.html",
+      "memephant.html": "products.html",
+    };
+    var activeFilename = sectionPageMap[filename] || filename;
     var sidebarLinks = document.querySelectorAll(".sidebar-nav a");
     sidebarLinks.forEach(function (a) {
       var href = (a.getAttribute("href") || "").split("/").pop();
-      if (href === filename) {
+      if (href === activeFilename) {
         a.setAttribute("aria-current", "page");
       }
     });

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Products Built by BrightFoundry</title>
+  <meta
+    name="description"
+    content="Products built by BrightFoundry, including LeadClaw for local service businesses and Memephant for builders working across multiple AI tools."
+  />
+
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="theme.js" defer></script>
+</head>
+
+<body>
+
+  <!-- SIDEBAR NAV (desktop) -->
+  <nav class="site-sidebar" aria-label="Primary navigation">
+    <div class="sidebar-brand">
+      <a href="index.html" aria-label="BrightFoundry home">
+        <img
+          src="img/brightfoundry-logo-light.png"
+          alt="BrightFoundry"
+          class="sidebar-logo"
+        />
+      </a>
+      <span class="sidebar-brand-name" aria-hidden="true">BrightFoundry</span>
+    </div>
+
+    <ul class="sidebar-nav" role="list">
+      <li><a href="services.html">Services</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="client-portal.html">Client Portal</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="faqs.html">FAQs</a></li>
+      <li><a href="contact.html" class="sidebar-contact">Contact</a></li>
+    </ul>
+
+    <div class="sidebar-bottom">
+      <button
+        class="site-theme-toggle"
+        type="button"
+        aria-label="Toggle dark mode"
+        aria-pressed="false"
+      ></button>
+      <a href="portal/login.html" class="sidebar-login">Client Login</a>
+    </div>
+  </nav>
+
+  <!-- MOBILE HEADER (mobile only) -->
+  <header class="mobile-header">
+    <div class="mobile-header-inner">
+      <button
+        class="site-theme-toggle"
+        type="button"
+        aria-label="Toggle dark mode"
+        aria-pressed="false"
+      ></button>
+
+      <a href="index.html" class="mobile-brand" aria-label="BrightFoundry home">
+        <img
+          src="img/brightfoundry-logo-light.png"
+          alt="BrightFoundry"
+          class="mobile-logo"
+        />
+      </a>
+
+      <button
+        class="nav-toggle"
+        type="button"
+        id="navToggle"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="navMobile"
+      >
+        <span class="bars" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+      </button>
+    </div>
+
+    <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+    <nav class="nav-mobile" id="navMobile" aria-label="Mobile navigation">
+      <a href="services.html">Services</a>
+      <a href="products.html">Products</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="client-portal.html">Client Portal</a>
+      <a href="about.html">About</a>
+      <a href="faqs.html">FAQs</a>
+      <a href="portal/login.html" class="nav-link-muted">Client Login</a>
+      <a href="contact.html" class="btn">Contact</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+
+        <div class="hero-copy">
+          <span class="badge">Product studio</span>
+
+          <h1>Products built by BrightFoundry</h1>
+
+          <p>
+            BrightFoundry builds practical web and AI tools for small businesses, builders,
+            and teams. Some are client-ready products; others start as focused internal builds
+            that prove how a useful system should work.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#products" class="btn btn-primary">Explore products</a>
+            <a href="contact.html" class="btn">Need something custom?</a>
+          </div>
+        </div>
+
+        <div class="hero-support">
+          <div class="card">
+            <p class="hero-support-kicker">Built by BrightFoundry</p>
+            <ul class="hero-check-list">
+              <li>Small-business websites and portals</li>
+              <li>AI receptionist and lead-capture systems</li>
+              <li>Project memory and AI handoff workflows</li>
+              <li>Practical software built by a hands-on UK studio</li>
+            </ul>
+            <p class="hero-support-note">BrightFoundry stays the front door; LeadClaw and Memephant stay separate products.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section class="section" id="products">
+    <div class="container">
+      <div class="section-heading">
+        <h2>Current products</h2>
+        <p>Two focused products showing the type of practical systems BrightFoundry can design and build.</p>
+      </div>
+
+      <div class="product-grid">
+        <article class="card product-card">
+          <p class="product-kicker">For clinics, trades and service businesses</p>
+          <h2>LeadClaw</h2>
+          <p class="product-subtitle">AI receptionist and lead capture for local service businesses.</p>
+          <p>
+            LeadClaw helps clinics, trades, and service businesses capture enquiries from their website,
+            organise leads, and follow up faster.
+          </p>
+
+          <ul class="feature-list">
+            <li>AI receptionist / website assistant</li>
+            <li>Lead capture and enquiry tracking</li>
+            <li>Follow-up automation</li>
+            <li>Built for clinics, trades, and service businesses</li>
+          </ul>
+
+          <div class="product-actions">
+            <a href="leadclaw.html" class="btn btn-primary">View case study</a>
+            <a href="https://leadclaw.uk" class="btn" target="_blank" rel="noopener">Visit LeadClaw</a>
+          </div>
+        </article>
+
+        <article class="card product-card">
+          <p class="product-kicker">For builders using multiple AI tools</p>
+          <h2>Memephant</h2>
+          <p class="product-subtitle">Project memory and AI handoff for builders.</p>
+          <p>
+            Memephant helps builders keep project context organised and move work between AI tools
+            without losing the thread.
+          </p>
+
+          <ul class="feature-list">
+            <li>Project memory</li>
+            <li>AI handoff exports</li>
+            <li>Useful for ChatGPT, Claude, Gemini, Perplexity, Codex and similar tools</li>
+            <li>Designed for builders working across multiple AI tools</li>
+          </ul>
+
+          <div class="product-actions">
+            <a href="memephant.html" class="btn btn-primary">View case study</a>
+            <a href="https://github.com/krisninnis/memephant" class="btn" target="_blank" rel="noopener">View Memephant</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-panel">
+        <div>
+          <h2>Need something custom?</h2>
+          <p>
+            If you need a website, AI receptionist, portal, dashboard or workflow tool,
+            BrightFoundry can help shape a sensible phase one.
+          </p>
+        </div>
+
+        <div class="cta-panel-actions">
+          <a href="contact.html" class="btn btn-primary">Talk about a custom build</a>
+          <a href="services.html" class="btn">View services</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 BrightFoundry. All rights reserved.</p>
+
+      <p class="bf-csp-mt-6px-fs-085rem-color-6b7280">
+        Privacy-first studio. No spam, no pressure - reach out only if and when it suits you.
+      </p>
+
+      <div class="studio-footer">
+        <p class="studio-footer-title">Built by BrightFoundry</p>
+        <div class="studio-footer-links">
+          <a href="products.html">Products</a>
+          <a href="leadclaw.html">LeadClaw</a>
+          <a href="memephant.html">Memephant</a>
+          <a href="services.html">Services</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </div>
+
+      <div class="bf-csp-mt-6px">
+        <a href="privacy.html">Privacy Policy</a> &bull;
+        <a href="terms.html">Terms</a> &bull;
+        <a href="cookies.html">Cookies</a> &bull;
+        <a href="portal/login.html">Client Login</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/site-nav.js" defer></script>
+
+</body>
+</html>

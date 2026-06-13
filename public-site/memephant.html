@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Memephant Case Study - BrightFoundry</title>
+  <meta
+    name="description"
+    content="Memephant is a project-memory and AI handoff product built by BrightFoundry for builders working across multiple AI tools."
+  />
+
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="theme.js" defer></script>
+</head>
+
+<body>
+
+  <!-- SIDEBAR NAV (desktop) -->
+  <nav class="site-sidebar" aria-label="Primary navigation">
+    <div class="sidebar-brand">
+      <a href="index.html" aria-label="BrightFoundry home">
+        <img
+          src="img/brightfoundry-logo-light.png"
+          alt="BrightFoundry"
+          class="sidebar-logo"
+        />
+      </a>
+      <span class="sidebar-brand-name" aria-hidden="true">BrightFoundry</span>
+    </div>
+
+    <ul class="sidebar-nav" role="list">
+      <li><a href="services.html">Services</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="client-portal.html">Client Portal</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="faqs.html">FAQs</a></li>
+      <li><a href="contact.html" class="sidebar-contact">Contact</a></li>
+    </ul>
+
+    <div class="sidebar-bottom">
+      <button
+        class="site-theme-toggle"
+        type="button"
+        aria-label="Toggle dark mode"
+        aria-pressed="false"
+      ></button>
+      <a href="portal/login.html" class="sidebar-login">Client Login</a>
+    </div>
+  </nav>
+
+  <!-- MOBILE HEADER (mobile only) -->
+  <header class="mobile-header">
+    <div class="mobile-header-inner">
+      <button
+        class="site-theme-toggle"
+        type="button"
+        aria-label="Toggle dark mode"
+        aria-pressed="false"
+      ></button>
+
+      <a href="index.html" class="mobile-brand" aria-label="BrightFoundry home">
+        <img
+          src="img/brightfoundry-logo-light.png"
+          alt="BrightFoundry"
+          class="mobile-logo"
+        />
+      </a>
+
+      <button
+        class="nav-toggle"
+        type="button"
+        id="navToggle"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="navMobile"
+      >
+        <span class="bars" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+      </button>
+    </div>
+
+    <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+    <nav class="nav-mobile" id="navMobile" aria-label="Mobile navigation">
+      <a href="services.html">Services</a>
+      <a href="products.html">Products</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="client-portal.html">Client Portal</a>
+      <a href="about.html">About</a>
+      <a href="faqs.html">FAQs</a>
+      <a href="portal/login.html" class="nav-link-muted">Client Login</a>
+      <a href="contact.html" class="btn">Contact</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+
+        <div class="hero-copy">
+          <span class="badge">Memephant case study</span>
+
+          <h1>Memephant: project memory and AI handoff for builders.</h1>
+
+          <p>
+            Memephant is a BrightFoundry product for builders who use multiple AI tools and need
+            a reliable way to keep project context together without rebuilding the story every time.
+          </p>
+
+          <div class="hero-actions">
+            <a href="https://github.com/krisninnis/memephant" class="btn btn-primary" target="_blank" rel="noopener">View Memephant</a>
+            <a href="contact.html" class="btn">Ask about a product build</a>
+          </div>
+        </div>
+
+        <div class="hero-support">
+          <div class="card">
+            <p class="hero-support-kicker">Build snapshot</p>
+            <ul class="hero-check-list">
+              <li>Local-first project memory</li>
+              <li>AI handoff exports between tools</li>
+              <li>Tauri, React and Vite desktop app</li>
+              <li>Useful for ChatGPT, Claude, Gemini, Perplexity, Codex and similar tools</li>
+            </ul>
+            <p class="hero-support-note">Built as a separate product for AI-assisted builders, not as part of the BrightFoundry client portal.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="section">
+    <div class="container">
+      <div class="section-heading">
+        <h2>The problem</h2>
+        <p>
+          Builders are increasingly moving between AI tools, code agents and chat interfaces.
+          The hard part is not writing another prompt; it is carrying the project memory forward accurately.
+        </p>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>Context gets lost</h3>
+          <p>Each tool starts with a partial view unless the builder carefully rebuilds the project story.</p>
+        </div>
+
+        <div class="card">
+          <h3>Handoffs are messy</h3>
+          <p>Notes, decisions, risks and next steps often live in different chats and documents.</p>
+        </div>
+
+        <div class="card">
+          <h3>Momentum drops</h3>
+          <p>Switching tools should not mean explaining the same project from scratch again.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT I BUILT -->
+  <section class="section bf-csp-pt-0">
+    <div class="container">
+      <div class="section-heading">
+        <h2>What I built</h2>
+        <p>
+          A local-first desktop tool that keeps useful project context organised and turns it into
+          clean handoff material for the next AI tool in the workflow.
+        </p>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>Project memory</h3>
+          <p>A structured place for the current project state, decisions, tasks and useful notes.</p>
+        </div>
+
+        <div class="card">
+          <h3>AI handoff exports</h3>
+          <p>Reusable handoff context for moving work between ChatGPT, Claude, Gemini, Perplexity, Codex and similar tools.</p>
+        </div>
+
+        <div class="card">
+          <h3>Builder workflow</h3>
+          <p>Designed around people actively making products, not generic note-taking for its own sake.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section">
+    <div class="container">
+      <div class="section-heading">
+        <h2>Key features</h2>
+        <p>Focused on keeping context usable as work moves between tools and sessions.</p>
+      </div>
+
+      <div class="case-study-grid">
+        <div class="card">
+          <ul class="case-study-list">
+            <li>Local-first project memory</li>
+            <li>AI handoff exports for multiple tools</li>
+            <li>Project context that can include decisions, risks, tasks and next steps</li>
+            <li>Useful for ChatGPT, Claude, Gemini, Perplexity, Codex and similar tools</li>
+            <li>Safe review thinking before updates are applied to project memory</li>
+            <li>Designed for builders working across several AI tools</li>
+          </ul>
+        </div>
+
+        <aside class="card case-study-meta" aria-label="Memephant product summary">
+          <div>
+            <p class="product-kicker">Audience</p>
+            <p>Builders, solo founders and makers using AI tools heavily.</p>
+          </div>
+          <div>
+            <p class="product-kicker">Positioning</p>
+            <p>Project memory and AI handoff, not another generic notes app.</p>
+          </div>
+          <div>
+            <p class="product-kicker">BrightFoundry role</p>
+            <p>Product strategy, app design and desktop build.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH -->
+  <section class="section bf-csp-pt-0">
+    <div class="container">
+      <div class="section-heading">
+        <h2>Tech and build credibility</h2>
+        <p>Built as a practical desktop product rather than a marketing mock-up.</p>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>Desktop app foundation</h3>
+          <p>Tauri and Rust for the desktop shell, with a React interface.</p>
+        </div>
+
+        <div class="card">
+          <h3>Modern frontend</h3>
+          <p>Vite-powered React app structure for fast iteration and clean UI work.</p>
+        </div>
+
+        <div class="card">
+          <h3>Local-first thinking</h3>
+          <p>Designed around keeping project context close to the builder and exporting only what is useful for the next handoff.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO IT IS FOR -->
+  <section class="section">
+    <div class="container">
+      <div class="section-heading">
+        <h2>Who it is for</h2>
+        <p>
+          Memephant is for builders who rely on AI but still need ownership of their project memory:
+          solo founders, developers, product builders and technical operators working across several tools.
+        </p>
+      </div>
+
+      <div class="cta-panel">
+        <div>
+          <h2>Need a focused product built around your workflow?</h2>
+          <p>BrightFoundry can help turn a practical workflow problem into a small, useful app or portal.</p>
+        </div>
+
+        <div class="cta-panel-actions">
+          <a href="https://github.com/krisninnis/memephant" class="btn btn-primary" target="_blank" rel="noopener">View Memephant</a>
+          <a href="contact.html" class="btn">Ask about a product build</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 BrightFoundry. All rights reserved.</p>
+
+      <p class="bf-csp-mt-6px-fs-085rem-color-6b7280">
+        Privacy-first studio. No spam, no pressure - reach out only if and when it suits you.
+      </p>
+
+      <div class="studio-footer">
+        <p class="studio-footer-title">Built by BrightFoundry</p>
+        <div class="studio-footer-links">
+          <a href="products.html">Products</a>
+          <a href="leadclaw.html">LeadClaw</a>
+          <a href="memephant.html">Memephant</a>
+          <a href="services.html">Services</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </div>
+
+      <div class="bf-csp-mt-6px">
+        <a href="privacy.html">Privacy Policy</a> &bull;
+        <a href="terms.html">Terms</a> &bull;
+        <a href="cookies.html">Cookies</a> &bull;
+        <a href="portal/login.html">Client Login</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/site-nav.js" defer></script>
+
+</body>
+</html>
